@@ -88,9 +88,6 @@ export default function App() {
         onOpenLegalModal={(modal) => setActiveLegalModal(modal)}
       />
 
-      {/* Live Depot Spot Ticker (Rendered on Home view) */}
-      {currentView === 'home' && <DepotTicker />}
-
       {/* Main Body */}
       <main className="flex-1 pb-20 md:pb-0">
         {/* VIEW 1: REGISTRATION PAGE */}
@@ -124,14 +121,18 @@ export default function App() {
             {/* Hero Section */}
             <Hero 
               onExploreMarketplace={() => {
-                const market = document.getElementById('marketplace');
-                if (market) market.scrollIntoView({ behavior: 'smooth' });
+                const rates = document.getElementById('depot-rates') || document.getElementById('marketplace');
+                if (rates) rates.scrollIntoView({ behavior: 'smooth' });
               }}
               onExploreSimulator={() => {
                 const sim = document.getElementById('escrow-simulator');
                 if (sim) sim.scrollIntoView({ behavior: 'smooth' });
               }}
+              onOpenRegister={() => handleOpenRegistration('buyer')}
             />
+
+            {/* Today's Certified Depot Rates Section */}
+            <DepotTicker />
 
             {/* WHAT WE DO & ROLE BREAKDOWN SECTION */}
             <section className="bg-white py-14 sm:py-20 border-b border-cas-border">
