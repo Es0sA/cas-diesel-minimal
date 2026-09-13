@@ -1,0 +1,203 @@
+export const DEPOT_PRICES = [
+  {
+    id: 'apapa',
+    name: 'Apapa Marine Terminal',
+    hub: 'Lagos Island & Port Area',
+    state: 'Lagos',
+    spotPrice: 1180,
+    dailyChange: -5,
+    status: 'Depot Loading Active',
+    activeGantries: 14,
+    avgWaitTime: '2.5 hrs',
+    densitySpec: '0.842 kg/L',
+    flashPoint: '68 C'
+  },
+  {
+    id: 'ijegun',
+    name: 'Ijegun Egba Tank Farm Cluster',
+    hub: 'Amuwo Odofin & Satellite Town',
+    state: 'Lagos',
+    spotPrice: 1175,
+    dailyChange: -8,
+    status: 'Depot Loading Active',
+    activeGantries: 22,
+    avgWaitTime: '1.8 hrs',
+    densitySpec: '0.839 kg/L',
+    flashPoint: '67 C'
+  },
+  {
+    id: 'oghara',
+    name: 'Oghara Water Depot',
+    hub: 'Ethiope West Hub',
+    state: 'Delta',
+    spotPrice: 1195,
+    dailyChange: 2,
+    status: 'Depot Loading Active',
+    activeGantries: 8,
+    avgWaitTime: '3.0 hrs',
+    densitySpec: '0.845 kg/L',
+    flashPoint: '69 C'
+  },
+  {
+    id: 'ph',
+    name: 'Port Harcourt Marine Base',
+    hub: 'Rivers Downstream Corridor',
+    state: 'Rivers',
+    spotPrice: 1210,
+    dailyChange: 0,
+    status: 'Depot Loading Active',
+    activeGantries: 12,
+    avgWaitTime: '2.0 hrs',
+    densitySpec: '0.841 kg/L',
+    flashPoint: '70 C'
+  },
+  {
+    id: 'warri',
+    name: 'Warri Depot Complex',
+    hub: 'Delta Coastal Route',
+    state: 'Delta',
+    spotPrice: 1200,
+    dailyChange: -3,
+    status: 'Depot Loading Active',
+    activeGantries: 9,
+    avgWaitTime: '2.2 hrs',
+    densitySpec: '0.844 kg/L',
+    flashPoint: '68 C'
+  },
+  {
+    id: 'calabar',
+    name: 'Calabar Free Trade Depot',
+    hub: 'Cross River Port Access',
+    state: 'Cross River',
+    spotPrice: 1225,
+    dailyChange: 5,
+    status: 'Depot Loading Active',
+    activeGantries: 6,
+    avgWaitTime: '3.5 hrs',
+    densitySpec: '0.843 kg/L',
+    flashPoint: '69 C'
+  }
+];
+
+export const TANKER_CAPACITIES = [
+  { volume: 11000, label: '11,000 Litres (Bobtail / Short Body)', recommendedFor: 'Tight gates, estates, urban bank branches' },
+  { volume: 22000, label: '22,000 Litres (Medium Rigid Tanker)', recommendedFor: 'Commercial buildings, mid-size manufacturing' },
+  { volume: 33000, label: '33,000 Litres (Standard 3-Axle Semi-Trailer)', recommendedFor: 'Industrial factories, telecom clusters, data centers' },
+  { volume: 45000, label: '45,000 Litres (Heavy Articulated Tanker)', recommendedFor: 'Large tank farms, bottling plants, cement works' },
+  { volume: 60000, label: '60,000 Litres (Double-Compartment Bulk Carrier)', recommendedFor: 'Mining operations, power stations, mega facilities' }
+];
+
+export const SUPPLIERS = [
+  {
+    id: 'sup-1',
+    companyName: 'Matrix Downstream Distribution Ltd',
+    nmdpraLicense: 'NMDPRA/DW/DEP/2024/0981',
+    primaryDepot: 'Ijegun Egba Tank Farm Cluster',
+    depotId: 'ijegun',
+    pricePerLitre: 1175,
+    minOrderVolume: 11000,
+    ratingScore: '4.95',
+    verifiedTrips: 428,
+    fleetSize: 34,
+    densitySpec: '0.840 kg/L',
+    flashPoint: '68 C',
+    leadTimeHours: '3 to 6 hrs',
+    paymentTerms: 'CAS Escrow Locked',
+    availableLitres: 450000
+  },
+  {
+    id: 'sup-2',
+    companyName: 'Pinnacle Hydrocarbons FZE',
+    nmdpraLicense: 'NMDPRA/DW/DEP/2023/1142',
+    primaryDepot: 'Apapa Marine Terminal',
+    depotId: 'apapa',
+    pricePerLitre: 1180,
+    minOrderVolume: 22000,
+    ratingScore: '4.92',
+    verifiedTrips: 612,
+    fleetSize: 52,
+    densitySpec: '0.842 kg/L',
+    flashPoint: '70 C',
+    leadTimeHours: '2 to 5 hrs',
+    paymentTerms: 'CAS Escrow Locked',
+    availableLitres: 890000
+  },
+  {
+    id: 'sup-3',
+    companyName: 'Rainoil Energy Logistics Hub',
+    nmdpraLicense: 'NMDPRA/DW/DEP/2024/0419',
+    primaryDepot: 'Ijegun Egba Tank Farm Cluster',
+    depotId: 'ijegun',
+    pricePerLitre: 1178,
+    minOrderVolume: 11000,
+    ratingScore: '4.90',
+    verifiedTrips: 340,
+    fleetSize: 28,
+    densitySpec: '0.839 kg/L',
+    flashPoint: '67 C',
+    leadTimeHours: '4 to 8 hrs',
+    paymentTerms: 'CAS Escrow Locked',
+    availableLitres: 310000
+  },
+  {
+    id: 'sup-4',
+    companyName: 'NIPCO Bulk Gas & AGO Operations',
+    nmdpraLicense: 'NMDPRA/DW/DEP/2023/0821',
+    primaryDepot: 'Apapa Marine Terminal',
+    depotId: 'apapa',
+    pricePerLitre: 1182,
+    minOrderVolume: 33000,
+    ratingScore: '4.88',
+    verifiedTrips: 510,
+    fleetSize: 45,
+    densitySpec: '0.841 kg/L',
+    flashPoint: '69 C',
+    leadTimeHours: '3 to 6 hrs',
+    paymentTerms: 'CAS Escrow Locked',
+    availableLitres: 620000
+  },
+  {
+    id: 'sup-5',
+    companyName: 'Delta Coastal Fuels & Terminals Ltd',
+    nmdpraLicense: 'NMDPRA/DW/DEP/2024/1502',
+    primaryDepot: 'Warri Depot Complex',
+    depotId: 'warri',
+    pricePerLitre: 1200,
+    minOrderVolume: 11000,
+    ratingScore: '4.86',
+    verifiedTrips: 184,
+    fleetSize: 19,
+    densitySpec: '0.844 kg/L',
+    flashPoint: '68 C',
+    leadTimeHours: '2 to 5 hrs',
+    paymentTerms: 'CAS Escrow Locked',
+    availableLitres: 240000
+  },
+  {
+    id: 'sup-6',
+    companyName: 'Rivers PetroLink Supply Ltd',
+    nmdpraLicense: 'NMDPRA/DW/DEP/2024/0773',
+    primaryDepot: 'Port Harcourt Marine Base',
+    depotId: 'ph',
+    pricePerLitre: 1210,
+    minOrderVolume: 22000,
+    ratingScore: '4.91',
+    verifiedTrips: 295,
+    fleetSize: 22,
+    densitySpec: '0.843 kg/L',
+    flashPoint: '71 C',
+    leadTimeHours: '3 to 7 hrs',
+    paymentTerms: 'CAS Escrow Locked',
+    availableLitres: 380000
+  }
+];
+
+export const DESTINATIONS = [
+  { id: 'ikeja', name: 'Ikeja Industrial Zone, Lagos', state: 'Lagos', haulageRatePerLitre: 18 },
+  { id: 'vi', name: 'Victoria Island & Lekki Phase 1, Lagos', state: 'Lagos', haulageRatePerLitre: 22 },
+  { id: 'ibadan', name: 'Oluyole Industrial Estate, Ibadan', state: 'Oyo', haulageRatePerLitre: 38 },
+  { id: 'sagamu', name: 'Sagamu Interchange & Industrial Park', state: 'Ogun', haulageRatePerLitre: 30 },
+  { id: 'abuja', name: 'Idu Industrial Layout, Abuja FCT', state: 'Abuja', haulageRatePerLitre: 85 },
+  { id: 'ph_trans', name: 'Trans-Amadi Industrial Layout, Port Harcourt', state: 'Rivers', haulageRatePerLitre: 20 },
+  { id: 'kano', name: 'Bompai Industrial Area, Kano', state: 'Kano', haulageRatePerLitre: 110 }
+];
