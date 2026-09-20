@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   UserCheck, 
   Truck, 
@@ -13,6 +13,7 @@ import {
   KeyRound 
 } from 'lucide-react';
 import { INITIAL_INVITES } from '../data/invites';
+import { api } from '../api';
 
 export default function SupplierPortal() {
   const [dailySpotPrice, setDailySpotPrice] = useState(1175);
@@ -29,30 +30,31 @@ export default function SupplierPortal() {
   const [copiedCode, setCopiedCode] = useState('');
   const [newlyCreatedCode, setNewlyCreatedCode] = useState(null);
 
-  const [orders, setOrders] = useState([
-    {
-      id: 'CAS-ORD-8812',
-      buyerCompany: 'Dangote Flour Mills - Calabar Terminal',
-      volume: 33000,
-      totalEscrowSum: 40425000,
-      assignedDriver: 'Suleiman Tanko',
-      tankerPlate: 'LSR-492-XA',
-      status: 'In Transit (Route Locked)',
-      escrowState: 'Guaranteed by CAS',
-      destination: 'Calabar EPZ Gate 2'
-    },
-    {
-      id: 'CAS-ORD-8819',
-      buyerCompany: 'Standard Industrial Plant - Ikeja Terminal',
-      volume: 22000,
-      totalEscrowSum: 26334000,
-      assignedDriver: 'Unassigned',
-      tankerPlate: 'Pending Allocation',
-      status: 'Escrow Locked - Awaiting Driver Assignment',
-      escrowState: 'Guaranteed by CAS',
-      destination: 'Ikeja Industrial Zone'
-    }
-  ]);
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        if (localStorage.getItem('cas_token')) {
+          const data = await api.orders.list();
+          setOrders(data.orders.map(ord => ({
+            id: ord.id,
+            buyerCompany: ord.buyer?.companyName || 'Unknown Buyer',
+            volume: ord.volumeLiters,
+            totalEscrowSum: ord.totalEscrowAmount,
+            assignedDriver: ord.driver ? `${ord.driver.firstName} ${ord.driver.lastName}` : 'Unassigned',
+            tankerPlate: ord.driver?.truckPlateNumber || 'Pending Allocation',
+            status: ord.status,
+            escrowState: 'Guaranteed by CAS',
+            destination: `${ord.targetLatitude}, ${ord.targetLongitude}`
+          })));
+        }
+      } catch (err) {
+        console.error('Failed to fetch orders', err);
+      }
+    };
+    fetchOrders();
+  }, []);
 
   const [selectedDriverForOrder, setSelectedDriverForOrder] = useState('Emeka Okonkwo (KJA-112-XC)');
 

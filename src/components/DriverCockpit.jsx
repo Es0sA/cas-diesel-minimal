@@ -1,10 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Truck, Navigation, Phone, MapPin, CheckCircle2, ShieldCheck, AlertCircle, UserPlus, ArrowRight } from 'lucide-react';
+import { api } from '../api';
 
 export default function DriverCockpit({ onNavigateToRegister }) {
   // Active Trip Milestone State
   // 1 = loaded at depot, 2 = transit, 3 = arrived at gate, 4 = discharged
   const [tripStep, setTripStep] = useState(2);
+  const [activeOrder, setActiveOrder] = useState(null);
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        if (localStorage.getItem('cas_token')) {
+          const data = await api.orders.list();
+          if (data.orders && data.orders.length > 0) {
+            setActiveOrder(data.orders[0]); // Just pick the first assigned order
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch driver order', err);
+      }
+    };
+    fetchOrder();
+  }, []);
 
   return (
     <section id="driver-cockpit" className="bg-cas-canvas py-6 sm:py-12 md:py-20 border-b border-cas-border">
@@ -65,7 +83,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                 Active Dispatch Manifest
               </div>
               <div className="text-lg sm:text-xl font-extrabold text-cas-slate">
-                Order #CAS-ORD-8812 (33,000 Litres AGO)
+                {activeOrder ? `Order #${activeOrder.id} (${activeOrder.volumeLiters.toLocaleString()} Litres AGO)` : 'Order #CAS-ORD-8812 (33,000 Litres AGO)'}
               </div>
               <div className="text-xs text-slate-700 mt-1">
                 Escrow Verified by CAS Energy. Payment locked for delivery.

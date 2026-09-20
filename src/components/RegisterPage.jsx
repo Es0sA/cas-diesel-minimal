@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { INITIAL_INVITES } from '../data/invites';
 import { DEPOT_PRICES } from '../data/depots';
+import { api } from '../api';
 
 export default function RegisterPage({ 
   onBackToHome, 
@@ -33,6 +34,10 @@ export default function RegisterPage({
   const [driverInviteCode, setDriverInviteCode] = useState(inviteCodeParam || '');
   const [verifiedSupplier, setVerifiedSupplier] = useState(null);
   const [codeError, setCodeError] = useState('');
+  const [driverEmail, setDriverEmail] = useState('');
+  const [driverPassword, setDriverPassword] = useState('');
+  const [driverConfirmPassword, setDriverConfirmPassword] = useState('');
+  const [driverError, setDriverError] = useState('');
   const [driverName, setDriverName] = useState('');
   const [driverPhone, setDriverPhone] = useState('');
   const [driverLicense, setDriverLicense] = useState('');
@@ -40,6 +45,10 @@ export default function RegisterPage({
   const [driverCapacity, setDriverCapacity] = useState('33000');
 
   // Buyer Form States
+  const [buyerEmail, setBuyerEmail] = useState('');
+  const [buyerPassword, setBuyerPassword] = useState('');
+  const [buyerConfirmPassword, setBuyerConfirmPassword] = useState('');
+  const [buyerError, setBuyerError] = useState('');
   const [buyerCompany, setBuyerCompany] = useState('');
   const [buyerRcNumber, setBuyerRcNumber] = useState('');
   const [buyerCategory, setBuyerCategory] = useState('manufacturing');
@@ -52,6 +61,10 @@ export default function RegisterPage({
   const [buyerConsent, setBuyerConsent] = useState(true);
 
   // Supplier Form States
+  const [supplierEmail, setSupplierEmail] = useState('');
+  const [supplierPassword, setSupplierPassword] = useState('');
+  const [supplierConfirmPassword, setSupplierConfirmPassword] = useState('');
+  const [supplierError, setSupplierError] = useState('');
   const [supplierName, setSupplierName] = useState('');
   const [supplierRc, setSupplierRc] = useState('');
   const [supplierLicense, setSupplierLicense] = useState('');
@@ -149,22 +162,72 @@ export default function RegisterPage({
     });
   };
 
-  const handleBuyerSubmit = (e) => {
+  const handleBuyerSubmit = async (e) => {
     e.preventDefault();
-    setSubmitSuccess({
-      role: 'buyer',
-      title: 'Corporate Buyer Account Activated',
-      message: `${buyerCompany} has been registered with verified discharge gate coordinates at (${latitude}, ${longitude}). You can now deposit into escrow and order directly from loading terminals.`
-    });
+    setBuyerError('');
+    if (buyerPassword.length < 12) {
+      setBuyerError('Password must be at least 12 characters.');
+      return;
+    }
+    if (buyerPassword !== buyerConfirmPassword) {
+      setBuyerError('Passwords do not match.');
+      return;
+    }
+    
+    try {
+      await api.auth.register({ email: buyerEmail, password: buyerPassword, role: 'BUYER' });
+      await api.auth.login({ email: buyerEmail, password: buyerPassword });
+      
+      await api.companies.updateProfile({
+        companyName: buyerCompany,
+        registrationNumber: buyerRcNumber,
+        businessAddress: `${latitude}, ${longitude}`,
+        contactPhone: receivingOfficerPhone
+      });
+
+      setSubmitSuccess({
+        role: 'buyer',
+        title: 'Corporate Buyer Account Activated',
+        message: `${buyerCompany} has been registered with verified discharge gate coordinates at (${latitude}, ${longitude}). You can now deposit into escrow and order directly from loading terminals.`
+      });
+    } catch (err) {
+      console.error(err);
+      setBuyerError(err.message || 'An error occurred during buyer registration.');
+    }
   };
 
-  const handleSupplierSubmit = (e) => {
+  const handleSupplierSubmit = async (e) => {
     e.preventDefault();
-    setSubmitSuccess({
-      role: 'supplier',
-      title: 'Marketer Account Created',
-      message: `${supplierName} has been registered under NMDPRA license ${supplierLicense}. You can now broadcast spot prices and generate one-time driver invitation links.`
-    });
+    setSupplierError('');
+    if (supplierPassword.length < 12) {
+      setSupplierError('Password must be at least 12 characters.');
+      return;
+    }
+    if (supplierPassword !== supplierConfirmPassword) {
+      setSupplierError('Passwords do not match.');
+      return;
+    }
+    
+    try {
+      await api.auth.register({ email: supplierEmail, password: supplierPassword, role: 'SUPPLIER' });
+      await api.auth.login({ email: supplierEmail, password: supplierPassword });
+      
+      await api.companies.updateProfile({
+        companyName: supplierName,
+        registrationNumber: supplierRc,
+        businessAddress: primaryDepot,
+        contactPhone: contactPhone
+      });
+
+      setSubmitSuccess({
+        role: 'supplier',
+        title: 'Marketer Account Created',
+        message: `${supplierName} has been registered under NMDPRA license ${supplierLicense}. You can now broadcast spot prices and generate one-time driver invitation links.`
+      });
+    } catch (err) {
+      console.error(err);
+      setSupplierError(err.message || 'An error occurred during supplier registration.');
+    }
   };
 
   return (
@@ -372,6 +435,21 @@ export default function RegisterPage({
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-bold uppercase text-cas-slate mb-1.5">Email Address</label>
+                  <input type="email" required value={driverEmail} onChange={(e) => setDriverEmail(e.target.value)} className="w-full p-3 bg-white border border-slate-300 rounded-lg text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-cas-slate mb-1.5">Password</label>
+                  <input type="password" required value={driverPassword} onChange={(e) => setDriverPassword(e.target.value)} className="w-full p-3 bg-white border border-slate-300 rounded-lg text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-cas-slate mb-1.5">Confirm Password</label>
+                  <input type="password" required value={driverConfirmPassword} onChange={(e) => setDriverConfirmPassword(e.target.value)} className="w-full p-3 bg-white border border-slate-300 rounded-lg text-sm" />
+                </div>
+                {driverError && (
+                  <div className="sm:col-span-2 p-3 bg-rose-50 border border-rose-300 rounded-lg text-rose-800 text-xs font-semibold">{driverError}</div>
+                )}
                 <div>
                   <label htmlFor="driver-name-in" className="block text-xs font-bold uppercase tracking-wider text-cas-slate mb-1.5">
                     Full Legal Name
@@ -482,6 +560,21 @@ export default function RegisterPage({
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-bold uppercase text-cas-slate mb-1.5">Email Address</label>
+                  <input type="email" required value={buyerEmail} onChange={(e) => setBuyerEmail(e.target.value)} className="w-full p-3 bg-white border border-slate-300 rounded-lg text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-cas-slate mb-1.5">Password</label>
+                  <input type="password" required value={buyerPassword} onChange={(e) => setBuyerPassword(e.target.value)} className="w-full p-3 bg-white border border-slate-300 rounded-lg text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-cas-slate mb-1.5">Confirm Password</label>
+                  <input type="password" required value={buyerConfirmPassword} onChange={(e) => setBuyerConfirmPassword(e.target.value)} className="w-full p-3 bg-white border border-slate-300 rounded-lg text-sm" />
+                </div>
+                {buyerError && (
+                  <div className="sm:col-span-2 p-3 bg-rose-50 border border-rose-300 rounded-lg text-rose-800 text-xs font-semibold">{buyerError}</div>
+                )}
                 <div>
                   <label htmlFor="b-company" className="block text-xs font-bold uppercase tracking-wider text-cas-slate mb-1.5">
                     Company / Establishment Name
@@ -707,6 +800,21 @@ export default function RegisterPage({
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-bold uppercase text-cas-slate mb-1.5">Email Address</label>
+                  <input type="email" required value={supplierEmail} onChange={(e) => setSupplierEmail(e.target.value)} className="w-full p-3 bg-white border border-slate-300 rounded-lg text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-cas-slate mb-1.5">Password</label>
+                  <input type="password" required value={supplierPassword} onChange={(e) => setSupplierPassword(e.target.value)} className="w-full p-3 bg-white border border-slate-300 rounded-lg text-sm" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-cas-slate mb-1.5">Confirm Password</label>
+                  <input type="password" required value={supplierConfirmPassword} onChange={(e) => setSupplierConfirmPassword(e.target.value)} className="w-full p-3 bg-white border border-slate-300 rounded-lg text-sm" />
+                </div>
+                {supplierError && (
+                  <div className="sm:col-span-2 p-3 bg-rose-50 border border-rose-300 rounded-lg text-rose-800 text-xs font-semibold">{supplierError}</div>
+                )}
                 <div>
                   <label htmlFor="s-company" className="block text-xs font-bold uppercase tracking-wider text-cas-slate mb-1.5">
                     Registered Marketer Company Name

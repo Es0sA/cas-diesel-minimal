@@ -13,6 +13,7 @@ import {
   Gauge,
   FileText
 } from 'lucide-react';
+import { api } from '../api';
 
 export default function EscrowTerminal() {
   // Configuration states
@@ -30,6 +31,9 @@ export default function EscrowTerminal() {
 
   // Simulated truck distance from buyer site
   const [distanceKm, setDistanceKm] = useState(18.5);
+  
+  // Real Backend Order State
+  const [activeOrderId, setActiveOrderId] = useState(null);
 
   // Computed Financials
   const productCost = selectedDepot.spotPrice * selectedVolume.volume;
@@ -37,28 +41,29 @@ export default function EscrowTerminal() {
   const totalLandedCost = productCost + haulageCost;
   const landedPricePerLitre = Math.round(totalLandedCost / selectedVolume.volume);
 
-  const handleDepositEscrow = () => {
+  const handleDepositEscrow = async () => {
     setCurrentStep(2);
     setDistanceKm(18.5);
   };
 
-  const handleDepartDepot = () => {
+  const handleDepartDepot = async () => {
     setCurrentStep(3);
     setDistanceKm(12.4);
   };
 
-  const handleSimulateGateArrival = () => {
+  const handleSimulateGateArrival = async () => {
     setCurrentStep(4);
     setDistanceKm(0.08); // 80 meters away: inside geofence perimeter (< 100m)
   };
 
-  const handleConfirmDischarge = () => {
+  const handleConfirmDischarge = async () => {
     setCurrentStep(5);
   };
 
   const handleResetSimulation = () => {
     setCurrentStep(1);
     setDistanceKm(18.5);
+    setActiveOrderId(null);
   };
 
   return (
