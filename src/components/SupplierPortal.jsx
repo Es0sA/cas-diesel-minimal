@@ -12,7 +12,6 @@ import {
   Copy, 
   KeyRound 
 } from 'lucide-react';
-import { INITIAL_INVITES } from '../data/invites';
 import { api } from '../api';
 
 export default function SupplierPortal() {
@@ -20,15 +19,6 @@ export default function SupplierPortal() {
   const [availableLitres, setAvailableLitres] = useState(450000);
   const [minOrderVolume, setMinOrderVolume] = useState(11000);
   const [saveAlert, setSaveAlert] = useState(false);
-
-  // Marketer Driver Invites State
-  const [invites, setInvites] = useState(() => {
-    const saved = localStorage.getItem('cas_invites_store');
-    return saved ? JSON.parse(saved) : INITIAL_INVITES;
-  });
-
-  const [copiedCode, setCopiedCode] = useState('');
-  const [newlyCreatedCode, setNewlyCreatedCode] = useState(null);
 
   const [orders, setOrders] = useState([]);
 
@@ -78,31 +68,6 @@ export default function SupplierPortal() {
     }));
   };
 
-  const handleGenerateInvite = () => {
-    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-    const newCode = `MAT-${randomSuffix}`;
-    const newInviteObj = {
-      code: newCode,
-      supplierId: 'sup-1',
-      supplierName: 'Matrix Downstream Distribution Ltd',
-      depotName: 'Ijegun Egba Tank Farm Cluster',
-      status: 'active',
-      createdAt: '2026-09-12',
-      usedBy: null
-    };
-
-    const updated = [newInviteObj, ...invites];
-    setInvites(updated);
-    localStorage.setItem('cas_invites_store', JSON.stringify(updated));
-    setNewlyCreatedCode(newCode);
-  };
-
-  const handleCopyLink = (code) => {
-    const fullLink = `${window.location.origin}${window.location.pathname}?invite=${code}`;
-    navigator.clipboard.writeText(fullLink);
-    setCopiedCode(code);
-    setTimeout(() => setCopiedCode(''), 3000);
-  };
 
   return (
     <section id="supplier-desk" className="bg-cas-canvas py-12 md:py-20 border-b border-cas-border">
@@ -118,7 +83,7 @@ export default function SupplierPortal() {
             Matrix Downstream Operations Desk
           </h2>
           <p className="text-base text-cas-muted mt-2">
-            Set your daily spot price per litre, review confirmed escrow allocations, and generate single-use authorization links to register drivers under your company.
+            Set your daily spot price per litre and review confirmed escrow allocations.
           </p>
         </div>
 
@@ -220,105 +185,7 @@ export default function SupplierPortal() {
           {/* Column 2: Order Queue & Driver Management */}
           <div className="lg:col-span-8 space-y-6">
             
-            {/* The Driver Authorization & Invitation Desk */}
-            <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-cas-border shadow-sm">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 mb-6">
-                <div>
-                  <h3 className="font-extrabold text-lg text-cas-slate flex items-center gap-2">
-                    <KeyRound className="w-5 h-5 text-cas-amberDark" aria-hidden="true" />
-                    <span>Fleet Driver Authorization & Invitation Desk</span>
-                  </h3>
-                  <p className="text-xs text-cas-muted mt-0.5">
-                    Generate single-use authorization links. Drivers who register with these links are tied directly to your company.
-                  </p>
-                </div>
 
-                <button
-                  type="button"
-                  onClick={handleGenerateInvite}
-                  className="px-4 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-slate-900 hover:text-white text-xs font-extrabold rounded-lg transition-all flex items-center gap-2 shrink-0 shadow-sm"
-                >
-                  <Plus className="w-4 h-4" aria-hidden="true" />
-                  <span>Generate Driver Invite Code</span>
-                </button>
-              </div>
-
-              {/* Notice when newly generated */}
-              {newlyCreatedCode && (
-                <div className="p-4 mb-5 bg-amber-50 border-2 border-cas-amber rounded-xl text-xs">
-                  <span className="font-bold text-cas-slate block mb-1">
-                    New Single-Use Code Created: <strong className="font-mono text-base text-cas-amberDark">{newlyCreatedCode}</strong>
-                  </span>
-                  <p className="text-slate-700 mb-3">
-                    Send this code or direct link to your driver. Once they register their tanker, the code is marked as redeemed and cannot be reused.
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleCopyLink(newlyCreatedCode)}
-                      className="px-3 py-1.5 bg-cas-slate hover:bg-black text-white font-bold rounded text-xs inline-flex items-center gap-1.5"
-                    >
-                      <Copy className="w-3.5 h-3.5" aria-hidden="true" />
-                      <span>{copiedCode === newlyCreatedCode ? 'Copied Link!' : 'Copy Direct Invite Link'}</span>
-                    </button>
-                    <span className="font-mono text-slate-500 text-[11px] truncate">
-                      ?invite={newlyCreatedCode}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {/* Table of Generated Codes */}
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left border border-slate-200 rounded-lg overflow-hidden">
-                  <thead className="bg-slate-100 text-cas-slate uppercase font-bold border-b border-slate-200">
-                    <tr>
-                      <th className="p-3">Authorization Code</th>
-                      <th className="p-3">Status</th>
-                      <th className="p-3">Redeemed By</th>
-                      <th className="p-3 text-right">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {invites.filter(inv => inv.supplierId === 'sup-1').map((inv) => (
-                      <tr key={inv.code} className="hover:bg-slate-50">
-                        <td className="p-3 font-mono font-extrabold text-cas-slate text-sm">
-                          {inv.code}
-                        </td>
-                        <td className="p-3">
-                          {inv.status === 'active' ? (
-                            <span className="px-2 py-0.5 rounded bg-emerald-100 text-cas-green font-bold text-[11px]">
-                              Active (Unused)
-                            </span>
-                          ) : (
-                            <span className="px-2 py-0.5 rounded bg-slate-200 text-slate-700 font-bold text-[11px]">
-                              Redeemed
-                            </span>
-                          )}
-                        </td>
-                        <td className="p-3 text-cas-muted font-medium">
-                          {inv.usedBy || 'Waiting for driver registration'}
-                        </td>
-                        <td className="p-3 text-right">
-                          {inv.status === 'active' ? (
-                            <button
-                              type="button"
-                              onClick={() => handleCopyLink(inv.code)}
-                              className="px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-cas-slate font-bold inline-flex items-center gap-1"
-                            >
-                              <Copy className="w-3 h-3 text-cas-amberDark" aria-hidden="true" />
-                              <span>{copiedCode === inv.code ? 'Copied' : 'Copy Link'}</span>
-                            </button>
-                          ) : (
-                            <span className="text-slate-400">Locked</span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
 
             {/* Confirmed Escrow Orders */}
             <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-cas-border shadow-sm">

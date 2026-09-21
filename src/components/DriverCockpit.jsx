@@ -28,30 +28,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
     <section id="driver-cockpit" className="bg-cas-canvas py-6 sm:py-12 md:py-20 border-b border-cas-border">
       <div className="max-w-3xl mx-auto px-3 sm:px-8">
 
-        {/* Onboarding Notice for New / Unregistered Drivers */}
-        <div className="mb-6 p-4 bg-amber-50 border-2 border-amber-300 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
-          <div className="flex items-start gap-2.5">
-            <UserPlus className="w-5 h-5 text-cas-amberDark shrink-0 mt-0.5" aria-hidden="true" />
-            <div>
-              <span className="font-extrabold text-xs sm:text-sm text-cas-slate block">
-                Need to register your tanker under an authorized marketer?
-              </span>
-              <p className="text-xs text-slate-600 mt-0.5">
-                Drivers must enter their single-use marketer authorization code to bind their truck to the company fleet.
-              </p>
-            </div>
-          </div>
-          {onNavigateToRegister && (
-            <button
-              type="button"
-              onClick={onNavigateToRegister}
-              className="px-3.5 py-2 bg-cas-slate hover:bg-black text-white text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 shrink-0 w-full sm:w-auto justify-center"
-            >
-              <span>Register Driver</span>
-              <ArrowRight className="w-3.5 h-3.5 text-cas-amber" aria-hidden="true" />
-            </button>
-          )}
-        </div>
+
 
         {/* Active Trip Manifest (Mobile First Cockpit) */}
         <div className="bg-white rounded-2xl border-2 border-cas-border shadow-md overflow-hidden">

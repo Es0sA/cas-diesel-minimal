@@ -18,28 +18,21 @@ import {
   ShieldCheck, 
   Lock, 
   ArrowRight, 
-  KeyRound, 
   CheckCircle2
 } from 'lucide-react';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('home'); // 'home', 'register', 'supplier-portal', 'driver-cockpit'
   const [registerInitialRole, setRegisterInitialRole] = useState('buyer'); // 'buyer', 'supplier', 'driver'
-  const [inviteCodeFromUrl, setInviteCodeFromUrl] = useState('');
   const [activeLegalModal, setActiveLegalModal] = useState(null);
 
-  // Check URL query parameters for direct driver invite links (e.g. ?invite=MAT-8849)
+  // Check URL query parameters
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const invite = params.get('invite');
     const role = params.get('role');
     const view = params.get('view');
 
-    if (invite) {
-      setInviteCodeFromUrl(invite);
-      setRegisterInitialRole('driver');
-      setCurrentView('register');
-    } else if (role && ['buyer', 'supplier', 'driver'].includes(role)) {
+    if (role && ['buyer', 'supplier', 'driver'].includes(role)) {
       setRegisterInitialRole(role);
       setCurrentView('register');
     } else if (view && ['home', 'register', 'supplier-portal', 'driver-cockpit'].includes(view)) {
@@ -94,7 +87,6 @@ export default function App() {
         {currentView === 'register' && (
           <RegisterPage 
             initialRole={registerInitialRole}
-            inviteCodeParam={inviteCodeFromUrl}
             onBackToHome={() => {
               setCurrentView('home');
               window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -196,7 +188,7 @@ export default function App() {
                       </div>
                       <h3 className="text-xl font-extrabold text-cas-slate mb-2">For Licensed Marketers</h3>
                       <p className="text-sm text-cas-muted leading-relaxed mb-6">
-                        Publish your own spot price per litre and available volumes. Once your truck departs the gantry, the order is non-cancellable, protecting your capital. You invite and authorize drivers directly.
+                        Publish your own spot price per litre and available volumes. Once your truck departs the gantry, the order is non-cancellable, protecting your capital.
                       </p>
                     </div>
 
@@ -205,10 +197,6 @@ export default function App() {
                         <div className="flex items-center gap-2">
                           <CheckCircle2 className="w-4 h-4 text-cas-green" aria-hidden="true" />
                           <span>Guaranteed escrow before truck departs</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <CheckCircle2 className="w-4 h-4 text-cas-green" aria-hidden="true" />
-                          <span>Generate one-time driver invite links</span>
                         </div>
                       </div>
 
@@ -231,16 +219,12 @@ export default function App() {
                       </div>
                       <h3 className="text-xl font-extrabold text-cas-slate mb-2">For Fleet Tanker Drivers</h3>
                       <p className="text-sm text-cas-muted leading-relaxed mb-6">
-                        Register under your marketer using their single-use authorization code or link. Receive verified dispatch orders with exact gate coordinates and turn-by-turn route navigation.
+                        Register under your marketer. Receive verified dispatch orders with exact gate coordinates and turn-by-turn route navigation.
                       </p>
                     </div>
 
                     <div>
                       <div className="text-xs font-bold text-cas-slate space-y-2 mb-6 pt-4 border-t border-slate-200">
-                        <div className="flex items-center gap-2">
-                          <KeyRound className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
-                          <span>Bound to employer marketer via code</span>
-                        </div>
                         <div className="flex items-center gap-2">
                           <CheckCircle2 className="w-4 h-4 text-cas-green" aria-hidden="true" />
                           <span>One-tap GPS navigation to discharge gate</span>
@@ -252,7 +236,7 @@ export default function App() {
                         onClick={() => handleOpenRegistration('driver')}
                         className="w-full py-3 px-4 bg-cas-slate hover:bg-black text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
                       >
-                        <span>Register With Marketer Code</span>
+                        <span>Register As A Driver</span>
                         <ArrowRight className="w-4 h-4 text-cas-amber" aria-hidden="true" />
                       </button>
                     </div>

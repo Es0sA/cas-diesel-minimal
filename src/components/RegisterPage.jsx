@@ -8,32 +8,20 @@ import {
   ShieldCheck, 
   MapPin, 
   Navigation, 
-  KeyRound, 
   ArrowLeft,
   Lock
 } from 'lucide-react';
-import { INITIAL_INVITES } from '../data/invites';
 import { DEPOT_PRICES } from '../data/depots';
 import { api } from '../api';
 
 export default function RegisterPage({ 
   onBackToHome, 
   initialRole = 'buyer', 
-  inviteCodeParam = '',
   onRegistrationSuccess
 }) {
   const [selectedRole, setSelectedRole] = useState(initialRole); // 'buyer', 'supplier', 'driver'
 
-  // Global Invite Codes state
-  const [invites, setInvites] = useState(() => {
-    const saved = localStorage.getItem('cas_invites_store');
-    return saved ? JSON.parse(saved) : INITIAL_INVITES;
-  });
-
   // Driver Form States
-  const [driverInviteCode, setDriverInviteCode] = useState(inviteCodeParam || '');
-  const [verifiedSupplier, setVerifiedSupplier] = useState(null);
-  const [codeError, setCodeError] = useState('');
   const [driverEmail, setDriverEmail] = useState('');
   const [driverPassword, setDriverPassword] = useState('');
   const [driverConfirmPassword, setDriverConfirmPassword] = useState('');
@@ -76,40 +64,6 @@ export default function RegisterPage({
   // Submission Status
   const [submitSuccess, setSubmitSuccess] = useState(null);
 
-  const validateCode = React.useCallback((codeToTest) => {
-    const trimmed = codeToTest.trim().toUpperCase();
-    if (!trimmed) {
-      setVerifiedSupplier(null);
-      setCodeError('');
-      return;
-    }
-
-    const found = invites.find(inv => inv.code.toUpperCase() === trimmed);
-    if (!found) {
-      setVerifiedSupplier(null);
-      setCodeError('Invalid code. Please request a valid one-time registration link or code from your marketer.');
-    } else if (found.status === 'used') {
-      setVerifiedSupplier(null);
-      setCodeError('This authorization code has already been redeemed by another driver. Codes are strictly single use.');
-    } else {
-      setVerifiedSupplier(found);
-      setCodeError('');
-    }
-  }, [invites]);
-
-  // Check code on load if inviteCodeParam is present
-  useEffect(() => {
-    if (inviteCodeParam) {
-      setDriverInviteCode(inviteCodeParam);
-      validateCode(inviteCodeParam);
-    }
-  }, [inviteCodeParam, validateCode]);
-
-  const handleDriverCodeChange = (e) => {
-    const val = e.target.value.toUpperCase();
-    setDriverInviteCode(val);
-    validateCode(val);
-  };
 
   const handleTriggerGeolocation = () => {
     setGeolocating(true);
@@ -134,30 +88,11 @@ export default function RegisterPage({
 
   const handleDriverSubmit = (e) => {
     e.preventDefault();
-    if (!verifiedSupplier) {
-      setCodeError('You must enter a valid marketer authorization code to register as a driver.');
-      return;
-    }
-
-    // Mark code as redeemed
-    const updatedInvites = invites.map(inv => {
-      if (inv.code === verifiedSupplier.code) {
-        return {
-          ...inv,
-          status: 'used',
-          usedBy: `${driverName} (${driverPlate})`
-        };
-      }
-      return inv;
-    });
-
-    setInvites(updatedInvites);
-    localStorage.setItem('cas_invites_store', JSON.stringify(updatedInvites));
 
     setSubmitSuccess({
       role: 'driver',
       title: 'Driver Registration Approved',
-      message: `You are now officially registered as a fleet tanker driver for ${verifiedSupplier.supplierName}. You will receive order dispatch notifications on WhatsApp at ${driverPhone}.`
+      message: `You are now officially registered as a fleet tanker driver. You will receive order dispatch notifications on WhatsApp at ${driverPhone}.`
     });
   };
 
@@ -221,7 +156,7 @@ export default function RegisterPage({
       setSubmitSuccess({
         role: 'supplier',
         title: 'Marketer Account Created',
-        message: `${supplierName} has been registered under NMDPRA license ${supplierLicense}. You can now broadcast spot prices and generate one-time driver invitation links.`
+        message: `${supplierName} has been registered under NMDPRA license ${supplierLicense}. You can now broadcast spot prices.`
       });
     } catch (err) {
       console.error(err);
@@ -253,7 +188,7 @@ export default function RegisterPage({
             Create Your CAS Energy Account
           </h1>
           <p className="text-sm sm:text-base text-cas-muted mt-2">
-            Select your role below. Buyers map their facility gate coordinates; drivers must provide an authorization code from their employing marketer.
+            Select your role below. Buyers map their facility gate coordinates.
           </p>
         </div>
 
@@ -334,9 +269,7 @@ export default function RegisterPage({
                 For downstream petroleum off-takers and depot owners marketing certified AGO at custom spot rates.
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold text-cas-amberDark">
-              Includes Driver Code Generator
-            </div>
+
           </button>
 
           {/* Card 3: Driver */}
@@ -358,9 +291,7 @@ export default function RegisterPage({
                 For calibrated truck operators delivering fuel under an authorized marketer fleet.
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold text-cas-green">
-              Requires Marketer Authorization Code
-            </div>
+
           </button>
 
         </div>
@@ -373,59 +304,7 @@ export default function RegisterPage({
         {selectedRole === 'driver' && (
           <form onSubmit={handleDriverSubmit} className="bg-white p-6 sm:p-10 rounded-2xl border-2 border-cas-border shadow-sm space-y-8">
             
-            {/* The Mandatory Supplier Authorization Box */}
-            <div className="p-6 bg-amber-50/80 border-2 border-cas-amber rounded-xl">
-              <div className="flex items-start gap-3 mb-4">
-                <KeyRound className="w-6 h-6 text-cas-amberDark shrink-0 mt-0.5" aria-hidden="true" />
-                <div>
-                  <h3 className="font-extrabold text-base text-cas-slate">
-                    Mandatory Marketer Authorization Code
-                  </h3>
-                  <p className="text-xs text-slate-700 mt-1 leading-relaxed">
-                    All drivers must be authorized by a registered petroleum marketer before receiving delivery orders.
-                    Enter the single-use registration code provided by your employing company, or paste the link they texted you.
-                  </p>
-                </div>
-              </div>
 
-              <div>
-                <label htmlFor="auth-code" className="block text-xs font-bold uppercase tracking-wider text-cas-slate mb-1.5">
-                  Authorization Code (e.g. MAT-8849, PIN-4412, RAI-9921)
-                </label>
-                <div className="relative max-w-sm">
-                  <input
-                    id="auth-code"
-                    type="text"
-                    required
-                    placeholder="ENTER CODE"
-                    value={driverInviteCode}
-                    onChange={handleDriverCodeChange}
-                    className="w-full p-3 bg-white border-2 border-slate-300 rounded-lg text-lg font-mono font-extrabold tracking-widest text-cas-slate focus:border-cas-amber uppercase"
-                  />
-                </div>
-
-                {/* Validation Status Feedback */}
-                {verifiedSupplier && (
-                  <div className="mt-3 p-3 bg-emerald-100 border border-emerald-300 rounded-lg text-xs font-bold text-emerald-900 flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0" aria-hidden="true" />
-                    <span>
-                      Authorization Confirmed: You will be bound to fleet: <strong>{verifiedSupplier.supplierName}</strong> ({verifiedSupplier.depotName}).
-                    </span>
-                  </div>
-                )}
-
-                {codeError && (
-                  <div className="mt-3 p-3 bg-rose-50 border border-rose-300 rounded-lg text-xs text-rose-800 flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" aria-hidden="true" />
-                    <span>{codeError}</span>
-                  </div>
-                )}
-
-                <div className="mt-3 text-[11px] text-cas-muted">
-                  Demo hint: Active sample codes include <strong className="font-mono text-cas-slate">MAT-8849</strong> (Matrix) or <strong className="font-mono text-cas-slate">PIN-4412</strong> (Pinnacle).
-                </div>
-              </div>
-            </div>
 
             {/* Driver Personal Information */}
             <div>
@@ -534,11 +413,10 @@ export default function RegisterPage({
             <div className="pt-4 border-t border-slate-200">
               <button
                 type="submit"
-                disabled={!verifiedSupplier}
                 className="w-full py-4 px-6 bg-cas-slate hover:bg-black text-white font-extrabold text-base rounded-lg transition-all shadow-md flex items-center justify-center gap-2 border-2 border-transparent hover:border-cas-amber disabled:opacity-50"
               >
                 <CheckCircle2 className="w-5 h-5 text-cas-green" aria-hidden="true" />
-                <span>Complete Driver Registration & Bind to Supplier Fleet</span>
+                <span>Complete Driver Registration</span>
               </button>
             </div>
 
@@ -930,7 +808,7 @@ export default function RegisterPage({
                 className="w-full py-4 px-6 bg-cas-slate hover:bg-black text-white font-extrabold text-base rounded-lg transition-all shadow-md flex items-center justify-center gap-2 border-2 border-transparent hover:border-cas-amber"
               >
                 <CheckCircle2 className="w-5 h-5 text-cas-green" aria-hidden="true" />
-                <span>Register Marketer Account & Enable Fleet Invitation Desk</span>
+                <span>Register Marketer Account</span>
               </button>
             </div>
 
