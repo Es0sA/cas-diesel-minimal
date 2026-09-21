@@ -76,16 +76,7 @@ export default function RegisterPage({
   // Submission Status
   const [submitSuccess, setSubmitSuccess] = useState(null);
 
-  // Check code on load if inviteCodeParam is present
-  useEffect(() => {
-    if (inviteCodeParam) {
-      setSelectedRole('driver');
-      setDriverInviteCode(inviteCodeParam);
-      validateCode(inviteCodeParam);
-    }
-  }, [inviteCodeParam]);
-
-  const validateCode = (codeToTest) => {
+  const validateCode = React.useCallback((codeToTest) => {
     const trimmed = codeToTest.trim().toUpperCase();
     if (!trimmed) {
       setVerifiedSupplier(null);
@@ -104,7 +95,15 @@ export default function RegisterPage({
       setVerifiedSupplier(found);
       setCodeError('');
     }
-  };
+  }, [invites]);
+
+  // Check code on load if inviteCodeParam is present
+  useEffect(() => {
+    if (inviteCodeParam) {
+      setDriverInviteCode(inviteCodeParam);
+      validateCode(inviteCodeParam);
+    }
+  }, [inviteCodeParam, validateCode]);
 
   const handleDriverCodeChange = (e) => {
     const val = e.target.value.toUpperCase();
