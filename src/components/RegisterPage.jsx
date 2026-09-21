@@ -25,7 +25,7 @@ export default function RegisterPage({
   const [driverEmail, setDriverEmail] = useState('');
   const [driverPassword, setDriverPassword] = useState('');
   const [driverConfirmPassword, setDriverConfirmPassword] = useState('');
-  const [driverError, setDriverError] = useState('');
+
   const [driverName, setDriverName] = useState('');
   const [driverPhone, setDriverPhone] = useState('');
   const [driverLicense, setDriverLicense] = useState('');
@@ -299,7 +299,7 @@ export default function RegisterPage({
         {/* Step 2: Role-Specific Forms */}
 
         {/* ============================================================ */}
-        {/* DRIVER REGISTRATION FORM (With Supplier Code Requirement) */}
+        {/* DRIVER REGISTRATION FORM */}
         {/* ============================================================ */}
         {selectedRole === 'driver' && (
           <form onSubmit={handleDriverSubmit} className="bg-white p-6 sm:p-10 rounded-2xl border-2 border-cas-border shadow-sm space-y-8">
@@ -325,9 +325,7 @@ export default function RegisterPage({
                   <label className="block text-xs font-bold uppercase text-cas-slate mb-1.5">Confirm Password</label>
                   <input type="password" required value={driverConfirmPassword} onChange={(e) => setDriverConfirmPassword(e.target.value)} className="w-full p-3 bg-white border border-slate-300 rounded-lg text-sm" />
                 </div>
-                {driverError && (
-                  <div className="sm:col-span-2 p-3 bg-rose-50 border border-rose-300 rounded-lg text-rose-800 text-xs font-semibold">{driverError}</div>
-                )}
+
                 <div>
                   <label htmlFor="driver-name-in" className="block text-xs font-bold uppercase tracking-wider text-cas-slate mb-1.5">
                     Full Legal Name
