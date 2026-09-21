@@ -1,22 +1,17 @@
 import React, { useState } from 'react';
 import { ShieldCheck, PhoneCall, UserPlus, Menu, X, ArrowRight } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 
-export default function Header({ 
-  currentView, 
-  onNavigate, 
-  onOpenLegalModal 
-}) {
+export default function Header({ onOpenLegalModal }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const handleNavClick = (view) => {
-    onNavigate(view);
-    setMobileMenuOpen(false);
-  };
+  const location = useLocation();
 
   const handleModalClick = (modal) => {
     onOpenLegalModal(modal);
     setMobileMenuOpen(false);
   };
+
+  const isActive = (path) => location.pathname === path;
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
@@ -55,9 +50,8 @@ export default function Header({
         <div className="flex items-center justify-between">
           
           {/* Brand Identity */}
-          <button
-            type="button"
-            onClick={() => handleNavClick('home')}
+          <Link
+            to="/"
             className="flex items-center gap-3 text-left group"
           >
             <div className="w-10 h-10 bg-cas-slate rounded-xl flex items-center justify-center border border-slate-700 shadow-sm shrink-0">
@@ -76,55 +70,51 @@ export default function Header({
                 Bulk Fuel Marketplace & Geofenced Escrow
               </p>
             </div>
-          </button>
+          </Link>
 
           {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center gap-3 lg:gap-4">
-            <button
-              type="button"
-              onClick={() => handleNavClick('home')}
+            <Link
+              to="/"
               className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition-all ${
-                currentView === 'home'
+                isActive('/')
                   ? 'bg-slate-100 text-cas-slate font-bold'
                   : 'text-slate-600 hover:text-black hover:bg-slate-50'
               }`}
             >
               What We Do
-            </button>
+            </Link>
 
-            <button
-              type="button"
-              onClick={() => handleNavClick('supplier-portal')}
+            <Link
+              to="/marketer"
               className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition-all ${
-                currentView === 'supplier-portal'
+                isActive('/marketer')
                   ? 'bg-slate-100 text-cas-slate font-bold'
                   : 'text-slate-600 hover:text-black hover:bg-slate-50'
               }`}
             >
               Supplier Desk
-            </button>
+            </Link>
 
-            <button
-              type="button"
-              onClick={() => handleNavClick('driver-cockpit')}
+            <Link
+              to="/driver"
               className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition-all ${
-                currentView === 'driver-cockpit'
+                isActive('/driver')
                   ? 'bg-slate-100 text-cas-slate font-bold'
                   : 'text-slate-600 hover:text-black hover:bg-slate-50'
               }`}
             >
               Driver Cockpit
-            </button>
+            </Link>
 
             {/* Primary Registration CTA */}
-            <button
-              type="button"
-              onClick={() => handleNavClick('register')}
+            <Link
+              to="/register"
               className="ml-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-cas-slate hover:bg-black text-white transition-all shadow-sm flex items-center gap-2"
             >
               <UserPlus className="w-4 h-4 text-cas-amber" aria-hidden="true" />
               <span>Create Account</span>
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Right Controls */}
@@ -159,47 +149,47 @@ export default function Header({
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-slate-200 bg-white px-4 py-5 shadow-xl animate-fadeIn">
           <div className="flex flex-col gap-2">
-            <button
-              type="button"
-              onClick={() => handleNavClick('home')}
+            <Link
+              to="/"
+              onClick={() => setMobileMenuOpen(false)}
               className={`flex items-center justify-between p-3.5 rounded-xl text-sm font-semibold text-left ${
-                currentView === 'home' ? 'bg-slate-100 text-cas-slate font-bold' : 'text-slate-700 hover:bg-slate-50'
+                isActive('/') ? 'bg-slate-100 text-cas-slate font-bold' : 'text-slate-700 hover:bg-slate-50'
               }`}
             >
               <span>What We Do & Marketplace</span>
               <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
-            </button>
+            </Link>
 
-            <button
-              type="button"
-              onClick={() => handleNavClick('supplier-portal')}
+            <Link
+              to="/marketer"
+              onClick={() => setMobileMenuOpen(false)}
               className={`flex items-center justify-between p-3.5 rounded-xl text-sm font-semibold text-left ${
-                currentView === 'supplier-portal' ? 'bg-slate-100 text-cas-slate font-bold' : 'text-slate-700 hover:bg-slate-50'
+                isActive('/marketer') ? 'bg-slate-100 text-cas-slate font-bold' : 'text-slate-700 hover:bg-slate-50'
               }`}
             >
               <span>Downstream Supplier Desk</span>
               <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
-            </button>
+            </Link>
 
-            <button
-              type="button"
-              onClick={() => handleNavClick('driver-cockpit')}
+            <Link
+              to="/driver"
+              onClick={() => setMobileMenuOpen(false)}
               className={`flex items-center justify-between p-3.5 rounded-xl text-sm font-semibold text-left ${
-                currentView === 'driver-cockpit' ? 'bg-slate-100 text-cas-slate font-bold' : 'text-slate-700 hover:bg-slate-50'
+                isActive('/driver') ? 'bg-slate-100 text-cas-slate font-bold' : 'text-slate-700 hover:bg-slate-50'
               }`}
             >
               <span>Driver Cockpit & Manifest</span>
               <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
-            </button>
+            </Link>
 
-            <button
-              type="button"
-              onClick={() => handleNavClick('register')}
+            <Link
+              to="/register"
+              onClick={() => setMobileMenuOpen(false)}
               className="flex items-center justify-center gap-2 p-3.5 mt-2 rounded-xl text-sm font-bold bg-cas-slate text-white shadow-sm"
             >
               <UserPlus className="w-4 h-4 text-cas-amber" aria-hidden="true" />
               <span>Create Account / Register</span>
-            </button>
+            </Link>
           </div>
 
           <div className="mt-5 pt-4 border-t border-slate-100 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-500">
