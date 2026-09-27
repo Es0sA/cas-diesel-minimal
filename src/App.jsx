@@ -5,7 +5,6 @@ import DepotTicker from './components/DepotTicker';
 import Hero from './components/Hero';
 import EscrowTerminal from './components/EscrowTerminal';
 import Marketplace from './components/Marketplace';
-import RegisterPage from './components/RegisterPage';
 import LoginPage from './components/LoginPage';
 import SupplierPortal from './components/SupplierPortal';
 import DriverCockpit from './components/DriverCockpit';
@@ -216,7 +215,7 @@ function HomePage({ handleOpenRegistration, handleSelectSupplierForEscrow }) {
 export default function App() {
   const [activeLegalModal, setActiveLegalModal] = useState(null);
   const [registerInitialRole, setRegisterInitialRole] = useState('buyer');
-  const [loginInitialRole, setLoginInitialRole] = useState('buyer');
+  const loginInitialRole = 'buyer';
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -227,11 +226,6 @@ export default function App() {
   const handleOpenRegistration = (role = 'buyer') => {
     setRegisterInitialRole(role);
     navigate('/register');
-  };
-
-  const handleOpenLogin = (role = 'buyer') => {
-    setLoginInitialRole(role);
-    navigate('/login');
   };
 
   const handleSelectSupplierForEscrow = () => {
@@ -274,8 +268,8 @@ export default function App() {
       <main className="flex-1 pb-20 md:pb-0">
         <Routes>
           <Route path="/" element={<HomePage handleOpenRegistration={handleOpenRegistration} handleSelectSupplierForEscrow={handleSelectSupplierForEscrow} />} />
-          <Route path="/register" element={<RegisterPage initialRole={registerInitialRole} onBackToHome={() => navigate('/')} onRegistrationSuccess={handleRegistrationSuccess} onNavigateToLogin={handleOpenLogin} />} />
-          <Route path="/login" element={<LoginPage initialRole={loginInitialRole} onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onNavigateToRegister={handleOpenRegistration} />} />
+          <Route path="/register" element={<LoginPage initialRole={registerInitialRole} initialMode="register" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
+          <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/marketer" element={<SupplierPortal />} />
           <Route path="/driver" element={<DriverCockpit onNavigateToRegister={() => handleOpenRegistration('driver')} />} />
         </Routes>
