@@ -6,6 +6,7 @@ import Hero from './components/Hero';
 import EscrowTerminal from './components/EscrowTerminal';
 import Marketplace from './components/Marketplace';
 import RegisterPage from './components/RegisterPage';
+import LoginPage from './components/LoginPage';
 import SupplierPortal from './components/SupplierPortal';
 import DriverCockpit from './components/DriverCockpit';
 import LegalModals from './components/LegalModals';
@@ -215,6 +216,7 @@ function HomePage({ handleOpenRegistration, handleSelectSupplierForEscrow }) {
 export default function App() {
   const [activeLegalModal, setActiveLegalModal] = useState(null);
   const [registerInitialRole, setRegisterInitialRole] = useState('buyer');
+  const [loginInitialRole, setLoginInitialRole] = useState('buyer');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -227,7 +229,12 @@ export default function App() {
     navigate('/register');
   };
 
-  const handleSelectSupplierForEscrow = (supplier) => {
+  const handleOpenLogin = (role = 'buyer') => {
+    setLoginInitialRole(role);
+    navigate('/login');
+  };
+
+  const handleSelectSupplierForEscrow = () => {
     navigate('/');
     setTimeout(() => {
       const sim = document.getElementById('escrow-simulator');
@@ -247,6 +254,17 @@ export default function App() {
     }
   };
 
+  const handleLoginSuccess = (role) => {
+    const normalizedRole = (role || '').toUpperCase();
+    if (normalizedRole === 'SUPPLIER') {
+      navigate('/marketer');
+    } else if (normalizedRole === 'DRIVER') {
+      navigate('/driver');
+    } else {
+      navigate('/');
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-cas-canvas text-cas-slate">
       {/* Top Header */}
@@ -256,7 +274,8 @@ export default function App() {
       <main className="flex-1 pb-20 md:pb-0">
         <Routes>
           <Route path="/" element={<HomePage handleOpenRegistration={handleOpenRegistration} handleSelectSupplierForEscrow={handleSelectSupplierForEscrow} />} />
-          <Route path="/register" element={<RegisterPage initialRole={registerInitialRole} onBackToHome={() => navigate('/')} onRegistrationSuccess={handleRegistrationSuccess} />} />
+          <Route path="/register" element={<RegisterPage initialRole={registerInitialRole} onBackToHome={() => navigate('/')} onRegistrationSuccess={handleRegistrationSuccess} onNavigateToLogin={handleOpenLogin} />} />
+          <Route path="/login" element={<LoginPage initialRole={loginInitialRole} onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onNavigateToRegister={handleOpenRegistration} />} />
           <Route path="/marketer" element={<SupplierPortal />} />
           <Route path="/driver" element={<DriverCockpit onNavigateToRegister={() => handleOpenRegistration('driver')} />} />
         </Routes>

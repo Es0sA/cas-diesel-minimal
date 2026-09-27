@@ -17,7 +17,8 @@ import { api } from '../api';
 export default function RegisterPage({ 
   onBackToHome, 
   initialRole = 'buyer', 
-  onRegistrationSuccess
+  onRegistrationSuccess,
+  onNavigateToLogin
 }) {
   const [selectedRole, setSelectedRole] = useState(initialRole); // 'buyer', 'supplier', 'driver'
 
@@ -190,6 +191,16 @@ export default function RegisterPage({
           <p className="text-sm sm:text-base text-cas-muted mt-2">
             Select your role below. Buyers map their facility gate coordinates.
           </p>
+          <div className="mt-3 flex items-center justify-center gap-1.5 text-xs sm:text-sm text-slate-600">
+            <span>Already have an account?</span>
+            <button
+              type="button"
+              onClick={() => onNavigateToLogin ? onNavigateToLogin(selectedRole) : null}
+              className="font-bold text-cas-amberDark hover:text-black underline underline-offset-2"
+            >
+              Sign In to Terminal
+            </button>
+          </div>
         </div>
 
         {/* Success Alert Banner */}

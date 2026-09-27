@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, PhoneCall, UserPlus, Menu, X, ArrowRight } from 'lucide-react';
+import { ShieldCheck, PhoneCall, UserPlus, Menu, X, ArrowRight, LogIn } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Header({ onOpenLegalModal }) {
@@ -107,10 +107,22 @@ export default function Header({ onOpenLegalModal }) {
               Driver Cockpit
             </Link>
 
+            <Link
+              to="/login"
+              className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 ${
+                isActive('/login')
+                  ? 'bg-slate-100 text-cas-slate font-bold'
+                  : 'text-slate-700 hover:text-black hover:bg-slate-50'
+              }`}
+            >
+              <LogIn className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
+              <span>Sign In</span>
+            </Link>
+
             {/* Primary Registration CTA */}
             <Link
               to="/register"
-              className="ml-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-cas-slate hover:bg-black text-white transition-all shadow-sm flex items-center gap-2"
+              className="ml-1 px-5 py-2.5 rounded-xl text-sm font-bold bg-cas-slate hover:bg-black text-white transition-all shadow-sm flex items-center gap-2"
             >
               <UserPlus className="w-4 h-4 text-cas-amber" aria-hidden="true" />
               <span>Create Account</span>
@@ -179,6 +191,20 @@ export default function Header({ onOpenLegalModal }) {
               }`}
             >
               <span>Driver Cockpit & Manifest</span>
+              <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
+            </Link>
+
+            <Link
+              to="/login"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`flex items-center justify-between p-3.5 rounded-xl text-sm font-semibold text-left ${
+                isActive('/login') ? 'bg-slate-100 text-cas-slate font-bold' : 'text-slate-700 hover:bg-slate-50'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <LogIn className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
+                <span>Sign In to Terminal</span>
+              </div>
               <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
             </Link>
 
