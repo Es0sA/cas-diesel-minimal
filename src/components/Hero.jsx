@@ -38,7 +38,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator, onOpenR
                 onClick={onOpenRegister}
                 className="px-8 py-4 bg-cas-slate hover:bg-black text-white font-bold text-base rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2.5"
               >
-                <span>Create Account / Register</span>
+                <span>Create Account</span>
                 <ArrowRight className="w-4 h-4 text-cas-amber" aria-hidden="true" />
               </button>
 

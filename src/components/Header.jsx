@@ -214,7 +214,7 @@ export default function Header({ onOpenLegalModal }) {
               className="flex items-center justify-center gap-2 p-3.5 mt-2 rounded-xl text-sm font-bold bg-cas-slate text-white shadow-sm"
             >
               <UserPlus className="w-4 h-4 text-cas-amber" aria-hidden="true" />
-              <span>Create Account / Register</span>
+              <span>Create Account</span>
             </Link>
           </div>
 
