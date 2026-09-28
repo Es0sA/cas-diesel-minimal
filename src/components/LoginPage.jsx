@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Building2, 
   UserCheck, 
@@ -119,6 +119,18 @@ export default function LoginPage({
 }) {
   const [authMode, setAuthMode] = useState(initialMode); // 'signin' or 'register'
   const [selectedRole, setSelectedRole] = useState(initialRole);
+
+  useEffect(() => {
+    if (initialMode) {
+      setAuthMode(initialMode);
+    }
+  }, [initialMode]);
+
+  useEffect(() => {
+    if (initialRole) {
+      setSelectedRole(initialRole);
+    }
+  }, [initialRole]);
 
   // Common Credential States
   const [email, setEmail] = useState('');
