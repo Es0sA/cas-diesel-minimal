@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, PhoneCall, UserPlus, Menu, X, ArrowRight, LogIn, LogOut } from 'lucide-react';
+import { ShieldCheck, PhoneCall, UserPlus, Menu, X, ArrowRight, LogIn, LogOut, Settings } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Header({ user, onLogout, onOpenLegalModal }) {
@@ -132,6 +132,17 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
               </>
             ) : (
               <>
+                <Link
+                  to="/profile"
+                  className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 ${
+                    isActive('/profile')
+                      ? 'bg-slate-100 text-cas-slate font-bold'
+                      : 'text-slate-700 hover:text-black hover:bg-slate-50'
+                  }`}
+                >
+                  <Settings className="w-4 h-4" aria-hidden="true" />
+                  <span>Profile</span>
+                </Link>
                 <div className="px-3.5 py-2 rounded-lg text-sm font-bold bg-slate-100 text-cas-slate capitalize border border-slate-200">
                   {user.role}
                 </div>
@@ -239,6 +250,19 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
               </>
             ) : (
               <>
+                <Link
+                  to="/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between p-3.5 rounded-xl text-sm font-semibold text-left ${
+                    isActive('/profile') ? 'bg-slate-100 text-cas-slate font-bold' : 'text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <Settings className="w-4 h-4 text-slate-500" aria-hidden="true" />
+                    <span>Profile Settings</span>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
+                </Link>
                 <div className="flex items-center justify-between p-3.5 rounded-xl text-sm font-bold bg-slate-100 text-cas-slate capitalize">
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />

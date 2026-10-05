@@ -10,6 +10,7 @@ import LoginPage from './components/LoginPage';
 import SupplierPortal from './components/SupplierPortal';
 import DriverCockpit from './components/DriverCockpit';
 import OrderDetail from './components/OrderDetail';
+import ProfileSettings from './components/ProfileSettings';
 import LegalModals from './components/LegalModals';
 import CookieBanner from './components/CookieBanner';
 import Footer from './components/Footer';
@@ -288,6 +289,7 @@ export default function App() {
           <Route path="/marketer" element={<SupplierPortal />} />
           <Route path="/driver" element={<DriverCockpit onNavigateToRegister={() => handleOpenRegistration('driver')} />} />
           <Route path="/orders/:id" element={<OrderDetail />} />
+          <Route path="/profile" element={<ProfileSettings user={user} />} />
         </Routes>
       </main>
 
