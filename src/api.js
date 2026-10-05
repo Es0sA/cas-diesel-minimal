@@ -42,6 +42,7 @@ export const api = {
     forSupplier: (companyId) => request(`/reviews/supplier/${companyId}`),
   },
   drivers: {
+    list: () => request('/drivers'),
     updateProfile: (data) => request('/drivers/profile', { method: 'POST', body: JSON.stringify(data) }),
     editProfile: (data) => request('/drivers/profile', { method: 'PUT', body: JSON.stringify(data) }),
   },

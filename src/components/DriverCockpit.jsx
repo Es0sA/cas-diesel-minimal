@@ -1,61 +1,135 @@
-import React, { useState, useEffect } from 'react';
-import { Truck, Navigation, Phone, MapPin, CheckCircle2, ShieldCheck, AlertCircle, UserPlus, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Truck, Navigation, MapPin, CheckCircle2, AlertCircle, UserPlus, Radio } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 
-export default function DriverCockpit({ onNavigateToRegister }) {
-  const navigate = useNavigate();
-  // Active Trip Milestone State
-  // 1 = loaded at depot, 2 = transit, 3 = arrived at gate, 4 = discharged
-  const [tripStep, setTripStep] = useState(2);
-  const [activeOrder, setActiveOrder] = useState(null);
-  const [allOrders, setAllOrders] = useState([]);
-  const [filterStatus, setFilterStatus] = useState('All');
-  const [loading, setLoading] = useState(false);
+const PING_INTERVAL_MS = 15000;
+const STEPS = [
+  { status: 'IN_TRANSIT', label: 'In transit' },
+  { status: 'ARRIVED', label: 'Arrived at gate' },
+  { status: 'DELIVERED', label: 'Delivered' }
+];
+
+// Shares the driver's GPS position with the server while the trip is in transit.
+// The server marks the order ARRIVED automatically when the truck is within 100 m of the gate.
+function LocationSharing({ order, onStatusChange }) {
+  const [sharing, setSharing] = useState(false);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const positionRef = useRef(null);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      setLoading(true);
-      try {
-        if (localStorage.getItem('cas_token')) {
-          let data;
-          if (filterStatus === 'All' || filterStatus === 'Active') {
-            data = await api.orders.list();
-          } else if (filterStatus === 'Completed') {
-            data = await api.orders.list({ status: 'DELIVERED' });
-          }
-          
-          let rawOrders = data?.orders || [];
-          if (filterStatus === 'Active') {
-            rawOrders = rawOrders.filter(o => ['IN_TRANSIT', 'ARRIVED'].includes(o.status));
-          }
+    if (!sharing) return undefined;
+    if (!navigator.geolocation) {
+      setError('This device does not support location sharing.');
+      setSharing(false);
+      return undefined;
+    }
 
-          setAllOrders(rawOrders);
-          if (rawOrders.length > 0) {
-            setActiveOrder(rawOrders[0]);
-          } else {
-            setActiveOrder(null);
-          }
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => {
+        positionRef.current = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
+        setError('');
+      },
+      (err) => {
+        setError(err.code === 1 ? 'Location permission denied. Allow location access in your browser settings.' : 'Waiting for a GPS signal...');
+      },
+      { enableHighAccuracy: true, maximumAge: 10000, timeout: 20000 }
+    );
+
+    const send = async () => {
+      if (!positionRef.current) return;
+      try {
+        const res = await api.telemetry.ping(order.id, positionRef.current);
+        const meters = typeof res.distanceMeters === 'number' ? Math.round(res.distanceMeters) : null;
+        setMessage(meters != null ? `${meters.toLocaleString()} m from the gate` : res.message);
+        if (res.order) {
+          setSharing(false);
+          onStatusChange();
         }
       } catch (err) {
-        console.error('Failed to fetch driver orders', err);
-      } finally {
-        setLoading(false);
+        setError(err.message);
+        if (/not in transit/i.test(err.message)) {
+          setSharing(false);
+          onStatusChange();
+        }
       }
     };
-    fetchOrders();
+
+    const first = setTimeout(send, 3000);
+    const timer = setInterval(send, PING_INTERVAL_MS);
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+      clearTimeout(first);
+      clearInterval(timer);
+    };
+  }, [sharing, order.id, onStatusChange]);
+
+  return (
+    <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <span className="text-xs font-bold uppercase tracking-wider text-cas-slate block">Live Location</span>
+          <span className="text-xs text-cas-muted">
+            {sharing ? 'Sharing every 15 seconds. Keep this page open.' : 'Share your location so the buyer can track the truck and arrival is detected automatically.'}
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={() => { setError(''); setMessage(''); setSharing((s) => !s); }}
+          className={`px-4 py-2 rounded-lg text-xs font-bold shrink-0 flex items-center gap-2 ${sharing ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-cas-slate text-white'}`}
+        >
+          <Radio className="w-4 h-4" aria-hidden="true" />
+          {sharing ? 'Stop sharing' : 'Start sharing'}
+        </button>
+      </div>
+      {message && <p className="text-xs font-bold text-cas-green mt-3">{message}</p>}
+      {error && (
+        <p className="text-xs text-rose-600 mt-3 flex items-center gap-1.5">
+          <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+export default function DriverCockpit({ onNavigateToRegister }) {
+  const navigate = useNavigate();
+  const viewOrder = (id) => navigate(`/orders/${id}`);
+
+  const [orders, setOrders] = useState([]);
+  const [filterStatus, setFilterStatus] = useState('Active');
+  const [loading, setLoading] = useState(true);
+  const [authError, setAuthError] = useState(false);
+
+  const loadOrders = useCallback(async () => {
+    try {
+      const data = await api.orders.list(filterStatus === 'Completed' ? { status: 'DELIVERED' } : {});
+      let rows = data?.orders || [];
+      if (filterStatus === 'Active') rows = rows.filter((o) => ['IN_TRANSIT', 'ARRIVED'].includes(o.status));
+      setOrders(rows);
+      setAuthError(false);
+    } catch (err) {
+      console.error('Failed to fetch driver orders', err);
+      setAuthError(true);
+    } finally {
+      setLoading(false);
+    }
   }, [filterStatus]);
+
+  useEffect(() => {
+    setLoading(true);
+    loadOrders();
+  }, [loadOrders]);
+
+  const driver = orders.find((o) => o.driver)?.driver;
 
   return (
     <section id="driver-cockpit" className="bg-cas-canvas py-6 sm:py-12 md:py-20 border-b border-cas-border">
       <div className="max-w-3xl mx-auto px-3 sm:px-8">
-
-
-
-        {/* Active Trip Manifest (Mobile First Cockpit) */}
         <div className="bg-white rounded-2xl border-2 border-cas-border shadow-md overflow-hidden">
-          
-          {/* Header / Driver Identity */}
+
           <div className="bg-cas-slate text-white p-4 sm:p-6 border-b border-slate-700">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -63,182 +137,126 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                   <Truck className="w-6 h-6" aria-hidden="true" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-base sm:text-lg text-white">Driver Suleiman Tanko</h3>
-                  <span className="text-xs text-slate-300">Fleet: Matrix Downstream Distribution Ltd</span>
+                  <h3 className="font-extrabold text-base sm:text-lg text-white">
+                    {driver ? `Driver ${driver.firstName} ${driver.lastName}` : 'Driver Cockpit'}
+                  </h3>
+                  <span className="text-xs text-slate-300">Your assigned deliveries</span>
                 </div>
               </div>
-              <span className="font-mono font-bold text-xs bg-slate-800 text-cas-amber px-2.5 py-1.5 rounded-lg border border-slate-700 shrink-0">
-                LSR-492-XA
-              </span>
+              {driver?.truckPlateNumber && (
+                <span className="font-mono font-bold text-xs bg-slate-800 text-cas-amber px-2.5 py-1.5 rounded-lg border border-slate-700 shrink-0">
+                  {driver.truckPlateNumber}
+                </span>
+              )}
             </div>
           </div>
 
-          {/* Filter Tabs */}
           <div className="p-4 bg-slate-50 border-b border-slate-200">
-             <div className="flex flex-wrap gap-2">
-                {['All', 'Active', 'Completed'].map(tab => (
-                  <button
-                    key={tab}
-                    onClick={() => setFilterStatus(tab)}
-                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
-                      filterStatus === tab
-                        ? 'bg-cas-amber text-slate-900 border-2 border-cas-amber'
-                        : 'bg-transparent text-cas-slate border-2 border-slate-300 hover:border-cas-amber'
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
-             </div>
+            <div className="flex flex-wrap gap-2">
+              {['Active', 'Completed'].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setFilterStatus(tab)}
+                  className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
+                    filterStatus === tab
+                      ? 'bg-cas-amber text-slate-900 border-2 border-cas-amber'
+                      : 'bg-transparent text-cas-slate border-2 border-slate-300 hover:border-cas-amber'
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
           </div>
 
           {loading ? (
-             <div className="p-8 text-center text-cas-muted text-sm font-bold">Loading orders...</div>
-          ) : allOrders.length === 0 ? (
-             <div className="p-8 text-center text-cas-muted text-sm font-bold">No orders found.</div>
-          ) : (
-            allOrders.map((activeOrder, orderIndex) => (
-              <div key={activeOrder?.id || orderIndex} className="p-4 sm:p-8 space-y-5 sm:space-y-6 border-b border-slate-200 last:border-b-0">
-
-            
-            {/* Order Assignment Box */}
-            <div className="p-4 sm:p-5 bg-amber-50 border-2 border-cas-amber rounded-xl">
-              <div className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-cas-amberDark mb-1">
-                Active Dispatch Manifest
-              </div>
-              <div className="text-lg sm:text-xl font-extrabold text-cas-slate">
-                {activeOrder ? `Order #${activeOrder.id} (${activeOrder.volumeLiters.toLocaleString()} Litres AGO)` : 'Order #CAS-ORD-8812 (33,000 Litres AGO)'}
-              </div>
-              <div className="text-xs text-slate-700 mt-1">
-                Escrow Verified by CAS Energy. Payment locked for delivery.
-              </div>
-              {activeOrder && (
-                <div className="mt-3">
-                  <button onClick={() => navigate(`/orders/${activeOrder.id}`)} className="text-xs font-bold text-cas-blue hover:underline">View Full Details &rarr;</button>
-                </div>
+            <div className="p-8 text-center text-cas-muted text-sm font-bold">Loading deliveries...</div>
+          ) : authError ? (
+            <div className="p-8 text-center space-y-4">
+              <p className="text-cas-muted text-sm font-bold">Sign in with a driver account to see your deliveries.</p>
+              {onNavigateToRegister && (
+                <button onClick={onNavigateToRegister} className="inline-flex items-center gap-2 px-4 py-2 bg-cas-slate text-white text-xs font-bold rounded-lg">
+                  <UserPlus className="w-4 h-4" aria-hidden="true" />
+                  Register as a driver
+                </button>
               )}
             </div>
-
-            {/* Waypoint Coordinates & Destination */}
-            <div className="space-y-3 text-sm">
-              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-cas-blue shrink-0 mt-0.5" aria-hidden="true" />
-                  <div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-cas-muted block">
-                      Delivery Destination (Buyer Facility)
-                    </span>
-                    <h4 className="font-extrabold text-base text-cas-slate mt-0.5">
-                      Standard Industrial Plant - Ikeja Terminal
-                    </h4>
-                    <div className="text-xs font-mono text-cas-blue font-bold mt-1">
-                      GPS Coordinates: 6.595200 N, 3.342100 E
+          ) : orders.length === 0 ? (
+            <div className="p-8 text-center text-cas-muted text-sm font-bold">
+              {filterStatus === 'Active' ? 'No active deliveries. You will see a job here once a supplier dispatches you.' : 'No completed deliveries yet.'}
+            </div>
+          ) : (
+            orders.map((order) => {
+              const stepIndex = STEPS.findIndex((s) => s.status === order.status);
+              const hasGate = order.targetLatitude != null && order.targetLongitude != null;
+              return (
+                <div key={order.id} className="p-4 sm:p-8 space-y-5 border-b border-slate-200 last:border-b-0">
+                  <div className="p-4 sm:p-5 bg-amber-50 border-2 border-cas-amber rounded-xl">
+                    <div className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-cas-amberDark mb-1">Dispatch Manifest</div>
+                    <div className="text-lg sm:text-xl font-extrabold text-cas-slate">
+                      Order #{order.id.slice(0, 8).toUpperCase()} ({order.volumeLiters.toLocaleString()} Litres AGO)
                     </div>
-                    <span className="text-xs text-cas-amberDark font-bold block mt-1">
-                      Gate Clearance: Standard 33,000L trailer. Camlock 3-inch connection.
-                    </span>
+                    <div className="text-xs text-slate-700 mt-1">
+                      {order.supplier?.companyName} to {order.buyer?.companyName}
+                    </div>
+                    <div className="mt-3">
+                      <button onClick={() => viewOrder(order.id)} className="text-xs font-bold text-cas-blue hover:underline">View Full Details &rarr;</button>
+                    </div>
                   </div>
+
+                  <div className="grid grid-cols-3 gap-2 text-xs font-bold text-center">
+                    {STEPS.map((step, i) => (
+                      <div
+                        key={step.status}
+                        className={`p-2.5 rounded-lg border flex items-center justify-center gap-1.5 ${
+                          i <= stepIndex ? 'bg-cas-green text-white border-cas-green' : 'bg-white text-cas-muted border-slate-300'
+                        }`}
+                      >
+                        {i <= stepIndex && <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />}
+                        <span>{step.label}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {order.status === 'ARRIVED' && (
+                    <p className="text-xs text-cas-muted">You are at the gate. The buyer confirms delivery after discharge, which releases payment to the supplier.</p>
+                  )}
+
+                  {order.status !== 'DELIVERED' && (
+                    <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                      <div className="flex items-start gap-3">
+                        <MapPin className="w-5 h-5 text-cas-blue shrink-0 mt-0.5" aria-hidden="true" />
+                        <div>
+                          <span className="text-xs font-bold uppercase tracking-wider text-cas-muted block">Delivery Destination</span>
+                          <h4 className="font-extrabold text-base text-cas-slate mt-0.5">{order.buyer?.companyName}</h4>
+                          {order.buyer?.businessAddress && <div className="text-xs text-cas-muted">{order.buyer.businessAddress}</div>}
+                          <div className="text-xs font-mono text-cas-blue font-bold mt-1">
+                            {hasGate ? `GPS: ${order.targetLatitude}, ${order.targetLongitude}` : 'Gate coordinates not set'}
+                          </div>
+                        </div>
+                      </div>
+                      {hasGate && (
+                        <div className="mt-4 pt-3 border-t border-slate-200">
+                          <a
+                            href={`https://maps.google.com/?q=${order.targetLatitude},${order.targetLongitude}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="py-3 px-4 bg-cas-blue hover:bg-sky-800 text-white font-bold text-xs sm:text-sm rounded-lg transition-colors flex items-center justify-center gap-2"
+                          >
+                            <Navigation className="w-4 h-4" aria-hidden="true" />
+                            <span>Open GPS Turn-by-Turn Route</span>
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {order.status === 'IN_TRANSIT' && <LocationSharing order={order} onStatusChange={loadOrders} />}
                 </div>
-
-                {/* One-Tap Navigation Button & Gate Call */}
-                <div className="mt-4 pt-3 border-t border-slate-200 flex flex-col sm:flex-row gap-2.5 sm:gap-3">
-                  <a
-                    href="https://maps.google.com/?q=6.5952,3.3421"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 py-3 px-4 bg-cas-blue hover:bg-sky-800 text-white font-bold text-xs sm:text-sm rounded-lg transition-colors flex items-center justify-center gap-2"
-                  >
-                    <Navigation className="w-4 h-4" aria-hidden="true" />
-                    <span>Open GPS Turn-by-Turn Route</span>
-                  </a>
-
-                  <a
-                    href="tel:+2348034912289"
-                    className="py-3 px-4 bg-white border-2 border-slate-300 hover:bg-slate-100 text-cas-slate font-bold text-xs sm:text-sm rounded-lg transition-colors flex items-center justify-center gap-2"
-                  >
-                    <Phone className="w-4 h-4 text-cas-green" aria-hidden="true" />
-                    <span>Call Gate Officer</span>
-                  </a>
-                </div>
-              </div>
-
-              {/* Loading Depot Verification */}
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs flex justify-between items-center">
-                <div>
-                  <span className="text-cas-muted block">Depot of Origin</span>
-                  <strong className="text-cas-slate">Ijegun Egba Cluster (Gantry 14)</strong>
-                </div>
-                <div className="text-right">
-                  <span className="text-cas-muted block">Security Seals</span>
-                  <span className="font-mono font-bold text-cas-slate">SEAL-8821 / 8822</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Trip Milestone Progress Buttons */}
-            <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-cas-slate mb-3">
-                Update Trip Milestone
-              </div>
-
-              <div className="grid grid-cols-2 gap-2.5 sm:gap-3 text-xs sm:text-sm font-bold">
-                <button
-                  type="button"
-                  onClick={() => setTripStep(1)}
-                  className={`p-3 rounded-lg border text-left transition-all ${
-                    tripStep === 1
-                      ? 'bg-cas-slate text-white border-cas-slate'
-                      : 'bg-white text-cas-slate border-slate-300 hover:bg-slate-50'
-                  }`}
-                >
-                  <span>1. Loaded at Depot</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setTripStep(2)}
-                  className={`p-3 rounded-lg border text-left transition-all ${
-                    tripStep === 2
-                      ? 'bg-cas-amberDark text-white border-cas-amberDark'
-                      : 'bg-white text-cas-slate border-slate-300 hover:bg-slate-50'
-                  }`}
-                >
-                  <span>2. In Transit (Route Locked)</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setTripStep(3)}
-                  className={`p-3 rounded-lg border text-left transition-all ${
-                    tripStep === 3
-                      ? 'bg-cas-blue text-white border-cas-blue'
-                      : 'bg-white text-cas-slate border-slate-300 hover:bg-slate-50'
-                  }`}
-                >
-                  <span>3. Arrived at Buyer Gate</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setTripStep(4)}
-                  className={`p-3 rounded-lg border text-left transition-all ${
-                    tripStep === 4
-                      ? 'bg-cas-green text-white border-cas-green'
-                      : 'bg-white text-cas-slate border-slate-300 hover:bg-slate-50'
-                  }`}
-                >
-                  <span>4. Discharge Completed</span>
-                </button>
-              </div>
-
-              <p className="text-[11px] text-cas-muted mt-2">
-                Tapping milestones automatically updates the buyer and releases the geofence perimeter lock when you cross into the registered facility coordinates.
-              </p>
-            </div>
-            </div>
-            )))}
+              );
+            })
+          )}
         </div>
-
       </div>
     </section>
   );
