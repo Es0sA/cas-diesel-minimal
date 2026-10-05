@@ -31,12 +31,21 @@ export const api = {
   companies: {
     getProfile: () => request('/companies/profile'),
     updateProfile: (data) => request('/companies/profile', { method: 'POST', body: JSON.stringify(data) }),
+    listSuppliers: (params = {}) => {
+      const query = new URLSearchParams(params).toString();
+      return request(`/companies/suppliers${query ? `?${query}` : ''}`);
+    },
+    editProfile: (data) => request('/companies/profile', { method: 'PUT', body: JSON.stringify(data) }),
   },
   drivers: {
     updateProfile: (data) => request('/drivers/profile', { method: 'POST', body: JSON.stringify(data) }),
+    editProfile: (data) => request('/drivers/profile', { method: 'PUT', body: JSON.stringify(data) }),
   },
   orders: {
-    list: () => request('/orders'),
+    list: (params = {}) => {
+      const query = new URLSearchParams(params).toString();
+      return request(`/orders${query ? `?${query}` : ''}`);
+    },
     create: (data) => request('/orders/create', { method: 'POST', body: JSON.stringify(data) }),
     fundWebhook: (id, data) => request(`/orders/${id}/fund-webhook`, { method: 'POST', body: JSON.stringify(data) }),
     dispatch: (id, data) => request(`/orders/${id}/dispatch`, { method: 'POST', body: JSON.stringify(data) }),
@@ -52,5 +61,6 @@ export const api = {
   },
   compliance: {
     upload: (orderId, data) => request(`/compliance/upload/${orderId}`, { method: 'POST', body: JSON.stringify(data) }),
+    getDocuments: (orderId) => request(`/compliance/${orderId}`),
   },
 };

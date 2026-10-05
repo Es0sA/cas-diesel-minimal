@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { api } from './api';
 import Header from './components/Header';
 import DepotTicker from './components/DepotTicker';
 import Hero from './components/Hero';
@@ -213,6 +214,7 @@ function HomePage({ handleOpenRegistration, handleSelectSupplierForEscrow }) {
 }
 
 export default function App() {
+  const [user, setUser] = useState(null);
   const [activeLegalModal, setActiveLegalModal] = useState(null);
   const [registerInitialRole, setRegisterInitialRole] = useState('buyer');
   const loginInitialRole = 'buyer';
@@ -239,6 +241,7 @@ export default function App() {
   };
 
   const handleRegistrationSuccess = (role) => {
+    setUser({ role });
     if (role === 'supplier') {
       navigate('/marketer');
     } else if (role === 'driver') {
@@ -249,6 +252,7 @@ export default function App() {
   };
 
   const handleLoginSuccess = (role) => {
+    setUser({ role });
     const normalizedRole = (role || '').toUpperCase();
     if (normalizedRole === 'SUPPLIER') {
       navigate('/marketer');
@@ -259,10 +263,20 @@ export default function App() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await api.auth.logout();
+    } catch (e) {
+      console.error('Logout failed:', e);
+    }
+    setUser(null);
+    navigate('/');
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-cas-canvas text-cas-slate">
       {/* Top Header */}
-      <Header onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />
+      <Header user={user} onLogout={handleLogout} onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />
 
       {/* Main Body */}
       <main className="flex-1 pb-20 md:pb-0">

@@ -1,13 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SUPPLIERS, DEPOT_PRICES } from '../data/depots';
 import { Search, Filter, ShieldCheck, CheckCircle2, Truck, ArrowUpDown, ChevronRight } from 'lucide-react';
+import { api } from '../api';
 
 export default function Marketplace({ onSelectSupplierForEscrow }) {
   const [selectedDepotFilter, setSelectedDepotFilter] = useState('all');
   const [sortBy, setSortBy] = useState('price-asc');
   const [searchQuery, setSearchQuery] = useState('');
+  const [suppliers, setSuppliers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredSuppliers = SUPPLIERS.filter((sup) => {
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      try {
+        setLoading(true);
+        const data = await api.companies.listSuppliers();
+        if (data && data.length > 0) {
+          setSuppliers(data);
+        } else {
+          setSuppliers(SUPPLIERS);
+        }
+      } catch (error) {
+        console.error('Failed to fetch suppliers:', error);
+        setSuppliers(SUPPLIERS);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSuppliers();
+  }, []);
+
+  const filteredSuppliers = suppliers.filter((sup) => {
     const matchesDepot = selectedDepotFilter === 'all' || sup.depotId === selectedDepotFilter;
     const matchesSearch = sup.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           sup.primaryDepot.toLowerCase().includes(searchQuery.toLowerCase());
@@ -143,9 +167,14 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
         </div>
 
         {/* Supplier Cards List */}
-        <div className="space-y-4">
-          {filteredSuppliers.map((supplier) => (
-            <div
+        {loading ? (
+          <div className="py-12 flex justify-center items-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cas-slate"></div>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {filteredSuppliers.map((supplier) => (
+              <div
               key={supplier.id}
               className="p-5 sm:p-6 bg-white border-2 border-slate-200 rounded-xl hover:border-cas-amber transition-all shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6"
             >
@@ -207,7 +236,8 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
 
       </div>
     </section>

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { ShieldCheck, PhoneCall, UserPlus, Menu, X, ArrowRight, LogIn } from 'lucide-react';
+import { ShieldCheck, PhoneCall, UserPlus, Menu, X, ArrowRight, LogIn, LogOut } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
-export default function Header({ onOpenLegalModal }) {
+export default function Header({ user, onLogout, onOpenLegalModal }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -107,26 +107,44 @@ export default function Header({ onOpenLegalModal }) {
               Driver Cockpit
             </Link>
 
-            <Link
-              to="/login"
-              className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 ${
-                isActive('/login')
-                  ? 'bg-slate-100 text-cas-slate font-bold'
-                  : 'text-slate-700 hover:text-black hover:bg-slate-50'
-              }`}
-            >
-              <LogIn className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
-              <span>Sign In</span>
-            </Link>
+            {/* Desktop User Controls */}
+            {!user ? (
+              <>
+                <Link
+                  to="/login"
+                  className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 ${
+                    isActive('/login')
+                      ? 'bg-slate-100 text-cas-slate font-bold'
+                      : 'text-slate-700 hover:text-black hover:bg-slate-50'
+                  }`}
+                >
+                  <LogIn className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
+                  <span>Sign In</span>
+                </Link>
 
-            {/* Primary Registration CTA */}
-            <Link
-              to="/register"
-              className="ml-1 px-5 py-2.5 rounded-xl text-sm font-bold bg-cas-slate hover:bg-black text-white transition-all shadow-sm flex items-center gap-2"
-            >
-              <UserPlus className="w-4 h-4 text-cas-amber" aria-hidden="true" />
-              <span>Create Account</span>
-            </Link>
+                <Link
+                  to="/register"
+                  className="ml-1 px-5 py-2.5 rounded-xl text-sm font-bold bg-cas-slate hover:bg-black text-white transition-all shadow-sm flex items-center gap-2"
+                >
+                  <UserPlus className="w-4 h-4 text-cas-amber" aria-hidden="true" />
+                  <span>Create Account</span>
+                </Link>
+              </>
+            ) : (
+              <>
+                <div className="px-3.5 py-2 rounded-lg text-sm font-bold bg-slate-100 text-cas-slate capitalize border border-slate-200">
+                  {user.role}
+                </div>
+                <button
+                  type="button"
+                  onClick={onLogout}
+                  className="ml-1 px-4 py-2.5 rounded-xl text-sm font-bold bg-red-50 hover:bg-red-100 text-red-600 transition-all flex items-center gap-2"
+                >
+                  <LogOut className="w-4 h-4" aria-hidden="true" />
+                  <span>Sign Out</span>
+                </button>
+              </>
+            )}
           </div>
 
           {/* Mobile Right Controls */}
@@ -194,28 +212,52 @@ export default function Header({ onOpenLegalModal }) {
               <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
             </Link>
 
-            <Link
-              to="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`flex items-center justify-between p-3.5 rounded-xl text-sm font-semibold text-left ${
-                isActive('/login') ? 'bg-slate-100 text-cas-slate font-bold' : 'text-slate-700 hover:bg-slate-50'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <LogIn className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
-                <span>Sign In to Terminal</span>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
-            </Link>
+            {!user ? (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between p-3.5 rounded-xl text-sm font-semibold text-left ${
+                    isActive('/login') ? 'bg-slate-100 text-cas-slate font-bold' : 'text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <LogIn className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
+                    <span>Sign In to Terminal</span>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
+                </Link>
 
-            <Link
-              to="/register"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 p-3.5 mt-2 rounded-xl text-sm font-bold bg-cas-slate text-white shadow-sm"
-            >
-              <UserPlus className="w-4 h-4 text-cas-amber" aria-hidden="true" />
-              <span>Create Account</span>
-            </Link>
+                <Link
+                  to="/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-2 p-3.5 mt-2 rounded-xl text-sm font-bold bg-cas-slate text-white shadow-sm"
+                >
+                  <UserPlus className="w-4 h-4 text-cas-amber" aria-hidden="true" />
+                  <span>Create Account</span>
+                </Link>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-between p-3.5 rounded-xl text-sm font-bold bg-slate-100 text-cas-slate capitalize">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
+                    <span>Role: {user.role}</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    if (onLogout) onLogout();
+                  }}
+                  className="flex items-center justify-center gap-2 p-3.5 mt-2 rounded-xl text-sm font-bold bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                >
+                  <LogOut className="w-4 h-4" aria-hidden="true" />
+                  <span>Sign Out</span>
+                </button>
+              </>
+            )}
           </div>
 
           <div className="mt-5 pt-4 border-t border-slate-100 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-500">
