@@ -24,10 +24,12 @@ import {
   CheckCircle2
 } from 'lucide-react';
 
-function HomePage({ handleOpenRegistration, handleSelectSupplierForEscrow }) {
+function HomePage({ user, handleOpenRegistration, handleSelectSupplierForEscrow }) {
   return (
     <>
-      <Hero 
+      {!user && (
+        <>
+          <Hero 
         onExploreMarketplace={() => {
           const rates = document.getElementById('depot-rates') || document.getElementById('marketplace');
           if (rates) rates.scrollIntoView({ behavior: 'smooth' });
@@ -157,13 +159,16 @@ function HomePage({ handleOpenRegistration, handleSelectSupplierForEscrow }) {
       </section>
 
       <EscrowTerminal />
+        </>
+      )}
 
       <Marketplace 
         onSelectSupplierForEscrow={handleSelectSupplierForEscrow}
       />
 
-      <section className="bg-white py-14 sm:py-20 border-b border-cas-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
+      {!user && (
+        <section className="bg-white py-14 sm:py-20 border-b border-cas-border">
+          <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-100 text-cas-slate text-xs font-bold uppercase tracking-wider mb-3">
               <ShieldCheck className="w-3.5 h-3.5 text-cas-green" aria-hidden="true" />
@@ -211,6 +216,7 @@ function HomePage({ handleOpenRegistration, handleSelectSupplierForEscrow }) {
           </div>
         </div>
       </section>
+      )}
     </>
   );
 }
@@ -283,7 +289,7 @@ export default function App() {
       {/* Main Body */}
       <main className="flex-1 pb-20 md:pb-0">
         <Routes>
-          <Route path="/" element={<HomePage handleOpenRegistration={handleOpenRegistration} handleSelectSupplierForEscrow={handleSelectSupplierForEscrow} />} />
+          <Route path="/" element={<HomePage user={user} handleOpenRegistration={handleOpenRegistration} handleSelectSupplierForEscrow={handleSelectSupplierForEscrow} />} />
           <Route path="/register" element={<LoginPage initialRole={registerInitialRole} initialMode="register" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/marketer" element={<SupplierPortal />} />
