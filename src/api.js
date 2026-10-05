@@ -51,6 +51,14 @@ export const api = {
     dispatch: (id, data) => request(`/orders/${id}/dispatch`, { method: 'POST', body: JSON.stringify(data) }),
     cancel: (id, data) => request(`/orders/${id}/cancel`, { method: 'POST', body: JSON.stringify(data) }),
     confirmDelivery: (id) => request(`/orders/${id}/confirm-delivery`, { method: 'POST' }),
+    dispute: (id, data) => request(`/orders/${id}/dispute`, { method: 'POST', body: JSON.stringify(data) }),
+  },
+  admin: {
+    getStats: () => request('/admin/stats'),
+    getUsers: () => request('/admin/users'),
+    getDisputes: () => request('/admin/disputes'),
+    verifyUser: (id, isVerified) => request(`/admin/users/${id}/verify`, { method: 'PUT', body: JSON.stringify({ isVerified }) }),
+    resolveDispute: (id, resolution) => request(`/admin/disputes/${id}/resolve`, { method: 'POST', body: JSON.stringify({ resolution }) }),
   },
   chat: {
     getMessages: (orderId, cursor) => request(`/chat/${orderId}${cursor ? `?cursor=${cursor}` : ''}`),

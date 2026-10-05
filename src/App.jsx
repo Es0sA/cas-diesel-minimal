@@ -11,6 +11,8 @@ import SupplierPortal from './components/SupplierPortal';
 import DriverCockpit from './components/DriverCockpit';
 import OrderDetail from './components/OrderDetail';
 import ProfileSettings from './components/ProfileSettings';
+import AdminDashboard from './components/AdminDashboard';
+import AdminDashboard from './components/AdminDashboard';
 import LegalModals from './components/LegalModals';
 import CookieBanner from './components/CookieBanner';
 import Footer from './components/Footer';
@@ -294,8 +296,10 @@ export default function App() {
           <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/marketer" element={<SupplierPortal />} />
           <Route path="/driver" element={<DriverCockpit onNavigateToRegister={() => handleOpenRegistration('driver')} />} />
-          <Route path="/orders/:id" element={<OrderDetail />} />
+          <Route path="/orders/:id" element={<OrderDetail user={user} />} />
           <Route path="/profile" element={<ProfileSettings user={user} />} />
+          <Route path="/admin" element={<AdminDashboard user={user} />} />
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </main>
 
