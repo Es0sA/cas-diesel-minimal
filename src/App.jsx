@@ -12,7 +12,6 @@ import DriverCockpit from './components/DriverCockpit';
 import OrderDetail from './components/OrderDetail';
 import ProfileSettings from './components/ProfileSettings';
 import AdminDashboard from './components/AdminDashboard';
-import AdminDashboard from './components/AdminDashboard';
 import LegalModals from './components/LegalModals';
 import CookieBanner from './components/CookieBanner';
 import Footer from './components/Footer';
@@ -264,7 +263,9 @@ export default function App() {
   const handleLoginSuccess = (role) => {
     setUser({ role });
     const normalizedRole = (role || '').toUpperCase();
-    if (normalizedRole === 'SUPPLIER') {
+    if (normalizedRole === 'ADMIN') {
+      navigate('/admin');
+    } else if (normalizedRole === 'SUPPLIER') {
       navigate('/marketer');
     } else if (normalizedRole === 'DRIVER') {
       navigate('/driver');
@@ -299,7 +300,6 @@ export default function App() {
           <Route path="/orders/:id" element={<OrderDetail user={user} />} />
           <Route path="/profile" element={<ProfileSettings user={user} />} />
           <Route path="/admin" element={<AdminDashboard user={user} />} />
-          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </main>
 

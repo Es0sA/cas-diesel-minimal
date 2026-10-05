@@ -20,14 +20,6 @@ export default function OrderDetail() {
   const [chatInput, setChatInput] = useState('');
   const chatEndRef = useRef(null);
 
-  useEffect(() => {
-    fetchData();
-  }, [orderId]);
-
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -53,6 +45,14 @@ export default function OrderDetail() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [orderId]);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   
   const handleDispute = async () => {
