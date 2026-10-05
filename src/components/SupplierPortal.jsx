@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { UserCheck, CheckCircle2, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
-import { DEPOT_PRICES } from '../data/depots';
+import { DEPOTS } from '../data/depots';
 
 const ACTIVE_STATUSES = ['FUNDED', 'IN_TRANSIT', 'ARRIVED'];
 
@@ -94,7 +94,7 @@ export default function SupplierPortal() {
   const escrowInSettlement = orders
     .filter((o) => ACTIVE_STATUSES.includes(o.status))
     .reduce((sum, o) => sum + (o.totalEscrowAmount || 0), 0);
-  const depotName = DEPOT_PRICES.find((d) => d.id === profile?.depotId)?.name || profile?.depotId || 'Depot not set';
+  const depotName = DEPOTS.find((d) => d.id === profile?.depotId)?.name || profile?.depotId || 'Depot not set';
 
   return (
     <section id="supplier-desk" className="bg-cas-canvas py-12 md:py-20 border-b border-cas-border">

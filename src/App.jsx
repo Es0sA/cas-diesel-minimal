@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { api } from './api';
 import Header from './components/Header';
-import DepotTicker from './components/DepotTicker';
 import Hero from './components/Hero';
 import Marketplace from './components/Marketplace';
 import LoginPage from './components/LoginPage';
@@ -46,7 +45,6 @@ function HomePage({ user, handleOpenRegistration }) {
         onOpenRegister={() => handleOpenRegistration('buyer')}
       />
 
-      <DepotTicker />
 
       <section className="bg-white py-14 sm:py-20 border-b border-cas-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
@@ -80,11 +78,7 @@ function HomePage({ user, handleOpenRegistration }) {
                 <div className="text-xs font-bold text-cas-slate space-y-2 mb-6 pt-4 border-t border-slate-200">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-cas-green" aria-hidden="true" />
-                    <span>Direct refinery & depot spot rates</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-cas-green" aria-hidden="true" />
-                    <span>100% money-back quality guarantee</span>
+                    <span>Compare prices by depot</span>
                   </div>
                 </div>
 
@@ -178,57 +172,7 @@ function HomePage({ user, handleOpenRegistration }) {
         />
       )}
 
-      {!user && (
-        <section className="bg-white py-14 sm:py-20 border-b border-cas-border">
-          <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-100 text-cas-slate text-xs font-bold uppercase tracking-wider mb-3">
-              <ShieldCheck className="w-3.5 h-3.5 text-cas-green" aria-hidden="true" />
-              <span>Trust & Security Architecture</span>
-            </div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
-              How CAS Escrow Protects Both Parties
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <div className="p-8 bg-slate-50 rounded-2xl border-2 border-slate-200">
-              <h3 className="text-lg font-extrabold text-cas-slate mb-3 flex items-center gap-2">
-                <Lock className="w-5 h-5 text-cas-blue" aria-hidden="true" />
-                <span>Buyer Protection</span>
-              </h3>
-              <ul className="space-y-3 text-sm text-cas-muted">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" aria-hidden="true" />
-                  <span>Funds remain untouched until the tanker enters within 100 meters of your registered gate.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" aria-hidden="true" />
-                  <span>Quality disputes before discharge trigger full 100% escrow refund within 24 banking hours.</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="p-8 bg-slate-50 rounded-2xl border-2 border-slate-200">
-              <h3 className="text-lg font-extrabold text-cas-slate mb-3 flex items-center gap-2">
-                <Lock className="w-5 h-5 text-cas-amberDark" aria-hidden="true" />
-                <span>Marketer Protection</span>
-              </h3>
-              <ul className="space-y-3 text-sm text-cas-muted">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" aria-hidden="true" />
-                  <span>Escrow is verified and locked before your calibrated tanker leaves the loading terminal.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" aria-hidden="true" />
-                  <span>Once the truck departs the gantry, cancellation is blocked to protect your fuel in transit.</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-      )}
+      
     </>
   );
 }

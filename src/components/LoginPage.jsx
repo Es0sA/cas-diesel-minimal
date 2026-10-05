@@ -20,7 +20,8 @@ import {
   MapPin,
   Navigation
 } from 'lucide-react';
-import { DEPOT_PRICES } from '../data/depots';
+import { DEPOTS } from '../data/depots';
+import { CONTACT } from '../config';
 import { api } from '../api';
 
 const ROLE_CONFIGS = {
@@ -34,7 +35,7 @@ const ROLE_CONFIGS = {
     signinSubtitle: 'Sign in to access bulk spot prices, manage locked escrow accounts, and monitor gate GPS discharge radar.',
     registerSubtitle: 'Register your corporate facility, set up escrow-protected payments, and pin your facility discharge gate.',
     emailLabel: 'Corporate Procurement Email',
-    emailPlaceholder: 'procurement@dan-industries.ng',
+    emailPlaceholder: 'you@company.com',
     accentColor: 'text-cas-blue',
     accentBg: 'bg-sky-50 text-cas-blue border-sky-200',
     destination: '/',
@@ -42,13 +43,12 @@ const ROLE_CONFIGS = {
     featureTitle: '100% Escrow Custody Protection',
     signinFeatures: [
       'Funds remain locked in virtual escrow until tanker enters 100-meter gate radius.',
-      'Direct refinery spot rates across Apapa, Ijegun, Warri, and Port Harcourt.',
-      'Instant 24-hour full refund guarantee on any verified quality discrepancy.'
+      'Compare verified marketer prices by depot and order in a few clicks.'
     ],
     registerFeatures: [
       'Escrow-protected payment for zero cash transit risk.',
       'Mandatory discharge gate GPS pin drop to eliminate lost tanker diversions.',
-      'Direct corporate access to licensed NMDPRA marketer pricing.'
+      'Compare prices from verified marketers.'
     ],
     sampleEmail: 'buyer@corporate.com'
   },
@@ -58,11 +58,11 @@ const ROLE_CONFIGS = {
     title: 'Licensed Marketer',
     shortLabel: 'Marketer',
     tagline: 'Depot Terminals & Marketer Pricing Desk',
-    badge: 'NMDPRA Licensed Portal',
-    signinSubtitle: 'Sign in to broadcast daily spot prices, review verified buyer orders, and dispatch calibrated tanker fleets.',
+    badge: 'Marketer Portal',
+    signinSubtitle: 'Sign in to broadcast daily spot prices, review verified buyer orders, and dispatch tanker fleets.',
     registerSubtitle: 'Register your downstream marketing entity with NMDPRA credentials and start receiving verified escrow orders.',
     emailLabel: 'Marketer Terminal Email',
-    emailPlaceholder: 'operations@sahara-energy.ng',
+    emailPlaceholder: 'you@company.com',
     accentColor: 'text-cas-amberDark',
     accentBg: 'bg-amber-50 text-cas-amberDark border-amber-200',
     destination: '/marketer',
@@ -71,12 +71,12 @@ const ROLE_CONFIGS = {
     signinFeatures: [
       'Buyer escrow verified and locked before your tanker departs the loading gantry.',
       'Non-cancellable once in transit, eliminating counterparty settlement default.',
-      'Real-time automated funds disbursement upon verified gate arrival.'
+      'Payment is released when the buyer confirms delivery at the gate.'
     ],
     registerFeatures: [
-      'Publish your daily wholesale spot rates directly to verified corporate buyers.',
-      'Guaranteed escrow custody before dispatch protects your operating capital.',
-      'Integrated independent driver network for on-demand haulage allocation.'
+      'Publish your daily price directly to verified corporate buyers.',
+      'Buyer payment is held in escrow before you dispatch.',
+      'Assign verified drivers to each delivery.'
     ],
     sampleEmail: 'marketer@depot.ng'
   },
@@ -85,10 +85,10 @@ const ROLE_CONFIGS = {
     apiRole: 'DRIVER',
     title: 'Fleet Tanker Driver',
     shortLabel: 'Fleet Driver',
-    tagline: 'Calibrated Tanker Navigation & Seals',
+    tagline: 'Tanker Navigation',
     badge: 'Independent Logistics Network',
     signinSubtitle: 'Sign in to view assigned tanker dispatches, digital waypoint seals, and one-tap discharge gate GPS routing.',
-    registerSubtitle: 'Register as an independent calibrated tanker driver to receive verified dispatch manifests and turn-by-turn routing.',
+    registerSubtitle: 'Register as an independent tanker driver to receive verified dispatch manifests and turn-by-turn routing.',
     emailLabel: 'Driver Email or Phone ID',
     emailPlaceholder: 'driver01@logistics.ng',
     accentColor: 'text-cas-green',
@@ -99,7 +99,7 @@ const ROLE_CONFIGS = {
     signinFeatures: [
       'Turn-by-turn navigation directly to the facility discharge coordinates.',
       'Digital waypoint seals for loading gantry, transit checkpoints, and discharge.',
-      'Automatic arrival detection when calibrated tanker enters 100m gate perimeter.'
+      'Automatic arrival detection when the tanker enters 100m gate perimeter.'
     ],
     registerFeatures: [
       'Accept dispatch manifests from verified downstream marketers across Nigeria.',
@@ -339,7 +339,7 @@ export default function LoginPage({
           contactPhone: contactPhone.trim()
         });
 
-        setSuccessNotice('Marketer terminal verified under NMDPRA license. Redirecting to supplier desk...');
+        setSuccessNotice('Marketer account created. Redirecting to your desk...');
         setTimeout(() => {
           if (onRegistrationSuccess) onRegistrationSuccess('supplier');
           else if (onLoginSuccess) onLoginSuccess('SUPPLIER');
@@ -407,11 +407,6 @@ export default function LoginPage({
                 <ArrowLeft className="w-4 h-4" aria-hidden="true" />
                 <span>Return to Portal</span>
               </button>
-
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">
-                <ShieldCheck className="w-3.5 h-3.5 text-cas-green" aria-hidden="true" />
-                <span>256-Bit SSL Escrow Gateway</span>
-              </div>
             </div>
 
             {/* Brand Header */}
@@ -738,7 +733,7 @@ export default function LoginPage({
                           required
                           value={buyerCompany}
                           onChange={(e) => setBuyerCompany(e.target.value)}
-                          placeholder="e.g. Dangote Cement Plc"
+                          placeholder="Registered company name"
                           className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-medium"
                         />
                       </div>
@@ -863,7 +858,7 @@ export default function LoginPage({
                           required
                           value={supplierName}
                           onChange={(e) => setSupplierName(e.target.value)}
-                          placeholder="e.g. Matrix Energy Group"
+                          placeholder="Registered company name"
                           className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs"
                         />
                       </div>
@@ -887,7 +882,7 @@ export default function LoginPage({
                         required
                         value={supplierLicense}
                         onChange={(e) => setSupplierLicense(e.target.value)}
-                        placeholder="NMDPRA/DW/DEP/2024/0981"
+                        placeholder="NMDPRA licence number"
                         className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono font-bold"
                       />
                     </div>
@@ -900,7 +895,7 @@ export default function LoginPage({
                           onChange={(e) => setPrimaryDepot(e.target.value)}
                           className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-medium"
                         >
-                          {DEPOT_PRICES.map((d) => (
+                          {DEPOTS.map((d) => (
                             <option key={d.id} value={d.name}>{d.name} ({d.state})</option>
                           ))}
                         </select>
@@ -950,7 +945,7 @@ export default function LoginPage({
                   <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                     <div className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
                       <Truck className="w-3.5 h-3.5 text-cas-green" aria-hidden="true" />
-                      <span>Calibrated Tanker Driver Verification</span>
+                      <span>Driver Verification</span>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1062,10 +1057,6 @@ export default function LoginPage({
                 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </button>
             </div>
-            
-            <p className="text-xs text-slate-500 mt-3 text-center sm:text-left">
-              Regulated by NMDPRA under the Petroleum Industry Act (PIA). All settlements secured via virtual escrow.
-            </p>
           </div>
 
         </div>
@@ -1099,7 +1090,7 @@ export default function LoginPage({
                 {activeConfig.shortLabel} {authMode === 'signin' ? 'Safeguards' : 'Capabilities'}
               </span>
               <span className="text-xs px-2 py-0.5 rounded bg-black/40 text-slate-200 border border-white/10">
-                {authMode === 'signin' ? 'Live Terminal' : 'Onboarding'}
+                {authMode === 'signin' ? 'Sign in' : 'Onboarding'}
               </span>
             </div>
 
@@ -1115,26 +1106,22 @@ export default function LoginPage({
                 </li>
               ))}
             </ul>
-
-            <div className="mt-5 pt-4 border-t border-white/15 flex items-center justify-between text-xs text-slate-300">
-              <span>Settlement Custody:</span>
-              <span className="font-semibold text-white">Escrow</span>
-            </div>
           </div>
 
-          {/* Bottom Desk Hotline */}
+          {CONTACT.phone && (
           <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-300">
             <div className="flex items-center gap-2">
               <PhoneCall className="w-4 h-4 text-amber-400" aria-hidden="true" />
               <span>Operations Desk:</span>
             </div>
             <a 
-              href="tel:+23418880227" 
+              href={`tel:${CONTACT.phone.replace(/\s/g, '')}`} 
               className="font-mono font-bold text-white hover:text-amber-300 transition-colors"
             >
-              +234 (01) 888-0227
+              {CONTACT.phone}
             </a>
           </div>
+          )}
 
         </div>
 
@@ -1160,25 +1147,14 @@ export default function LoginPage({
             </div>
 
             <p className="text-xs text-slate-600 leading-relaxed mb-4">
-              For security reasons on downstream financial terminals, password resets and security token re-issuances require authorization via our 24/7 verification desk.
+              Password reset is not self-service yet. {CONTACT.email ? 'Email us from your registered address and we will help you regain access.' : 'Please contact the CAS Energy team to regain access.'}
             </p>
-
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 mb-5 text-xs">
-              <div className="flex justify-between">
-                <span className="text-slate-500">Operations Desk:</span>
-                <a href="tel:+23418880227" className="font-mono font-bold text-slate-800 hover:underline">
-                  +234 (01) 888-0227
-                </a>
+            {CONTACT.email && (
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-5 text-xs flex justify-between">
+                <span className="text-slate-500">Email:</span>
+                <a href={`mailto:${CONTACT.email}`} className="font-mono font-bold text-slate-800 hover:underline">{CONTACT.email}</a>
               </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Compliance Email:</span>
-                <span className="font-mono font-bold text-slate-800">support@cas-holdings.ng</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Operating Hours:</span>
-                <span className="font-bold text-slate-800">24/7 Wholesale Dispatch</span>
-              </div>
-            </div>
+            )}
 
             <div className="flex items-center gap-3">
               <button
@@ -1186,7 +1162,7 @@ export default function LoginPage({
                 onClick={() => setShowAssistanceModal(false)}
                 className="w-full py-2.5 bg-cas-slate hover:bg-black text-white text-xs font-bold rounded-xl transition-colors"
               >
-                Got It, Return to Terminal
+                Close
               </button>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, PhoneCall, UserPlus, Menu, X, ArrowRight, LogIn, LogOut, Settings } from 'lucide-react';
+import { ShieldCheck, UserPlus, Menu, X, ArrowRight, LogIn, LogOut, Settings } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Header({ user, onLogout, onOpenLegalModal }) {
@@ -15,36 +15,6 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
-      {/* Top Regulatory & Operations Bar in Calm Neutral Tone */}
-      <div className="bg-slate-50 border-b border-slate-200 text-slate-600 text-xs sm:text-xs py-2 px-3 sm:px-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 truncate">
-            <span className="w-2 h-2 rounded-full bg-cas-green shrink-0" aria-hidden="true"></span>
-            <span className="font-semibold text-slate-700 sm:hidden">NMDPRA Regulated</span>
-            <span className="font-semibold text-slate-700 hidden sm:inline">NMDPRA Regulated Wholesale Hub</span>
-            <span className="text-slate-500 hidden sm:inline">|</span>
-            <span className="text-slate-500 hidden sm:inline">CAS Holdings Nigeria</span>
-          </div>
-          <div className="flex items-center gap-4 text-slate-600 shrink-0">
-            <a 
-              href="tel:+23418880227" 
-              className="flex items-center gap-1.5 hover:text-black transition-colors"
-              aria-label="Call Operations Desk"
-            >
-              <PhoneCall className="w-3.5 h-3.5 text-cas-amberDark" aria-hidden="true" />
-              <span className="hidden xs:inline">Desk:</span>
-              <span className="font-mono font-bold text-slate-800 text-xs">+234 (01) 888-0227</span>
-            </a>
-            <button 
-              type="button"
-              onClick={() => handleModalClick('terms')} 
-              className="hidden sm:inline hover:text-black underline underline-offset-2 text-slate-500"
-            >
-              Escrow Terms
-            </button>
-          </div>
-        </div>
-      </div>
 
       {/* Main Navigation Bar with Generous Spacing */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 sm:py-4">
@@ -161,14 +131,6 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
 
           {/* Mobile Right Controls */}
           <div className="flex items-center gap-2 lg:hidden">
-            <a
-              href="tel:+23418880227"
-              className="p-2.5 rounded-xl bg-slate-100 text-slate-800 border border-slate-200"
-              aria-label="Call Dispatch Operations"
-            >
-              <PhoneCall className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
-            </a>
-
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

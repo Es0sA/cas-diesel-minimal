@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DEPOT_PRICES } from '../data/depots';
+import { DEPOTS } from '../data/depots';
 import { normalizeSuppliers } from '../lib/suppliers';
 import { StarRow } from './ReviewForm';
 import { Search, Filter, ShieldCheck, CheckCircle2, Truck, ArrowUpDown, ChevronRight } from 'lucide-react';
@@ -51,19 +51,18 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
             <div className="text-xs font-bold uppercase tracking-wider text-cas-amberDark mb-2">
-              Verified Wholesale Distribution
+              Verified Marketers
             </div>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
-              Live Marketer Spot Directory
+              Marketer Directory
             </h2>
             <p className="text-base text-cas-muted mt-1 max-w-2xl">
-              Compare licensed downstream marketers loading out of major Nigerian depot terminals.
-              All marketers hold valid NMDPRA off-taking licenses and supply certified Class A AGO.
+              Compare verified marketers by price and depot. Every marketer listed here has been verified by CAS Energy.
             </p>
           </div>
 
           <div className="text-xs font-semibold text-cas-slate bg-slate-50 px-4 py-3 rounded-lg border border-cas-border">
-            <span>Showing {filteredSuppliers.length} Verified Marketers Available For Instant Escrow Loading</span>
+            <span>Showing {filteredSuppliers.length} verified marketers</span>
           </div>
         </div>
 
@@ -108,7 +107,7 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
                   : 'bg-white text-cas-slate border border-slate-200 hover:bg-slate-100'
               }`}
             >
-              Ijegun Cluster
+              Ijegun
             </button>
             <button
               type="button"
@@ -188,7 +187,7 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
                   {supplier.isVerified && (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-50 border border-emerald-300 text-cas-green text-xs font-bold">
                     <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
-                    <span>NMDPRA Verified</span>
+                    <span>Verified</span>
                   </span>
                   )}
                   {supplier.reviewCount > 0 ? (
@@ -202,24 +201,11 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
                 </div>
 
                 <div className="text-xs text-cas-muted flex flex-wrap items-center gap-x-4 gap-y-1 mb-3">
-                  <span>Licence: {supplier.nmdpraLicense}</span>
+                  <span>Reg. No: {supplier.nmdpraLicense}</span>
                   <span>|</span>
                   <span>Depot: <strong className="text-cas-slate">{supplier.primaryDepot}</strong></span>
                   <span>|</span>
-                  <span>Dedicated Fleet: {supplier.fleetSize} Calibrated Tankers</span>
-                </div>
-
-                {/* Laboratory Specifications Badges */}
-                <div className="flex flex-wrap items-center gap-2 text-xs">
-                  <span className="px-2.5 py-1 bg-slate-100 rounded border border-slate-200 text-slate-700">
-                    Density: <strong className="font-mono">{supplier.densitySpec}</strong>
-                  </span>
-                  <span className="px-2.5 py-1 bg-slate-100 rounded border border-slate-200 text-slate-700">
-                    Flash Point: <strong className="font-mono">{supplier.flashPoint}</strong>
-                  </span>
-                  <span className="px-2.5 py-1 bg-amber-50 rounded border border-amber-200 text-cas-amberDark font-semibold">
-                    Depot Turnaround: {supplier.leadTimeHours}
-                  </span>
+                  <span>Fleet: {supplier.fleetSize} tankers</span>
                 </div>
               </div>
 
