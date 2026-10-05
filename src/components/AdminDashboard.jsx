@@ -129,8 +129,8 @@ export default function AdminDashboard({ user }) {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {usersList.map(u => {
-                    const isVerified = u.company?.isVerified || u.driverProfile?.isVerified || false;
-                    const entityName = u.company?.companyName || (u.driverProfile ? `${u.driverProfile.firstName} ${u.driverProfile.lastName}` : 'N/A');
+                    const isVerified = u.companies?.[0]?.isVerified || u.driverProfile?.isVerified || false;
+                    const entityName = u.companies?.[0]?.companyName || (u.driverProfile ? `${u.driverProfile.firstName} ${u.driverProfile.lastName}` : 'N/A');
                     
                     return (
                       <tr key={u.id} className="hover:bg-slate-50">
@@ -181,8 +181,9 @@ export default function AdminDashboard({ user }) {
                         {order.volumeLiters.toLocaleString()}L AGO
                       </div>
                       <div className="text-sm text-cas-muted space-y-1">
-                        <div><strong>Buyer:</strong> {order.buyer?.company?.companyName || `User ${order.buyerId}`}</div>
-                        <div><strong>Supplier:</strong> {order.supplier?.company?.companyName || `User ${order.supplierId}`}</div>
+                        <div><strong>Buyer:</strong> {order.buyer?.companyName || `User ${order.buyerId}`}</div>
+                        <div><strong>Supplier:</strong> {order.supplier?.companyName || `User ${order.supplierId}`}</div>
+                        {order.disputeReason && <div><strong>Reason:</strong> {order.disputeReason}</div>}
                         <div className="text-cas-green font-bold">Escrow: ₦{(order.totalEscrowAmount || 0).toLocaleString()}</div>
                       </div>
                     </div>
