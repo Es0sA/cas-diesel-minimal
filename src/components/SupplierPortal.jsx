@@ -59,10 +59,22 @@ export default function SupplierPortal() {
 
   const [selectedDriverForOrder, setSelectedDriverForOrder] = useState('Emeka Okonkwo (KJA-112-XC)');
 
-  const handleUpdatePricing = (e) => {
+  const handleUpdatePricing = async (e) => {
     e.preventDefault();
-    setSaveAlert(true);
-    setTimeout(() => setSaveAlert(false), 4000);
+    try {
+      if (localStorage.getItem('cas_token')) {
+        await api.companies.editProfile({
+          pricePerLitre: Number(dailySpotPrice),
+          availableLitres: Number(availableLitres),
+          minOrderVolume: Number(minOrderVolume)
+        });
+      }
+      setSaveAlert(true);
+      setTimeout(() => setSaveAlert(false), 4000);
+    } catch (err) {
+      console.error('Failed to update pricing:', err);
+      alert('Failed to update pricing. Please try again.');
+    }
   };
 
   const handleAssignDriver = (orderId) => {
