@@ -105,9 +105,9 @@ export default function SupplierPortal() {
             <UserCheck className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Downstream Marketer Operations Desk</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
             {profile ? `${profile.companyName} Operations Desk` : 'Marketer Operations Desk'}
-          </h2>
+          </h1>
           <p className="text-base text-cas-muted mt-2">
             Set your daily spot price per litre and review confirmed escrow allocations.
           </p>
@@ -137,7 +137,7 @@ export default function SupplierPortal() {
           <div className="lg:col-span-4 bg-white p-6 sm:p-8 rounded-2xl border-2 border-cas-border shadow-sm">
             <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-6">
               <div>
-                <h3 className="font-extrabold text-base text-cas-slate">Daily Spot Management</h3>
+                <h2 className="font-extrabold text-base text-cas-slate">Daily Spot Management</h2>
                 <span className="text-xs text-cas-muted">Depot: {depotName}</span>
               </div>
               <span className={`text-xs font-mono font-bold px-2 py-1 rounded border ${profile?.isVerified ? 'bg-emerald-50 text-cas-green border-emerald-200' : 'bg-slate-50 text-cas-muted border-slate-200'}`}>
@@ -275,11 +275,11 @@ export default function SupplierPortal() {
                         </div>
 
                         {ord.status === 'FUNDED' && !ord.driver ? (
-                          <div className="flex items-center gap-2">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
                             <select
                               value={driverChoice[ord.id] || ''}
                               onChange={(e) => setDriverChoice((prev) => ({ ...prev, [ord.id]: e.target.value }))}
-                              className="p-2 bg-white border border-slate-300 rounded font-semibold text-xs text-cas-slate"
+                              className="w-full sm:w-auto p-2 bg-white border border-slate-300 rounded font-semibold text-xs text-cas-slate"
                               aria-label="Select verified driver"
                             >
                               <option value="">{drivers.length ? 'Select driver' : 'No verified drivers yet'}</option>

@@ -27,7 +27,7 @@ export default function Footer({ onOpenLegalModal }) {
 
           {/* Real Physical Office & Terminal Desks */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white">Registered Physical Locations</h4>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-white">Registered Physical Locations</h2>
             <div className="flex items-start gap-2 text-xs text-slate-400">
               <MapPin className="w-4 h-4 text-cas-amber shrink-0 mt-0.5" aria-hidden="true" />
               <div>
@@ -46,7 +46,7 @@ export default function Footer({ onOpenLegalModal }) {
 
           {/* Operations & Escrow Contact */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white">Operations & Escrow Desk</h4>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-white">Operations & Escrow Desk</h2>
             <div className="space-y-2 text-xs text-slate-400">
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-cas-amber shrink-0" aria-hidden="true" />
@@ -67,14 +67,14 @@ export default function Footer({ onOpenLegalModal }) {
                 </a>
               </div>
             </div>
-            <div className="text-[11px] text-slate-400 pt-2 border-t border-slate-800">
+            <div className="text-xs text-slate-400 pt-2 border-t border-slate-800">
               Trading Hours: Monday to Saturday, 06:00 to 18:00 West Africa Time.
             </div>
           </div>
 
           {/* Legal Compliance & Policies Links */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white">Compliance & Governance</h4>
+            <h2 className="text-xs font-bold uppercase tracking-wider text-white">Compliance & Governance</h2>
             <ul className="space-y-2 text-xs">
               <li>
                 <button

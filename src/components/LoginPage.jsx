@@ -395,7 +395,7 @@ export default function LoginPage({
       <div className="w-full max-w-5xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden grid grid-cols-1 lg:grid-cols-12 transition-all">
         
         {/* Left Column: Unified Auth Terminal (Sign In & Register) */}
-        <div className="p-6 sm:p-10 lg:p-12 lg:col-span-7 flex flex-col justify-between max-h-[92vh] overflow-y-auto">
+        <div className="p-6 sm:p-10 lg:p-12 lg:col-span-7 flex flex-col justify-between lg:max-h-[92vh] lg:overflow-y-auto">
           <div>
             {/* Top Navigation & Status Bar */}
             <div className="flex items-center justify-between gap-4 mb-6">
@@ -408,7 +408,7 @@ export default function LoginPage({
                 <span>Return to Portal</span>
               </button>
 
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-[11px] font-semibold">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">
                 <ShieldCheck className="w-3.5 h-3.5 text-cas-green" aria-hidden="true" />
                 <span>256-Bit SSL Escrow Gateway</span>
               </div>
@@ -462,7 +462,7 @@ export default function LoginPage({
 
             {/* 3-Role Segmented Selector Tabs */}
             <div className="mb-6">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
                 Select Persona
               </label>
               <div className="grid grid-cols-3 gap-1.5 p-1.5 bg-slate-100 rounded-2xl border border-slate-200">
@@ -478,7 +478,7 @@ export default function LoginPage({
                   }`}
                   aria-pressed={selectedRole === 'buyer'}
                 >
-                  <Building2 className={`w-4 h-4 ${selectedRole === 'buyer' ? 'text-sky-400' : 'text-slate-500'}`} aria-hidden="true" />
+                  <Building2 className={`hidden min-[360px]:block w-4 h-4 ${selectedRole === 'buyer' ? 'text-sky-400' : 'text-slate-500'}`} aria-hidden="true" />
                   <span className="truncate">Buyer</span>
                 </button>
 
@@ -493,8 +493,8 @@ export default function LoginPage({
                   }`}
                   aria-pressed={selectedRole === 'supplier'}
                 >
-                  <UserCheck className={`w-4 h-4 ${selectedRole === 'supplier' ? 'text-amber-400' : 'text-slate-500'}`} aria-hidden="true" />
-                  <span className="truncate">Marketer</span>
+                  <UserCheck className={`hidden min-[360px]:block w-4 h-4 ${selectedRole === 'supplier' ? 'text-amber-400' : 'text-slate-500'}`} aria-hidden="true" />
+                  <span>Marketer</span>
                 </button>
 
                 {/* 3. Driver Role */}
@@ -508,8 +508,8 @@ export default function LoginPage({
                   }`}
                   aria-pressed={selectedRole === 'driver'}
                 >
-                  <Truck className={`w-4 h-4 ${selectedRole === 'driver' ? 'text-emerald-400' : 'text-slate-500'}`} aria-hidden="true" />
-                  <span className="truncate">Driver</span>
+                  <Truck className={`hidden min-[360px]:block w-4 h-4 ${selectedRole === 'driver' ? 'text-emerald-400' : 'text-slate-500'}`} aria-hidden="true" />
+                  <span>Driver</span>
                 </button>
 
               </div>
@@ -519,7 +519,7 @@ export default function LoginPage({
                 <span className="font-semibold text-slate-700">
                   {activeConfig.title} <span className="font-normal text-slate-500">({activeConfig.tagline})</span>
                 </span>
-                <span className="font-mono text-[11px] font-bold text-slate-600 bg-white px-2 py-0.5 rounded border border-slate-200 shadow-2xs">
+                <span className="font-mono text-xs font-bold text-slate-600 bg-white px-2 py-0.5 rounded border border-slate-200 shadow-2xs">
                   {activeConfig.badge}
                 </span>
               </div>
@@ -528,7 +528,7 @@ export default function LoginPage({
             {/* Error & Success Alerts */}
             {errorMessage && (
               <div className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2.5 animate-fadeIn">
-                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-600" aria-hidden="true" />
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-700" aria-hidden="true" />
                 <div className="flex-1">
                   <p className="font-semibold">{errorMessage}</p>
                   {authMode === 'signin' && (
@@ -549,7 +549,7 @@ export default function LoginPage({
 
             {successNotice && (
               <div className="mb-5 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2.5 animate-fadeIn">
-                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" aria-hidden="true" />
+                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-700" aria-hidden="true" />
                 <span className="font-semibold">{successNotice}</span>
               </div>
             )}
@@ -566,7 +566,7 @@ export default function LoginPage({
                     {activeConfig.emailLabel}
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
                       <Mail className="w-4 h-4" aria-hidden="true" />
                     </div>
                     <input
@@ -575,7 +575,7 @@ export default function LoginPage({
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder={activeConfig.emailPlaceholder}
-                      className="w-full pl-10 pr-4 py-3 bg-slate-50 hover:bg-slate-100/60 focus:bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none transition-all"
+                      className="w-full pl-10 pr-4 py-3 bg-slate-50 hover:bg-slate-100/60 focus:bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder:text-slate-500 focus:outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -595,7 +595,7 @@ export default function LoginPage({
                     </button>
                   </div>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
                       <Lock className="w-4 h-4" aria-hidden="true" />
                     </div>
                     <input
@@ -604,12 +604,12 @@ export default function LoginPage({
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter terminal password"
-                      className="w-full pl-10 pr-11 py-3 bg-slate-50 hover:bg-slate-100/60 focus:bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none transition-all"
+                      className="w-full pl-10 pr-11 py-3 bg-slate-50 hover:bg-slate-100/60 focus:bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder:text-slate-500 focus:outline-none transition-all"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-700 transition-colors"
+                      className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-500 hover:text-slate-700 transition-colors"
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >
                       {showPassword ? (
@@ -636,7 +636,7 @@ export default function LoginPage({
                   <button
                     type="button"
                     onClick={handleQuickDemoFill}
-                    className="inline-flex items-center gap-1 text-[11px] font-bold text-cas-amberDark hover:text-black transition-colors"
+                    className="inline-flex items-center gap-1 text-xs font-bold text-cas-amberDark hover:text-black transition-colors"
                   >
                     <Sparkles className="w-3 h-3 text-cas-amber" aria-hidden="true" />
                     <span>Demo fill</span>
@@ -679,44 +679,44 @@ export default function LoginPage({
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                    <label htmlFor="fld-official-account-email-1" className="block text-xs font-bold text-slate-700 mb-1">
                       Official Account Email
                     </label>
-                    <input
+                    <input id="fld-official-account-email-1"
                       type="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder={activeConfig.emailPlaceholder}
-                      className="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-cas-amber"
+                      className="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-500 focus:outline-none focus:border-cas-amber"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                      <label htmlFor="fld-password-min-12-chars-2" className="block text-xs font-bold text-slate-700 mb-1">
                         Password (min 12 chars)
                       </label>
-                      <input
+                      <input id="fld-password-min-12-chars-2"
                         type={showPassword ? 'text' : 'password'}
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••••••"
-                        className="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-cas-amber"
+                        className="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-500 focus:outline-none focus:border-cas-amber"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                      <label htmlFor="fld-confirm-password-3" className="block text-xs font-bold text-slate-700 mb-1">
                         Confirm Password
                       </label>
-                      <input
+                      <input id="fld-confirm-password-3"
                         type={showPassword ? 'text' : 'password'}
                         required
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="••••••••••••"
-                        className="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-cas-amber"
+                        className="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-500 focus:outline-none focus:border-cas-amber"
                       />
                     </div>
                   </div>
@@ -732,8 +732,8 @@ export default function LoginPage({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Company Name</label>
-                        <input
+                        <label htmlFor="fld-company-name-4" className="block text-xs font-bold text-slate-700 mb-1">Company Name</label>
+                        <input id="fld-company-name-4"
                           type="text"
                           required
                           value={buyerCompany}
@@ -743,8 +743,8 @@ export default function LoginPage({
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">CAC RC Number</label>
-                        <input
+                        <label htmlFor="fld-cac-rc-number-5" className="block text-xs font-bold text-slate-700 mb-1">CAC RC Number</label>
+                        <input id="fld-cac-rc-number-5"
                           type="text"
                           required
                           value={buyerRcNumber}
@@ -756,8 +756,8 @@ export default function LoginPage({
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Facility Category</label>
-                      <select
+                      <label htmlFor="fld-facility-category-6" className="block text-xs font-bold text-slate-700 mb-1">Facility Category</label>
+                      <select id="fld-facility-category-6"
                         value={buyerCategory}
                         onChange={(e) => setBuyerCategory(e.target.value)}
                         className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-medium"
@@ -773,7 +773,7 @@ export default function LoginPage({
                     {/* Geofence Gate Coordinates */}
                     <div className="p-3 bg-white rounded-lg border border-slate-200 space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-bold text-slate-700 flex items-center gap-1">
+                        <span className="text-xs font-bold text-slate-700 flex items-center gap-1">
                           <MapPin className="w-3.5 h-3.5 text-cas-amberDark" aria-hidden="true" />
                           <span>Discharge Gate Coordinates (100m Radar)</span>
                         </span>
@@ -781,7 +781,7 @@ export default function LoginPage({
                           type="button"
                           onClick={handleTriggerGeolocation}
                           disabled={geolocating}
-                          className="text-[10px] font-bold px-2 py-1 rounded bg-sky-50 text-cas-blue hover:bg-sky-100 flex items-center gap-1"
+                          className="text-xs font-bold px-2 py-1 rounded bg-sky-50 text-cas-blue hover:bg-sky-100 flex items-center gap-1"
                         >
                           <Navigation className="w-3 h-3" aria-hidden="true" />
                           <span>{geolocating ? 'Detecting...' : 'Detect Gate GPS'}</span>
@@ -809,8 +809,8 @@ export default function LoginPage({
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Tanker Discharge Clearance</label>
-                      <select
+                      <label htmlFor="fld-tanker-discharge-clearance-7" className="block text-xs font-bold text-slate-700 mb-1">Tanker Discharge Clearance</label>
+                      <select id="fld-tanker-discharge-clearance-7"
                         value={truckClearance}
                         onChange={(e) => setTruckClearance(e.target.value)}
                         className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-medium"
@@ -823,8 +823,8 @@ export default function LoginPage({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Receiving Officer Name</label>
-                        <input
+                        <label htmlFor="fld-receiving-officer-name-8" className="block text-xs font-bold text-slate-700 mb-1">Receiving Officer Name</label>
+                        <input id="fld-receiving-officer-name-8"
                           type="text"
                           required
                           value={receivingOfficerName}
@@ -834,8 +834,8 @@ export default function LoginPage({
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Receiving Officer Hotline</label>
-                        <input
+                        <label htmlFor="fld-receiving-officer-hotline-9" className="block text-xs font-bold text-slate-700 mb-1">Receiving Officer Hotline</label>
+                        <input id="fld-receiving-officer-hotline-9"
                           type="tel"
                           required
                           value={receivingOfficerPhone}
@@ -857,8 +857,8 @@ export default function LoginPage({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Marketer Company Name</label>
-                        <input
+                        <label htmlFor="fld-marketer-company-name-10" className="block text-xs font-bold text-slate-700 mb-1">Marketer Company Name</label>
+                        <input id="fld-marketer-company-name-10"
                           type="text"
                           required
                           value={supplierName}
@@ -868,8 +868,8 @@ export default function LoginPage({
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">CAC RC Number</label>
-                        <input
+                        <label htmlFor="fld-cac-rc-number-11" className="block text-xs font-bold text-slate-700 mb-1">CAC RC Number</label>
+                        <input id="fld-cac-rc-number-11"
                           type="text"
                           required
                           value={supplierRc}
@@ -881,8 +881,8 @@ export default function LoginPage({
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">NMDPRA Downstream License No.</label>
-                      <input
+                      <label htmlFor="fld-nmdpra-downstream-license-no-12" className="block text-xs font-bold text-slate-700 mb-1">NMDPRA Downstream License No.</label>
+                      <input id="fld-nmdpra-downstream-license-no-12"
                         type="text"
                         required
                         value={supplierLicense}
@@ -894,8 +894,8 @@ export default function LoginPage({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Primary Loading Depot</label>
-                        <select
+                        <label htmlFor="fld-primary-loading-depot-13" className="block text-xs font-bold text-slate-700 mb-1">Primary Loading Depot</label>
+                        <select id="fld-primary-loading-depot-13"
                           value={primaryDepot}
                           onChange={(e) => setPrimaryDepot(e.target.value)}
                           className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-medium"
@@ -906,8 +906,8 @@ export default function LoginPage({
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Initial Daily Spot Rate (₦/L)</label>
-                        <input
+                        <label htmlFor="fld-initial-daily-spot-rate-l-14" className="block text-xs font-bold text-slate-700 mb-1">Initial Daily Spot Rate (₦/L)</label>
+                        <input id="fld-initial-daily-spot-rate-l-14"
                           type="number"
                           required
                           min="1000"
@@ -921,8 +921,8 @@ export default function LoginPage({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Gantry Dispatch Manager</label>
-                        <input
+                        <label htmlFor="fld-gantry-dispatch-manager-15" className="block text-xs font-bold text-slate-700 mb-1">Gantry Dispatch Manager</label>
+                        <input id="fld-gantry-dispatch-manager-15"
                           type="text"
                           required
                           value={contactName}
@@ -932,8 +932,8 @@ export default function LoginPage({
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Operations Hotline</label>
-                        <input
+                        <label htmlFor="fld-operations-hotline-16" className="block text-xs font-bold text-slate-700 mb-1">Operations Hotline</label>
+                        <input id="fld-operations-hotline-16"
                           type="tel"
                           required
                           value={contactPhone}
@@ -955,8 +955,8 @@ export default function LoginPage({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Driver Full Name</label>
-                        <input
+                        <label htmlFor="fld-driver-full-name-17" className="block text-xs font-bold text-slate-700 mb-1">Driver Full Name</label>
+                        <input id="fld-driver-full-name-17"
                           type="text"
                           required
                           value={driverName}
@@ -966,8 +966,8 @@ export default function LoginPage({
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">WhatsApp Dispatch Phone</label>
-                        <input
+                        <label htmlFor="fld-whatsapp-dispatch-phone-18" className="block text-xs font-bold text-slate-700 mb-1">WhatsApp Dispatch Phone</label>
+                        <input id="fld-whatsapp-dispatch-phone-18"
                           type="tel"
                           required
                           value={driverPhone}
@@ -980,8 +980,8 @@ export default function LoginPage({
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Driver License No.</label>
-                        <input
+                        <label htmlFor="fld-driver-license-no-19" className="block text-xs font-bold text-slate-700 mb-1">Driver License No.</label>
+                        <input id="fld-driver-license-no-19"
                           type="text"
                           required
                           value={driverLicense}
@@ -991,8 +991,8 @@ export default function LoginPage({
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Tanker Plate No.</label>
-                        <input
+                        <label htmlFor="fld-tanker-plate-no-20" className="block text-xs font-bold text-slate-700 mb-1">Tanker Plate No.</label>
+                        <input id="fld-tanker-plate-no-20"
                           type="text"
                           required
                           value={driverPlate}
@@ -1002,8 +1002,8 @@ export default function LoginPage({
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1">Tanker Capacity</label>
-                        <select
+                        <label htmlFor="fld-tanker-capacity-21" className="block text-xs font-bold text-slate-700 mb-1">Tanker Capacity</label>
+                        <select id="fld-tanker-capacity-21"
                           value={driverCapacity}
                           onChange={(e) => setDriverCapacity(e.target.value)}
                           className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-medium"
@@ -1063,7 +1063,7 @@ export default function LoginPage({
               </button>
             </div>
             
-            <p className="text-[11px] text-slate-400 mt-3 text-center sm:text-left">
+            <p className="text-xs text-slate-500 mt-3 text-center sm:text-left">
               Regulated by NMDPRA under the Petroleum Industry Act (PIA). All settlements secured via virtual escrow.
             </p>
           </div>
@@ -1098,7 +1098,7 @@ export default function LoginPage({
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-300">
                 {activeConfig.shortLabel} {authMode === 'signin' ? 'Safeguards' : 'Capabilities'}
               </span>
-              <span className="text-[11px] px-2 py-0.5 rounded bg-black/40 text-slate-200 border border-white/10">
+              <span className="text-xs px-2 py-0.5 rounded bg-black/40 text-slate-200 border border-white/10">
                 {authMode === 'signin' ? 'Live Terminal' : 'Onboarding'}
               </span>
             </div>
@@ -1116,7 +1116,7 @@ export default function LoginPage({
               ))}
             </ul>
 
-            <div className="mt-5 pt-4 border-t border-white/15 flex items-center justify-between text-[11px] text-slate-300">
+            <div className="mt-5 pt-4 border-t border-white/15 flex items-center justify-between text-xs text-slate-300">
               <span>Settlement Custody:</span>
               <span className="font-semibold text-white">Stanbic Virtual Escrow</span>
             </div>
@@ -1152,7 +1152,7 @@ export default function LoginPage({
               <button
                 type="button"
                 onClick={() => setShowAssistanceModal(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-black hover:bg-slate-100"
+                className="p-1 rounded-lg text-slate-500 hover:text-black hover:bg-slate-100"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5" aria-hidden="true" />

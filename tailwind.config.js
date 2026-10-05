@@ -16,7 +16,7 @@ export default {
           amber: '#D97706',
           amberDark: '#B45309',
           amberLight: '#FEF3C7',
-          green: '#16A34A',
+          green: '#15803D',
           greenLight: '#DCFCE7',
           blue: '#0369A1',
           blueLight: '#E0F2FE'

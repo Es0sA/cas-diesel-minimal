@@ -96,14 +96,14 @@ export default function ProfileSettings({ user }) {
             <Settings className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-xl font-extrabold text-slate-800">Profile Settings</h2>
+            <h1 className="text-xl font-extrabold text-slate-800">Profile Settings</h1>
             <p className="text-sm text-slate-500">Manage your account information</p>
           </div>
         </div>
 
         <div className="p-6">
           {error && (
-            <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl flex items-start gap-3 border border-red-100">
+            <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-xl flex items-start gap-3 border border-red-100">
               <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
               <span className="text-sm font-medium">{error}</span>
             </div>
@@ -120,8 +120,8 @@ export default function ProfileSettings({ user }) {
             {!isDriver && (
               <>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1.5">Company Name</label>
-                  <input
+                  <label htmlFor="fld-company-name-1" className="block text-sm font-bold text-slate-700 mb-1.5">Company Name</label>
+                  <input id="fld-company-name-1"
                     type="text"
                     name="companyName"
                     value={formData.companyName || ''}
@@ -130,8 +130,8 @@ export default function ProfileSettings({ user }) {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1.5">Business Address</label>
-                  <input
+                  <label htmlFor="fld-business-address-2" className="block text-sm font-bold text-slate-700 mb-1.5">Business Address</label>
+                  <input id="fld-business-address-2"
                     type="text"
                     name="businessAddress"
                     value={formData.businessAddress || ''}
@@ -140,8 +140,8 @@ export default function ProfileSettings({ user }) {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1.5">Contact Phone</label>
-                  <input
+                  <label htmlFor="fld-contact-phone-3" className="block text-sm font-bold text-slate-700 mb-1.5">Contact Phone</label>
+                  <input id="fld-contact-phone-3"
                     type="text"
                     name="contactPhone"
                     value={formData.contactPhone || ''}
@@ -153,8 +153,8 @@ export default function ProfileSettings({ user }) {
                 {role === 'SUPPLIER' && (
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-bold text-slate-700 mb-1.5">Price Per Litre (₦)</label>
-                      <input
+                      <label htmlFor="fld-price-per-litre-4" className="block text-sm font-bold text-slate-700 mb-1.5">Price Per Litre (₦)</label>
+                      <input id="fld-price-per-litre-4"
                         type="number"
                         name="pricePerLitre"
                         value={formData.pricePerLitre || ''}
@@ -163,8 +163,8 @@ export default function ProfileSettings({ user }) {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-bold text-slate-700 mb-1.5">Available Litres</label>
-                      <input
+                      <label htmlFor="fld-available-litres-5" className="block text-sm font-bold text-slate-700 mb-1.5">Available Litres</label>
+                      <input id="fld-available-litres-5"
                         type="number"
                         name="availableLitres"
                         value={formData.availableLitres || ''}
@@ -181,8 +181,8 @@ export default function ProfileSettings({ user }) {
               <>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-1.5">First Name</label>
-                    <input
+                    <label htmlFor="fld-first-name-6" className="block text-sm font-bold text-slate-700 mb-1.5">First Name</label>
+                    <input id="fld-first-name-6"
                       type="text"
                       name="firstName"
                       value={formData.firstName || ''}
@@ -191,8 +191,8 @@ export default function ProfileSettings({ user }) {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-1.5">Last Name</label>
-                    <input
+                    <label htmlFor="fld-last-name-7" className="block text-sm font-bold text-slate-700 mb-1.5">Last Name</label>
+                    <input id="fld-last-name-7"
                       type="text"
                       name="lastName"
                       value={formData.lastName || ''}
@@ -202,8 +202,8 @@ export default function ProfileSettings({ user }) {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1.5">Truck Plate Number</label>
-                  <input
+                  <label htmlFor="fld-truck-plate-number-8" className="block text-sm font-bold text-slate-700 mb-1.5">Truck Plate Number</label>
+                  <input id="fld-truck-plate-number-8"
                     type="text"
                     name="truckPlateNumber"
                     value={formData.truckPlateNumber || ''}
@@ -212,8 +212,8 @@ export default function ProfileSettings({ user }) {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1.5">Truck Capacity (Liters)</label>
-                  <input
+                  <label htmlFor="fld-truck-capacity-liters-9" className="block text-sm font-bold text-slate-700 mb-1.5">Truck Capacity (Liters)</label>
+                  <input id="fld-truck-capacity-liters-9"
                     type="number"
                     name="truckCapacityLiters"
                     value={formData.truckCapacityLiters || ''}

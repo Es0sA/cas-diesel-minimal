@@ -70,23 +70,24 @@ export default function AdminDashboard({ user }) {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-4 border-b border-slate-200 mb-8">
+      <div className="flex gap-1 sm:gap-4 border-b border-slate-200 mb-8">
         {[
-          { id: 'overview', label: 'System Overview', icon: BarChart },
-          { id: 'users', label: 'User Verification', icon: Users },
-          { id: 'disputes', label: 'Dispute Resolution', icon: AlertTriangle }
+          { id: 'overview', label: 'System Overview', short: 'Overview', icon: BarChart },
+          { id: 'users', label: 'User Verification', short: 'Users', icon: Users },
+          { id: 'disputes', label: 'Dispute Resolution', short: 'Disputes', icon: AlertTriangle }
         ].map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-3 font-bold text-sm border-b-2 transition-colors ${
+            className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-bold text-sm border-b-2 transition-colors ${
               activeTab === tab.id 
                 ? 'border-cas-amber text-cas-slate' 
                 : 'border-transparent text-cas-muted hover:text-cas-slate hover:border-slate-300'
             }`}
           >
-            <tab.icon className="w-4 h-4" />
-            {tab.label}
+            <tab.icon className="w-4 h-4" aria-hidden="true" />
+            <span className="sm:hidden">{tab.short}</span>
+            <span className="hidden sm:inline">{tab.label}</span>
           </button>
         ))}
       </div>
@@ -97,18 +98,18 @@ export default function AdminDashboard({ user }) {
         <div>
           {/* OVERVIEW TAB */}
           {activeTab === 'overview' && stats && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-[repeat(3,minmax(0,1fr))] gap-6">
+              <div className="bg-white p-5 lg:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
                 <div className="text-cas-muted text-sm font-bold uppercase tracking-wider mb-2">Total Users</div>
-                <div className="text-4xl font-extrabold text-cas-slate">{stats.totalUsers}</div>
+                <div className="text-3xl lg:text-4xl break-words font-extrabold text-cas-slate">{stats.totalUsers}</div>
               </div>
-              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <div className="bg-white p-5 lg:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
                 <div className="text-cas-muted text-sm font-bold uppercase tracking-wider mb-2">Total Orders</div>
-                <div className="text-4xl font-extrabold text-cas-slate">{stats.totalOrders}</div>
+                <div className="text-3xl lg:text-4xl break-words font-extrabold text-cas-slate">{stats.totalOrders}</div>
               </div>
-              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <div className="bg-white p-5 lg:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
                 <div className="text-cas-muted text-sm font-bold uppercase tracking-wider mb-2">Total Escrow Volume</div>
-                <div className="text-4xl font-extrabold text-cas-green">
+                <div className="text-3xl lg:text-4xl break-words font-extrabold text-cas-green">
                   ₦{(stats.totalEscrowVolume).toLocaleString()}
                 </div>
               </div>
@@ -174,7 +175,7 @@ export default function AdminDashboard({ user }) {
                   <div key={order.id} className="bg-white p-6 rounded-2xl border border-rose-200 shadow-sm flex flex-col md:flex-row justify-between gap-6">
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="bg-rose-100 text-rose-700 text-[10px] font-extrabold uppercase px-2 py-1 rounded">Disputed Order</span>
+                        <span className="bg-rose-100 text-rose-700 text-xs font-extrabold uppercase px-2 py-1 rounded">Disputed Order</span>
                         <span className="text-xs font-bold text-cas-muted">Order #{order.id}</span>
                       </div>
                       <div className="font-extrabold text-lg text-cas-slate mb-1">

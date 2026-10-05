@@ -4,7 +4,7 @@ import { api } from '../api';
 
 export function StarRow({ value, size = 'w-4 h-4' }) {
   return (
-    <span className="inline-flex items-center gap-0.5" aria-label={`${value} out of 5 stars`}>
+    <span className="inline-flex items-center gap-0.5" role="img" aria-label={`${value} out of 5 stars`}>
       {[1, 2, 3, 4, 5].map((n) => (
         <Star key={n} className={`${size} ${n <= Math.round(value) ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`} />
       ))}
@@ -68,7 +68,7 @@ export default function ReviewForm({ order, onSubmitted }) {
         placeholder="Quality, timing, documentation (optional)"
         className="w-full border border-slate-300 rounded-lg p-3 text-sm mb-3"
       />
-      {error && <p className="text-sm text-rose-600 mb-3">{error}</p>}
+      {error && <p className="text-sm text-rose-700 mb-3">{error}</p>}
       <button type="submit" disabled={saving} className="px-5 py-2.5 bg-cas-slate text-white text-sm font-bold rounded-lg disabled:opacity-50">
         {saving ? 'Submitting...' : 'Submit Review'}
       </button>

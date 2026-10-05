@@ -27,6 +27,7 @@ export const api = {
     register: (data) => request('/auth/register', { method: 'POST', body: JSON.stringify(data) }),
     login: (data) => request('/auth/login', { method: 'POST', body: JSON.stringify(data) }),
     logout: () => request('/auth/logout', { method: 'POST' }),
+    me: () => request('/auth/me'),
   },
   companies: {
     getProfile: () => request('/companies/profile'),

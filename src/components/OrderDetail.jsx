@@ -54,7 +54,8 @@ export default function OrderDetail() {
   }, [orderId]);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const panel = chatEndRef.current?.parentElement;
+    if (panel) panel.scrollTop = panel.scrollHeight;
   }, [messages]);
 
   
@@ -234,21 +235,25 @@ export default function OrderDetail() {
             const isCurrent = currentStatusIndex === index;
             
             return (
-              <div key={status} className="flex flex-col items-center gap-2 bg-white px-2">
+              <div key={status} className="flex flex-col items-center gap-2 bg-white px-1 sm:px-2">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                  isCompleted ? 'bg-cas-blue text-white' : 'bg-slate-100 text-slate-400'
+                  isCompleted ? 'bg-cas-blue text-white' : 'bg-slate-100 text-slate-500'
                 } ${isCurrent ? 'ring-4 ring-cas-blueLight' : ''}`}>
                   {isCompleted ? <CheckCircle2 className="w-5 h-5" /> : <Clock className="w-4 h-4" />}
                 </div>
-                <span className={`text-xs font-bold ${
-                  isCurrent ? 'text-cas-blue' : (isCompleted ? 'text-cas-slate' : 'text-slate-400')
+                <span className={`hidden sm:block text-xs font-bold ${
+                  isCurrent ? 'text-cas-blue' : (isCompleted ? 'text-cas-slate' : 'text-slate-500')
                 }`}>
-                  {status}
+                  {status.replace('_', ' ')}
                 </span>
+                <span className="sr-only sm:hidden">{status.replace('_', ' ')}{isCurrent ? ' (current)' : ''}</span>
               </div>
             );
           })}
         </div>
+        <p className="sm:hidden mt-4 text-center text-sm font-bold text-cas-blue">
+          {order.status.replace('_', ' ')}
+        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -258,22 +263,34 @@ export default function OrderDetail() {
             <h2 className="text-lg font-bold text-cas-slate mb-4">Order Details</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div>
-                <p className="text-xs text-cas-muted mb-1 flex items-center gap-1"><Package className="w-3 h-3" /> Volume</p>
-                <p className="font-bold text-cas-slate">{(order.volume || 0).toLocaleString()} Litres</p>
+                <p className="text-xs text-cas-muted mb-1 flex items-center gap-1"><Package className="w-3 h-3" aria-hidden="true" /> Volume</p>
+                <p className="font-bold text-cas-slate">{(order.volumeLiters || 0).toLocaleString()} Litres</p>
               </div>
               <div>
                 <p className="text-xs text-cas-muted mb-1">Price per Litre</p>
-                <p className="font-bold text-cas-slate">₦{(order.pricePerLitre || 0).toLocaleString()}</p>
+                <p className="font-bold text-cas-slate">₦{(order.pricePerLiter || 0).toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-xs text-cas-muted mb-1 flex items-center gap-1"><Truck className="w-3 h-3" /> Driver</p>
-                <p className="font-bold text-cas-slate">{order.driverName || 'Unassigned'}</p>
+                <p className="text-xs text-cas-muted mb-1 flex items-center gap-1"><Truck className="w-3 h-3" aria-hidden="true" /> Driver</p>
+                <p className="font-bold text-cas-slate break-words">
+                  {order.driver ? `${order.driver.firstName} ${order.driver.lastName}` : 'Unassigned'}
+                </p>
+                {order.driver?.truckPlateNumber && <p className="text-xs font-mono text-cas-muted">{order.driver.truckPlateNumber}</p>}
               </div>
               <div>
-                <p className="text-xs text-cas-muted mb-1 flex items-center gap-1"><MapPin className="w-3 h-3" /> Supplier</p>
-                <p className="font-bold text-cas-slate">{order.supplierName || 'Unknown'}</p>
+                <p className="text-xs text-cas-muted mb-1 flex items-center gap-1"><MapPin className="w-3 h-3" aria-hidden="true" /> {order.supplier ? 'Supplier' : 'Buyer'}</p>
+                <p className="font-bold text-cas-slate break-words">{(order.supplier || order.buyer)?.companyName || 'Unknown'}</p>
               </div>
             </div>
+            {order.disputeReason && (
+              <div className="mt-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-sm">
+                <p className="font-bold text-rose-700 mb-1">Dispute reason</p>
+                <p className="text-slate-700 break-words">{order.disputeReason}</p>
+                {order.disputeResolution && (
+                  <p className="mt-2 font-bold text-slate-700">Resolution: {order.disputeResolution.replace(/_/g, ' ').toLowerCase()}</p>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Chat */}
@@ -282,7 +299,7 @@ export default function OrderDetail() {
               <h2 className="text-lg font-bold text-cas-slate">Order Chat</h2>
             </div>
             
-            <div className="flex-1 p-4 overflow-y-auto space-y-4">
+            <div className="flex-1 p-4 overflow-y-auto space-y-4" role="log" aria-label="Order chat messages" tabIndex={0}>
               {messages.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-cas-muted">
                   <p>No messages yet.</p>
@@ -295,7 +312,7 @@ export default function OrderDetail() {
                   >
                     <span className="text-xs font-bold text-cas-blue mb-1">{msg.mine ? 'You' : msg.senderRole || 'User'}</span>
                     <p className="text-sm text-cas-slate whitespace-pre-wrap break-words">{msg.messageContent}</p>
-                    <span className="text-[10px] text-cas-muted mt-1">{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    <span className="text-xs text-cas-muted mt-1">{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                   </div>
                 ))
               )}
@@ -312,6 +329,7 @@ export default function OrderDetail() {
               />
               <button 
                 type="submit"
+                aria-label="Send message"
                 disabled={!chatInput.trim()}
                 className="bg-cas-slate hover:bg-cas-charcoal text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center"
               >

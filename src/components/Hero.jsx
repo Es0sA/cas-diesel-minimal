@@ -75,12 +75,12 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator, onOpenR
               
               <div className="flex items-center justify-between pb-5 border-b border-slate-200/80 mb-6">
                 <div>
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block">
                     Security Architecture
                   </span>
-                  <h3 className="font-extrabold text-lg text-cas-slate mt-0.5">
+                  <h2 className="font-extrabold text-lg text-cas-slate mt-0.5">
                     How CAS Escrow Protects You
-                  </h3>
+                  </h2>
                 </div>
                 <span className="p-2 rounded-xl bg-white border border-slate-200 text-cas-amberDark shadow-xs">
                   <ShieldCheck className="w-5 h-5" aria-hidden="true" />
@@ -96,7 +96,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator, onOpenR
                     1
                   </div>
                   <div>
-                    <h4 className="font-bold text-sm text-cas-slate">Select Verified Depot & Rate</h4>
+                    <h3 className="font-bold text-sm text-cas-slate">Select Verified Depot & Rate</h3>
                     <p className="text-xs text-slate-600 mt-1 leading-relaxed">
                       Compare spot prices across Apapa, Ijegun, Warri, and Port Harcourt. Every batch is certified Class A AGO.
                     </p>
@@ -156,7 +156,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator, onOpenR
             <div className="w-11 h-11 rounded-xl bg-slate-100 text-cas-slate flex items-center justify-center mb-4">
               <Lock className="w-5 h-5 text-cas-blue" aria-hidden="true" />
             </div>
-            <h3 className="font-extrabold text-base text-cas-slate mb-2">Two-Sided Protection</h3>
+            <h2 className="font-extrabold text-base text-cas-slate mb-2">Two-Sided Protection</h2>
             <p className="text-xs text-slate-600 leading-relaxed">
               Marketers are protected against payment defaults once the truck departs the gantry. Corporate buyers are protected against failed or adulterated deliveries.
             </p>
@@ -166,7 +166,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator, onOpenR
             <div className="w-11 h-11 rounded-xl bg-slate-100 text-cas-slate flex items-center justify-center mb-4">
               <MapPin className="w-5 h-5 text-cas-amberDark" aria-hidden="true" />
             </div>
-            <h3 className="font-extrabold text-base text-cas-slate mb-2">Geofenced Sign-Off</h3>
+            <h2 className="font-extrabold text-base text-cas-slate mb-2">Geofenced Sign-Off</h2>
             <p className="text-xs text-slate-600 leading-relaxed">
               Discharge sign-off is physically restricted until the tanker transponder crosses into your registered GPS coordinates. No premature payout is possible.
             </p>
@@ -176,7 +176,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator, onOpenR
             <div className="w-11 h-11 rounded-xl bg-slate-100 text-cas-slate flex items-center justify-center mb-4">
               <CheckCircle2 className="w-5 h-5 text-cas-green" aria-hidden="true" />
             </div>
-            <h3 className="font-extrabold text-base text-cas-slate mb-2">Certified NMDPRA Quality</h3>
+            <h2 className="font-extrabold text-base text-cas-slate mb-2">Certified NMDPRA Quality</h2>
             <p className="text-xs text-slate-600 leading-relaxed">
               Every delivery includes certified hydrometer density readings and flash point laboratory certificates. Quality disputes trigger an immediate 100% refund.
             </p>

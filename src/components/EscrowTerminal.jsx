@@ -102,19 +102,19 @@ export default function EscrowTerminal() {
               <span className={`px-2.5 py-1 rounded ${currentStep >= 1 ? 'bg-cas-amber text-slate-900' : 'bg-slate-800 text-slate-400'}`}>
                 1. Quote
               </span>
-              <span className="text-slate-500">&gt;</span>
+              <span className="text-slate-400">&gt;</span>
               <span className={`px-2.5 py-1 rounded ${currentStep >= 2 ? 'bg-cas-amber text-slate-900' : 'bg-slate-800 text-slate-400'}`}>
                 2. Escrow Locked
               </span>
-              <span className="text-slate-500">&gt;</span>
+              <span className="text-slate-400">&gt;</span>
               <span className={`px-2.5 py-1 rounded ${currentStep >= 3 ? 'bg-cas-amber text-slate-900' : 'bg-slate-800 text-slate-400'}`}>
                 3. Dispatch (Route Lock)
               </span>
-              <span className="text-slate-500">&gt;</span>
+              <span className="text-slate-400">&gt;</span>
               <span className={`px-2.5 py-1 rounded ${currentStep >= 4 ? 'bg-cas-amber text-slate-900' : 'bg-slate-800 text-slate-400'}`}>
                 4. Geofence Gate
               </span>
-              <span className="text-slate-500">&gt;</span>
+              <span className="text-slate-400">&gt;</span>
               <span className={`px-2.5 py-1 rounded ${currentStep === 5 ? 'bg-cas-green text-white' : 'bg-slate-800 text-slate-400'}`}>
                 5. Settle
               </span>
@@ -381,7 +381,7 @@ export default function EscrowTerminal() {
                       </div>
 
                       <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-800 flex items-start gap-2">
-                        <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" aria-hidden="true" />
+                        <AlertCircle className="w-4 h-4 shrink-0 text-rose-700 mt-0.5" aria-hidden="true" />
                         <div>
                           <strong>Discharge Verification Inactive:</strong> The button to verify receipt and release funds is disabled because the truck is outside your 100-meter facility geofence. Nobody can compel you to sign off early.
                         </div>
@@ -466,11 +466,11 @@ export default function EscrowTerminal() {
 
                     <div className="grid grid-cols-2 gap-3 max-w-md mx-auto text-xs text-left mb-6">
                       <div className="p-3 bg-white rounded border border-emerald-200">
-                        <span className="text-slate-500 block">Settlement Duration</span>
+                        <span className="text-slate-400 block">Settlement Duration</span>
                         <span className="font-bold text-slate-800">Instant (Within 60 secs)</span>
                       </div>
                       <div className="p-3 bg-white rounded border border-emerald-200">
-                        <span className="text-slate-500 block">Waybill Audit Key</span>
+                        <span className="text-slate-400 block">Waybill Audit Key</span>
                         <span className="font-mono font-bold text-slate-800">WB-LAG-9042-OK</span>
                       </div>
                     </div>

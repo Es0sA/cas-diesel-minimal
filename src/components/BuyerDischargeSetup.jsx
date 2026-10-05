@@ -183,10 +183,10 @@ export default function BuyerDischargeSetup() {
                 <div className="p-2.5 bg-cas-amber text-slate-900 rounded-full shadow-lg border-2 border-white animate-bounce">
                   <MapPin className="w-6 h-6 fill-current" aria-hidden="true" />
                 </div>
-                <div className="mt-1 px-3 py-1 bg-cas-slate text-white text-[11px] font-bold rounded shadow font-mono">
+                <div className="mt-1 px-3 py-1 bg-cas-slate text-white text-xs font-bold rounded shadow font-mono">
                   {latitude} N, {longitude} E
                 </div>
-                <span className="text-[10px] text-cas-slate font-bold bg-white/90 px-2 py-0.5 rounded mt-0.5">
+                <span className="text-xs text-cas-slate font-bold bg-white/90 px-2 py-0.5 rounded mt-0.5">
                   Discharge Inlet Perimeter (Radius: 100m)
                 </span>
               </div>

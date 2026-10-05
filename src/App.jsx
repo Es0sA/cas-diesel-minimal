@@ -28,6 +28,7 @@ import {
 function HomePage({ user, handleOpenRegistration, handleSelectSupplierForEscrow }) {
   return (
     <>
+      {user && <h1 className="sr-only">Fuel marketplace</h1>}
       {!user && (
         <>
           <Hero 
@@ -230,6 +231,13 @@ export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Restore the logged-in state after a refresh (the session lives in an HttpOnly cookie)
+  useEffect(() => {
+    api.auth.me()
+      .then((session) => { if (session.role) setUser({ role: session.role }); })
+      .catch(() => {});
+  }, []);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [location.pathname]);
@@ -251,9 +259,10 @@ export default function App() {
 
   const handleRegistrationSuccess = (role) => {
     setUser({ role });
-    if (role === 'supplier') {
+    const normalizedRole = (role || '').toUpperCase();
+    if (normalizedRole === 'SUPPLIER') {
       navigate('/marketer');
-    } else if (role === 'driver') {
+    } else if (normalizedRole === 'DRIVER') {
       navigate('/driver');
     } else {
       navigate('/');

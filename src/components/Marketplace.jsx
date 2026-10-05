@@ -71,7 +71,7 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
         <div className="p-4 bg-slate-50 rounded-xl border border-cas-border mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
           {/* Search Input */}
           <div className="relative w-full md:w-80">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" aria-hidden="true" />
+            <Search className="w-4 h-4 text-slate-500 absolute left-3 top-3.5" aria-hidden="true" />
             <input
               type="text"
               placeholder="Search marketer or terminal..."

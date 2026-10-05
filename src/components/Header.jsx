@@ -16,12 +16,13 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
       {/* Top Regulatory & Operations Bar in Calm Neutral Tone */}
-      <div className="bg-slate-50 border-b border-slate-200 text-slate-600 text-[11px] sm:text-xs py-2 px-3 sm:px-8">
+      <div className="bg-slate-50 border-b border-slate-200 text-slate-600 text-xs sm:text-xs py-2 px-3 sm:px-8">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 truncate">
             <span className="w-2 h-2 rounded-full bg-cas-green shrink-0" aria-hidden="true"></span>
-            <span className="font-semibold text-slate-700 truncate">NMDPRA Regulated Wholesale Hub</span>
-            <span className="text-slate-400 hidden sm:inline">|</span>
+            <span className="font-semibold text-slate-700 sm:hidden">NMDPRA Regulated</span>
+            <span className="font-semibold text-slate-700 hidden sm:inline">NMDPRA Regulated Wholesale Hub</span>
+            <span className="text-slate-500 hidden sm:inline">|</span>
             <span className="text-slate-500 hidden sm:inline">CAS Holdings Nigeria</span>
           </div>
           <div className="flex items-center gap-4 text-slate-600 shrink-0">
@@ -62,7 +63,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
                 <span className="font-extrabold text-xl sm:text-2xl tracking-tight text-cas-slate group-hover:text-cas-amberDark transition-colors">
                   CAS Energy
                 </span>
-                <span className="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded border border-slate-300">
+                <span className="bg-slate-100 text-slate-700 text-xs font-bold px-2 py-0.5 rounded border border-slate-300">
                   AGO Diesel
                 </span>
               </div>
@@ -73,7 +74,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center gap-3 lg:gap-4">
+          <div className="hidden lg:flex items-center gap-3 lg:gap-4">
             <Link
               to="/"
               className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition-all ${
@@ -149,7 +150,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
                 <button
                   type="button"
                   onClick={onLogout}
-                  className="ml-1 px-4 py-2.5 rounded-xl text-sm font-bold bg-red-50 hover:bg-red-100 text-red-600 transition-all flex items-center gap-2"
+                  className="ml-1 px-4 py-2.5 rounded-xl text-sm font-bold bg-red-50 hover:bg-red-100 text-red-700 transition-all flex items-center gap-2"
                 >
                   <LogOut className="w-4 h-4" aria-hidden="true" />
                   <span>Sign Out</span>
@@ -159,7 +160,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
           </div>
 
           {/* Mobile Right Controls */}
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="flex items-center gap-2 lg:hidden">
             <a
               href="tel:+23418880227"
               className="p-2.5 rounded-xl bg-slate-100 text-slate-800 border border-slate-200"
@@ -188,7 +189,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
 
       {/* Mobile Drawer Navigation Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 bg-white px-4 py-5 shadow-xl animate-fadeIn">
+        <div className="lg:hidden border-t border-slate-200 bg-white px-4 py-5 shadow-xl animate-fadeIn">
           <div className="flex flex-col gap-2">
             <Link
               to="/"
@@ -198,7 +199,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
               }`}
             >
               <span>What We Do & Marketplace</span>
-              <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
+              <ArrowRight className="w-4 h-4 text-slate-500" aria-hidden="true" />
             </Link>
 
             <Link
@@ -209,7 +210,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
               }`}
             >
               <span>Downstream Supplier Desk</span>
-              <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
+              <ArrowRight className="w-4 h-4 text-slate-500" aria-hidden="true" />
             </Link>
 
             <Link
@@ -220,7 +221,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
               }`}
             >
               <span>Driver Cockpit & Manifest</span>
-              <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
+              <ArrowRight className="w-4 h-4 text-slate-500" aria-hidden="true" />
             </Link>
 
             {!user ? (
@@ -236,7 +237,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
                     <LogIn className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
                     <span>Sign In to Terminal</span>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
+                  <ArrowRight className="w-4 h-4 text-slate-500" aria-hidden="true" />
                 </Link>
 
                 <Link
@@ -261,7 +262,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
                     <Settings className="w-4 h-4 text-slate-500" aria-hidden="true" />
                     <span>Profile Settings</span>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-slate-400" aria-hidden="true" />
+                  <ArrowRight className="w-4 h-4 text-slate-500" aria-hidden="true" />
                 </Link>
                 <div className="flex items-center justify-between p-3.5 rounded-xl text-sm font-bold bg-slate-100 text-cas-slate capitalize">
                   <div className="flex items-center gap-2">
@@ -275,7 +276,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
                     setMobileMenuOpen(false);
                     if (onLogout) onLogout();
                   }}
-                  className="flex items-center justify-center gap-2 p-3.5 mt-2 rounded-xl text-sm font-bold bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                  className="flex items-center justify-center gap-2 p-3.5 mt-2 rounded-xl text-sm font-bold bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
                 >
                   <LogOut className="w-4 h-4" aria-hidden="true" />
                   <span>Sign Out</span>

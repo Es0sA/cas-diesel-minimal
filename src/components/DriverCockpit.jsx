@@ -85,7 +85,7 @@ function LocationSharing({ order, onStatusChange }) {
       </div>
       {message && <p className="text-xs font-bold text-cas-green mt-3">{message}</p>}
       {error && (
-        <p className="text-xs text-rose-600 mt-3 flex items-center gap-1.5">
+        <p className="text-xs text-rose-700 mt-3 flex items-center gap-1.5">
           <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
           {error}
         </p>
@@ -137,9 +137,9 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                   <Truck className="w-6 h-6" aria-hidden="true" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-base sm:text-lg text-white">
+                  <h1 className="font-extrabold text-base sm:text-lg text-white">
                     {driver ? `Driver ${driver.firstName} ${driver.lastName}` : 'Driver Cockpit'}
-                  </h3>
+                  </h1>
                   <span className="text-xs text-slate-300">Your assigned deliveries</span>
                 </div>
               </div>
@@ -192,7 +192,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
               return (
                 <div key={order.id} className="p-4 sm:p-8 space-y-5 border-b border-slate-200 last:border-b-0">
                   <div className="p-4 sm:p-5 bg-amber-50 border-2 border-cas-amber rounded-xl">
-                    <div className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-cas-amberDark mb-1">Dispatch Manifest</div>
+                    <div className="text-xs sm:text-xs font-bold uppercase tracking-wider text-cas-amberDark mb-1">Dispatch Manifest</div>
                     <div className="text-lg sm:text-xl font-extrabold text-cas-slate">
                       Order #{order.id.slice(0, 8).toUpperCase()} ({order.volumeLiters.toLocaleString()} Litres AGO)
                     </div>
@@ -228,7 +228,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                         <MapPin className="w-5 h-5 text-cas-blue shrink-0 mt-0.5" aria-hidden="true" />
                         <div>
                           <span className="text-xs font-bold uppercase tracking-wider text-cas-muted block">Delivery Destination</span>
-                          <h4 className="font-extrabold text-base text-cas-slate mt-0.5">{order.buyer?.companyName}</h4>
+                          <h2 className="font-extrabold text-base text-cas-slate mt-0.5">{order.buyer?.companyName}</h2>
                           {order.buyer?.businessAddress && <div className="text-xs text-cas-muted">{order.buyer.businessAddress}</div>}
                           <div className="text-xs font-mono text-cas-blue font-bold mt-1">
                             {hasGate ? `GPS: ${order.targetLatitude}, ${order.targetLongitude}` : 'Gate coordinates not set'}

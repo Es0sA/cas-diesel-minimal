@@ -20,6 +20,22 @@
   }
 }
 
+/* Touch devices: every control is at least 44px tall (WCAG 2.5.5 / Apple HIG) */
+@media (pointer: coarse) {
+  a[href]:not(p a):not(li a):not(.inline-link),
+  button,
+  select,
+  input:not([type='checkbox']):not([type='radio']):not([type='hidden']),
+  textarea,
+  [role='button'] {
+    min-height: 44px;
+  }
+  a[href]:not(p a):not(li a):not(.inline-link),
+  button {
+    min-width: 44px;
+  }
+}
+
 /* Custom subtle scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

@@ -29,7 +29,7 @@ export default function CookieBanner({ onOpenPolicy }) {
         </div>
         <div className="flex-1">
           <h4 className="font-extrabold text-xs sm:text-sm text-cas-slate">Essential Security Cookies</h4>
-          <p className="text-[11px] sm:text-xs text-cas-muted mt-0.5 leading-relaxed">
+          <p className="text-xs sm:text-xs text-cas-muted mt-0.5 leading-relaxed">
             CAS Energy uses essential session cookies for escrow security and CSRF protection. No third-party ad trackers.
           </p>
 
@@ -37,14 +37,14 @@ export default function CookieBanner({ onOpenPolicy }) {
             <button
               type="button"
               onClick={handleAccept}
-              className="px-3 py-1.5 bg-cas-slate hover:bg-black text-white text-[11px] sm:text-xs font-bold rounded-lg transition-colors"
+              className="px-3 py-1.5 bg-cas-slate hover:bg-black text-white text-xs sm:text-xs font-bold rounded-lg transition-colors"
             >
               Accept Cookies
             </button>
             <button
               type="button"
               onClick={() => onOpenPolicy('cookies')}
-              className="text-[11px] sm:text-xs font-semibold text-cas-muted hover:text-cas-slate underline underline-offset-2"
+              className="text-xs sm:text-xs font-semibold text-cas-muted hover:text-cas-slate underline underline-offset-2"
             >
               Policy
             </button>
@@ -54,7 +54,7 @@ export default function CookieBanner({ onOpenPolicy }) {
         <button
           type="button"
           onClick={handleAccept}
-          className="text-slate-400 hover:text-cas-slate p-1 shrink-0"
+          className="text-slate-500 hover:text-cas-slate p-1 shrink-0"
           aria-label="Dismiss cookie notice"
         >
           <X className="w-4 h-4" aria-hidden="true" />
