@@ -77,13 +77,37 @@ export default function OrderDetail() {
     }
   };
 
+  const mergeMessages = (incoming) => {
+    if (!incoming.length) return;
+    setMessages((prev) => {
+      const seen = new Set(prev.map((m) => m.id));
+      const fresh = incoming.filter((m) => !seen.has(m.id));
+      return fresh.length ? [...prev, ...fresh] : prev;
+    });
+  };
+
+  // Poll for new messages every 5 seconds while the tab is visible
+  useEffect(() => {
+    const timer = setInterval(async () => {
+      if (document.hidden || !orderId) return;
+      const last = messages[messages.length - 1];
+      try {
+        const res = await api.chat.getMessages(orderId, last?.createdAt);
+        mergeMessages(res.messages || []);
+      } catch {
+        // transient network error, try again on the next tick
+      }
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [orderId, messages]);
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
 
     try {
-      const newMsg = await api.chat.sendMessage(orderId, { messageContent: chatInput });
-      setMessages(prev => [...prev, newMsg]);
+      const res = await api.chat.sendMessage(orderId, { messageContent: chatInput });
+      mergeMessages([res.chatMessage]);
       setChatInput('');
     } catch (err) {
       console.error('Failed to send message', err);
@@ -227,10 +251,14 @@ export default function OrderDetail() {
                   <p>No messages yet.</p>
                 </div>
               ) : (
-                messages.map((msg, i) => (
-                  <div key={i} className="flex flex-col bg-slate-50 p-3 rounded-lg border border-slate-100 max-w-[85%] self-start">
-                    <span className="text-xs font-bold text-cas-blue mb-1">{msg.senderRole || 'User'}</span>
-                    <p className="text-sm text-cas-slate">{msg.messageContent || msg.content}</p>
+                messages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className={`flex flex-col p-3 rounded-lg border max-w-[85%] ${msg.mine ? 'bg-blue-50 border-blue-100 self-end' : 'bg-slate-50 border-slate-100 self-start'}`}
+                  >
+                    <span className="text-xs font-bold text-cas-blue mb-1">{msg.mine ? 'You' : msg.senderRole || 'User'}</span>
+                    <p className="text-sm text-cas-slate whitespace-pre-wrap break-words">{msg.messageContent}</p>
+                    <span className="text-[10px] text-cas-muted mt-1">{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                   </div>
                 ))
               )}

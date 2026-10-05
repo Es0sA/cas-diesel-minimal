@@ -79,7 +79,8 @@ export const api = {
     resolveDispute: (id, resolution) => request(`/admin/disputes/${id}/resolve`, { method: 'POST', body: JSON.stringify({ resolution }) }),
   },
   chat: {
-    getMessages: (orderId, cursor) => request(`/chat/${orderId}${cursor ? `?cursor=${cursor}` : ''}`),
+    getMessages: (orderId, after) => request(`/chat/${orderId}${after ? `?after=${encodeURIComponent(after)}` : ''}`),
+    unread: () => request('/chat/unread/summary'),
     sendMessage: (orderId, data) => request(`/chat/${orderId}/send`, { method: 'POST', body: JSON.stringify(data) }),
   },
   telemetry: {
