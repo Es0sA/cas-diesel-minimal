@@ -37,6 +37,10 @@ export const api = {
     },
     editProfile: (data) => request('/companies/profile', { method: 'PUT', body: JSON.stringify(data) }),
   },
+  reviews: {
+    create: (data) => request('/reviews', { method: 'POST', body: JSON.stringify(data) }),
+    forSupplier: (companyId) => request(`/reviews/supplier/${companyId}`),
+  },
   drivers: {
     updateProfile: (data) => request('/drivers/profile', { method: 'POST', body: JSON.stringify(data) }),
     editProfile: (data) => request('/drivers/profile', { method: 'PUT', body: JSON.stringify(data) }),
