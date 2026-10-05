@@ -4,7 +4,6 @@ import { api } from './api';
 import Header from './components/Header';
 import DepotTicker from './components/DepotTicker';
 import Hero from './components/Hero';
-import EscrowTerminal from './components/EscrowTerminal';
 import Marketplace from './components/Marketplace';
 import LoginPage from './components/LoginPage';
 import SupplierPortal from './components/SupplierPortal';
@@ -12,6 +11,7 @@ import DriverCockpit from './components/DriverCockpit';
 import OrderDetail from './components/OrderDetail';
 import ProfileSettings from './components/ProfileSettings';
 import AdminDashboard from './components/AdminDashboard';
+import OrderCheckoutModal from './components/OrderCheckoutModal';
 import LegalModals from './components/LegalModals';
 import CookieBanner from './components/CookieBanner';
 import Footer from './components/Footer';
@@ -25,7 +25,14 @@ import {
   CheckCircle2
 } from 'lucide-react';
 
-function HomePage({ user, handleOpenRegistration, handleSelectSupplierForEscrow }) {
+function HomePage({ user, handleOpenRegistration }) {
+  const [checkoutSupplier, setCheckoutSupplier] = useState(null);
+  const navigate = useNavigate();
+
+  const handleCheckoutSuccess = (orderId) => {
+    setCheckoutSupplier(null);
+    navigate(`/orders/${orderId}`);
+  };
   return (
     <>
       {user && <h1 className="sr-only">Fuel marketplace</h1>}
@@ -35,10 +42,6 @@ function HomePage({ user, handleOpenRegistration, handleSelectSupplierForEscrow 
         onExploreMarketplace={() => {
           const rates = document.getElementById('depot-rates') || document.getElementById('marketplace');
           if (rates) rates.scrollIntoView({ behavior: 'smooth' });
-        }}
-        onExploreSimulator={() => {
-          const sim = document.getElementById('escrow-simulator');
-          if (sim) sim.scrollIntoView({ behavior: 'smooth' });
         }}
         onOpenRegister={() => handleOpenRegistration('buyer')}
       />
@@ -160,13 +163,20 @@ function HomePage({ user, handleOpenRegistration, handleSelectSupplierForEscrow 
         </div>
       </section>
 
-      <EscrowTerminal />
         </>
       )}
 
       <Marketplace 
-        onSelectSupplierForEscrow={handleSelectSupplierForEscrow}
+        onSelectSupplierForEscrow={(supplier) => setCheckoutSupplier(supplier)}
       />
+
+      {checkoutSupplier && (
+        <OrderCheckoutModal
+          supplier={checkoutSupplier}
+          onClose={() => setCheckoutSupplier(null)}
+          onSuccess={handleCheckoutSuccess}
+        />
+      )}
 
       {!user && (
         <section className="bg-white py-14 sm:py-20 border-b border-cas-border">
@@ -247,15 +257,6 @@ export default function App() {
     navigate('/register');
   };
 
-  const handleSelectSupplierForEscrow = () => {
-    navigate('/');
-    setTimeout(() => {
-      const sim = document.getElementById('escrow-simulator');
-      if (sim) {
-        sim.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
-  };
 
   const handleRegistrationSuccess = (role) => {
     setUser({ role });
@@ -301,7 +302,7 @@ export default function App() {
       {/* Main Body */}
       <main className="flex-1 pb-20 md:pb-0">
         <Routes>
-          <Route path="/" element={<HomePage user={user} handleOpenRegistration={handleOpenRegistration} handleSelectSupplierForEscrow={handleSelectSupplierForEscrow} />} />
+          <Route path="/" element={<HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
           <Route path="/register" element={<LoginPage initialRole={registerInitialRole} initialMode="register" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/marketer" element={<SupplierPortal />} />

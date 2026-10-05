@@ -1,7 +1,7 @@
 import React from 'react';
 import { ShieldCheck, MapPin, CheckCircle2, Lock, ArrowRight, Truck } from 'lucide-react';
 
-export default function Hero({ onExploreMarketplace, onExploreSimulator, onOpenRegister }) {
+export default function Hero({ onExploreMarketplace, onOpenRegister }) {
   return (
     <section className="bg-white py-14 sm:py-20 md:py-24 border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
@@ -55,7 +55,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator, onOpenR
             <div className="flex flex-wrap items-center gap-x-8 gap-y-3 text-xs font-medium text-slate-500 pt-6 border-t border-slate-100">
               <span className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0" aria-hidden="true" />
-                <span>Stanbic Nominees Escrow Custody</span>
+                <span>Escrow Payment Protection</span>
               </span>
               <span className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0" aria-hidden="true" />
@@ -111,7 +111,7 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator, onOpenR
                   <div>
                     <h4 className="font-bold text-sm text-cas-slate">Payment Locked in Custody</h4>
                     <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                      Your purchase capital is locked with Stanbic Nominees. The marketer cannot access funds until product is verified on site.
+                      Your purchase capital is held in escrow. The marketer cannot access funds until product is verified on site.
                     </p>
                   </div>
                 </div>
@@ -134,14 +134,6 @@ export default function Hero({ onExploreMarketplace, onExploreSimulator, onOpenR
               {/* Card Bottom Link */}
               <div className="mt-8 pt-5 border-t border-slate-200/80 flex items-center justify-between">
                 <span className="text-xs text-slate-500 font-medium">Zero default settlement record</span>
-                <button
-                  type="button"
-                  onClick={onExploreSimulator}
-                  className="text-xs font-bold text-cas-amberDark hover:text-black transition-colors flex items-center gap-1"
-                >
-                  <span>Test Interactive Terminal</span>
-                  <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                </button>
               </div>
 
             </div>

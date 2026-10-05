@@ -30,9 +30,9 @@ const ROLE_CONFIGS = {
     title: 'Corporate Buyer',
     shortLabel: 'Buyer',
     tagline: 'Procurement & Plant Facilities',
-    badge: 'Stanbic Nominees Virtual Escrow',
+    badge: 'Escrow Protected Payments',
     signinSubtitle: 'Sign in to access bulk spot prices, manage locked escrow accounts, and monitor gate GPS discharge radar.',
-    registerSubtitle: 'Register your corporate facility, establish Stanbic escrow custody, and pin your facility discharge gate.',
+    registerSubtitle: 'Register your corporate facility, set up escrow-protected payments, and pin your facility discharge gate.',
     emailLabel: 'Corporate Procurement Email',
     emailPlaceholder: 'procurement@dan-industries.ng',
     accentColor: 'text-cas-blue',
@@ -46,7 +46,7 @@ const ROLE_CONFIGS = {
       'Instant 24-hour full refund guarantee on any verified quality discrepancy.'
     ],
     registerFeatures: [
-      'Automatic Stanbic Virtual Escrow account setup for zero cash transit risk.',
+      'Escrow-protected payment for zero cash transit risk.',
       'Mandatory discharge gate GPS pin drop to eliminate lost tanker diversions.',
       'Direct corporate access to licensed NMDPRA marketer pricing.'
     ],
@@ -1118,7 +1118,7 @@ export default function LoginPage({
 
             <div className="mt-5 pt-4 border-t border-white/15 flex items-center justify-between text-xs text-slate-300">
               <span>Settlement Custody:</span>
-              <span className="font-semibold text-white">Stanbic Virtual Escrow</span>
+              <span className="font-semibold text-white">Escrow</span>
             </div>
           </div>
 
