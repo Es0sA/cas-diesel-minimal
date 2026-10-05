@@ -47,7 +47,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
           <div className="hidden lg:flex items-center gap-3 lg:gap-4">
             <Link
               to="/"
-              className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition-all ${
+              className={`px-3.5 py-2.5 rounded-lg text-sm font-semibold transition-all ${
                 isActive('/')
                   ? 'bg-slate-100 text-cas-slate font-bold'
                   : 'text-slate-600 hover:text-black hover:bg-slate-50'
@@ -58,7 +58,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
 
             <Link
               to="/marketer"
-              className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition-all ${
+              className={`px-3.5 py-2.5 rounded-lg text-sm font-semibold transition-all ${
                 isActive('/marketer')
                   ? 'bg-slate-100 text-cas-slate font-bold'
                   : 'text-slate-600 hover:text-black hover:bg-slate-50'
@@ -69,7 +69,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
 
             <Link
               to="/driver"
-              className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition-all ${
+              className={`px-3.5 py-2.5 rounded-lg text-sm font-semibold transition-all ${
                 isActive('/driver')
                   ? 'bg-slate-100 text-cas-slate font-bold'
                   : 'text-slate-600 hover:text-black hover:bg-slate-50'
@@ -83,7 +83,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
               <>
                 <Link
                   to="/login"
-                  className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 ${
+                  className={`px-3.5 py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 ${
                     isActive('/login')
                       ? 'bg-slate-100 text-cas-slate font-bold'
                       : 'text-slate-700 hover:text-black hover:bg-slate-50'
@@ -105,7 +105,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
               <>
                 <Link
                   to="/profile"
-                  className={`px-3.5 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 ${
+                  className={`px-3.5 py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center gap-1.5 ${
                     isActive('/profile')
                       ? 'bg-slate-100 text-cas-slate font-bold'
                       : 'text-slate-700 hover:text-black hover:bg-slate-50'
@@ -114,7 +114,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
                   <Settings className="w-4 h-4" aria-hidden="true" />
                   <span>Profile</span>
                 </Link>
-                <div className="px-3.5 py-2 rounded-lg text-sm font-bold bg-slate-100 text-cas-slate capitalize border border-slate-200">
+                <div className="px-3.5 py-2.5 rounded-lg text-sm font-bold bg-slate-100 text-cas-slate capitalize border border-slate-200">
                   {user.role}
                 </div>
                 <button

@@ -279,7 +279,7 @@ export default function SupplierPortal() {
                             <select
                               value={driverChoice[ord.id] || ''}
                               onChange={(e) => setDriverChoice((prev) => ({ ...prev, [ord.id]: e.target.value }))}
-                              className="w-full sm:w-auto p-2 bg-white border border-slate-300 rounded font-semibold text-xs text-cas-slate"
+                              className="w-full sm:w-auto h-9 px-2 bg-white border border-slate-300 rounded font-semibold text-xs text-cas-slate"
                               aria-label="Select verified driver"
                             >
                               <option value="">{drivers.length ? 'Select driver' : 'No verified drivers yet'}</option>
@@ -293,7 +293,7 @@ export default function SupplierPortal() {
                               type="button"
                               onClick={() => handleDispatch(ord.id)}
                               disabled={dispatchingId === ord.id}
-                              className="px-4 py-2 bg-cas-slate hover:bg-black text-white font-bold rounded text-xs transition-colors shrink-0 disabled:opacity-50"
+                              className="h-9 px-4 bg-cas-slate hover:bg-black text-white font-bold rounded text-xs transition-colors shrink-0 disabled:opacity-50"
                             >
                               {dispatchingId === ord.id ? 'Dispatching...' : 'Assign & Dispatch'}
                             </button>
