@@ -56,6 +56,14 @@ export default function OrderDetail() {
   }, [messages]);
 
   
+  const handleWaybill = async () => {
+    try {
+      await api.orders.downloadWaybill(orderId);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   const handleDispute = async () => {
     const reason = window.prompt("Enter reason for dispute (Quality, Shortage, Delay):");
     if (!reason) return;
@@ -129,6 +137,14 @@ export default function OrderDetail() {
         <div className="text-left md:text-right flex flex-col items-start md:items-end">
           <p className="text-sm text-cas-muted">Total Escrow Amount</p>
           <p className="text-3xl font-extrabold text-cas-slate">₦{(order.totalEscrowAmount ?? order.totalAmount ?? 0).toLocaleString()}</p>
+          {order.status !== 'DRAFT' && (
+            <button
+              onClick={handleWaybill}
+              className="mt-3 px-4 py-2 bg-white hover:bg-slate-50 text-cas-slate border border-slate-300 text-sm font-bold rounded-lg transition-colors"
+            >
+              Download Waybill (PDF)
+            </button>
+          )}
           {['FUNDED', 'IN_TRANSIT', 'ARRIVED'].includes(order.status) && (
             <button 
               onClick={handleDispute}

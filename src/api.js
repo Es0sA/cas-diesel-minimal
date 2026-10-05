@@ -55,6 +55,20 @@ export const api = {
     dispatch: (id, data) => request(`/orders/${id}/dispatch`, { method: 'POST', body: JSON.stringify(data) }),
     cancel: (id, data) => request(`/orders/${id}/cancel`, { method: 'POST', body: JSON.stringify(data) }),
     confirmDelivery: (id) => request(`/orders/${id}/confirm-delivery`, { method: 'POST' }),
+    downloadWaybill: async (id) => {
+      const response = await fetch(`${API_URL}/orders/${id}/waybill`, { credentials: 'include' });
+      if (!response.ok) {
+        let message = 'Could not download the waybill.';
+        try { message = (await response.json()).error || message; } catch { /* non-JSON error body */ }
+        throw new Error(message);
+      }
+      const url = URL.createObjectURL(await response.blob());
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `waybill-${id.slice(0, 8)}.pdf`;
+      link.click();
+      URL.revokeObjectURL(url);
+    },
     dispute: (id, data) => request(`/orders/${id}/dispute`, { method: 'POST', body: JSON.stringify(data) }),
   },
   admin: {
