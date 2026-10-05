@@ -9,6 +9,7 @@ import Marketplace from './components/Marketplace';
 import LoginPage from './components/LoginPage';
 import SupplierPortal from './components/SupplierPortal';
 import DriverCockpit from './components/DriverCockpit';
+import OrderDetail from './components/OrderDetail';
 import LegalModals from './components/LegalModals';
 import CookieBanner from './components/CookieBanner';
 import Footer from './components/Footer';
@@ -286,6 +287,7 @@ export default function App() {
           <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/marketer" element={<SupplierPortal />} />
           <Route path="/driver" element={<DriverCockpit onNavigateToRegister={() => handleOpenRegistration('driver')} />} />
+          <Route path="/orders/:id" element={<OrderDetail />} />
         </Routes>
       </main>
 

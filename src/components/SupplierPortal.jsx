@@ -4,22 +4,39 @@ import {
   CheckCircle2, 
   Lock
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 
 export default function SupplierPortal() {
+  const navigate = useNavigate();
   const [dailySpotPrice, setDailySpotPrice] = useState(1175);
   const [availableLitres, setAvailableLitres] = useState(450000);
   const [minOrderVolume, setMinOrderVolume] = useState(11000);
   const [saveAlert, setSaveAlert] = useState(false);
-
   const [orders, setOrders] = useState([]);
+  const [filterStatus, setFilterStatus] = useState('All');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchOrders = async () => {
+      setLoading(true);
       try {
         if (localStorage.getItem('cas_token')) {
-          const data = await api.orders.list();
-          setOrders(data.orders.map(ord => ({
+          let data;
+          if (filterStatus === 'All' || filterStatus === 'Active') {
+            data = await api.orders.list();
+          } else if (filterStatus === 'Completed') {
+            data = await api.orders.list({ status: 'DELIVERED' });
+          } else if (filterStatus === 'Cancelled') {
+            data = await api.orders.list({ status: 'CANCELLED' });
+          }
+          
+          let rawOrders = data?.orders || [];
+          if (filterStatus === 'Active') {
+            rawOrders = rawOrders.filter(o => ['FUNDED', 'IN_TRANSIT', 'ARRIVED'].includes(o.status));
+          }
+
+          setOrders(rawOrders.map(ord => ({
             id: ord.id,
             buyerCompany: ord.buyer?.companyName || 'Unknown Buyer',
             volume: ord.volumeLiters,
@@ -33,10 +50,12 @@ export default function SupplierPortal() {
         }
       } catch (err) {
         console.error('Failed to fetch orders', err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchOrders();
-  }, []);
+  }, [filterStatus]);
 
   const [selectedDriverForOrder, setSelectedDriverForOrder] = useState('Emeka Okonkwo (KJA-112-XC)');
 
@@ -181,16 +200,37 @@ export default function SupplierPortal() {
 
             {/* Confirmed Escrow Orders */}
             <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-cas-border shadow-sm">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 mb-6 gap-4">
                 <div>
                   <h3 className="font-extrabold text-lg text-cas-slate">Confirmed Inbound Escrow Orders</h3>
                   <span className="text-xs text-cas-muted">Funds guaranteed in CAS Escrow prior to dispatch</span>
                 </div>
                 <span className="text-xs font-bold px-3 py-1 bg-cas-amberLight text-cas-amberDark rounded-full border border-cas-amber/50">
-                  {orders.length} Active Orders
+                  {orders.length} Orders
                 </span>
               </div>
 
+              <div className="flex flex-wrap gap-2 mb-6">
+                {['All', 'Active', 'Completed', 'Cancelled'].map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => setFilterStatus(tab)}
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
+                      filterStatus === tab
+                        ? 'bg-cas-amber text-slate-900 border-2 border-cas-amber'
+                        : 'bg-transparent text-cas-slate border-2 border-slate-300 hover:border-cas-amber'
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+
+              {loading ? (
+                <div className="py-8 text-center text-cas-muted text-sm font-bold">Loading orders...</div>
+              ) : orders.length === 0 ? (
+                <div className="py-8 text-center text-cas-muted text-sm font-bold">No orders found.</div>
+              ) : (
               <div className="space-y-4">
                 {orders.map((ord) => (
                   <div key={ord.id} className="p-5 bg-slate-50 border-2 border-slate-200 rounded-xl space-y-4">
@@ -247,9 +287,13 @@ export default function SupplierPortal() {
                         </div>
                       )}
                     </div>
+                    <div className="flex justify-end border-t border-slate-200 pt-3">
+                      <button onClick={() => navigate(`/orders/${ord.id}`)} className="text-xs font-bold text-cas-slate hover:text-cas-blue transition-colors">View Full Details &rarr;</button>
+                    </div>
                   </div>
                 ))}
               </div>
+              )}
             </div>
 
           </div>

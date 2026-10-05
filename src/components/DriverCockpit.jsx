@@ -1,28 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import { Truck, Navigation, Phone, MapPin, CheckCircle2, ShieldCheck, AlertCircle, UserPlus, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 
 export default function DriverCockpit({ onNavigateToRegister }) {
+  const navigate = useNavigate();
   // Active Trip Milestone State
   // 1 = loaded at depot, 2 = transit, 3 = arrived at gate, 4 = discharged
   const [tripStep, setTripStep] = useState(2);
   const [activeOrder, setActiveOrder] = useState(null);
+  const [allOrders, setAllOrders] = useState([]);
+  const [filterStatus, setFilterStatus] = useState('All');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchOrder = async () => {
+    const fetchOrders = async () => {
+      setLoading(true);
       try {
         if (localStorage.getItem('cas_token')) {
-          const data = await api.orders.list();
-          if (data.orders && data.orders.length > 0) {
-            setActiveOrder(data.orders[0]); // Just pick the first assigned order
+          let data;
+          if (filterStatus === 'All' || filterStatus === 'Active') {
+            data = await api.orders.list();
+          } else if (filterStatus === 'Completed') {
+            data = await api.orders.list({ status: 'DELIVERED' });
+          }
+          
+          let rawOrders = data?.orders || [];
+          if (filterStatus === 'Active') {
+            rawOrders = rawOrders.filter(o => ['IN_TRANSIT', 'ARRIVED'].includes(o.status));
+          }
+
+          setAllOrders(rawOrders);
+          if (rawOrders.length > 0) {
+            setActiveOrder(rawOrders[0]);
+          } else {
+            setActiveOrder(null);
           }
         }
       } catch (err) {
-        console.error('Failed to fetch driver order', err);
+        console.error('Failed to fetch driver orders', err);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchOrder();
-  }, []);
+    fetchOrders();
+  }, [filterStatus]);
 
   return (
     <section id="driver-cockpit" className="bg-cas-canvas py-6 sm:py-12 md:py-20 border-b border-cas-border">
@@ -51,8 +73,33 @@ export default function DriverCockpit({ onNavigateToRegister }) {
             </div>
           </div>
 
-          {/* Trip Manifest Body */}
-          <div className="p-4 sm:p-8 space-y-5 sm:space-y-6">
+          {/* Filter Tabs */}
+          <div className="p-4 bg-slate-50 border-b border-slate-200">
+             <div className="flex flex-wrap gap-2">
+                {['All', 'Active', 'Completed'].map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => setFilterStatus(tab)}
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
+                      filterStatus === tab
+                        ? 'bg-cas-amber text-slate-900 border-2 border-cas-amber'
+                        : 'bg-transparent text-cas-slate border-2 border-slate-300 hover:border-cas-amber'
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+             </div>
+          </div>
+
+          {loading ? (
+             <div className="p-8 text-center text-cas-muted text-sm font-bold">Loading orders...</div>
+          ) : allOrders.length === 0 ? (
+             <div className="p-8 text-center text-cas-muted text-sm font-bold">No orders found.</div>
+          ) : (
+            allOrders.map((activeOrder, orderIndex) => (
+              <div key={activeOrder?.id || orderIndex} className="p-4 sm:p-8 space-y-5 sm:space-y-6 border-b border-slate-200 last:border-b-0">
+
             
             {/* Order Assignment Box */}
             <div className="p-4 sm:p-5 bg-amber-50 border-2 border-cas-amber rounded-xl">
@@ -65,6 +112,11 @@ export default function DriverCockpit({ onNavigateToRegister }) {
               <div className="text-xs text-slate-700 mt-1">
                 Escrow Verified by CAS Energy. Payment locked for delivery.
               </div>
+              {activeOrder && (
+                <div className="mt-3">
+                  <button onClick={() => navigate(`/orders/${activeOrder.id}`)} className="text-xs font-bold text-cas-blue hover:underline">View Full Details &rarr;</button>
+                </div>
+              )}
             </div>
 
             {/* Waypoint Coordinates & Destination */}
@@ -183,8 +235,8 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                 Tapping milestones automatically updates the buyer and releases the geofence perimeter lock when you cross into the registered facility coordinates.
               </p>
             </div>
-
-          </div>
+            </div>
+            ))}
         </div>
 
       </div>
