@@ -77,6 +77,7 @@ export const api = {
     getStats: () => request('/admin/stats'),
     getUsers: () => request('/admin/users'),
     getDisputes: () => request('/admin/disputes'),
+    reviewKycDoc: (docId, status, reason) => request(`/admin/kyc/${docId}/review`, { method: 'PUT', body: JSON.stringify({ status, reason }) }),
     getKycUrl: (docId) => request(`/admin/kyc/${docId}/url`),
     verifyUser: (id, isVerified) => request(`/admin/users/${id}/verify`, { method: 'PUT', body: JSON.stringify({ isVerified }) }),
     resolveDispute: (id, resolution) => request(`/admin/disputes/${id}/resolve`, { method: 'POST', body: JSON.stringify({ resolution }) }),

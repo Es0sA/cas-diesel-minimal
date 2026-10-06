@@ -50,7 +50,25 @@ export default function AdminDashboard({ user }) {
     }
   };
 
+  const [rejecting, setRejecting] = useState(null);
+  const [reason, setReason] = useState('');
+
+  const reviewDoc = async (docId, status, why) => {
+    try {
+      await api.admin.reviewKycDoc(docId, status, why);
+      const res = await api.admin.getUsers();
+      setUsersList(res);
+      setReviewing((cur) => (cur ? res.find((x) => x.id === cur.id) || cur : cur));
+      setRejecting(null);
+      setReason('');
+    } catch (err) {
+      alert(err.message || 'Failed to update document');
+    }
+  };
+
   const openReview = (u) => {
+    setRejecting(null);
+    setReason('');
     setChecks({});
     setReviewing(u);
   };
@@ -257,6 +275,7 @@ export default function AdminDashboard({ user }) {
         const docLabels = { CAC_CERT: 'CAC certificate', NMDPRA_LICENCE: 'NMDPRA licence', DRIVER_LICENCE: 'Driver licence' };
         const required = c ? ['CAC_CERT', 'NMDPRA_LICENCE'] : ['DRIVER_LICENCE'];
         const missing = required.filter((t) => !docs.some((d) => d.documentType === t));
+        const notApproved = required.filter((t) => !docs.some((d) => d.documentType === t && d.status === 'APPROVED'));
         const allChecked = items.every((_, i) => checks[i]);
         return (
           <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
@@ -280,11 +299,33 @@ export default function AdminDashboard({ user }) {
                 <div className="text-xs font-bold text-cas-muted uppercase mb-2">Uploaded documents</div>
                 {docs.length === 0 && <div className="text-sm font-bold text-rose-600">No documents uploaded</div>}
                 {docs.map((d) => (
-                  <button key={d.id} onClick={() => openDoc(d.id)} className="block text-sm font-bold text-cas-green underline mb-1 text-left">
-                    View {docLabels[d.documentType] || d.documentType} ({d.fileName})
-                  </button>
+                  <div key={d.id} className="border border-slate-200 rounded-xl p-3 mb-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <button onClick={() => openDoc(d.id)} className="text-sm font-bold text-cas-green underline text-left break-words">
+                        {docLabels[d.documentType] || d.documentType} ({d.fileName})
+                      </button>
+                      <span className={`shrink-0 text-xs font-bold ${d.status === 'APPROVED' ? 'text-cas-green' : d.status === 'REJECTED' ? 'text-rose-600' : 'text-amber-700'}`}>
+                        {d.status === 'APPROVED' ? 'Approved' : d.status === 'REJECTED' ? 'Rejected' : 'Pending'}
+                      </span>
+                    </div>
+                    {d.status === 'REJECTED' && <div className="text-xs text-rose-600 mt-1">Reason sent to user: {d.rejectReason}</div>}
+                    {rejecting === d.id ? (
+                      <div className="mt-2 space-y-2">
+                        <input value={reason} onChange={(e) => setReason(e.target.value)} maxLength={300} placeholder="Why is it rejected? (expired, unreadable, wrong document...)" className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
+                        <div className="flex gap-2">
+                          <button disabled={!reason.trim()} onClick={() => reviewDoc(d.id, 'REJECTED', reason)} className="px-3 py-1.5 rounded-full text-xs font-bold bg-rose-600 text-white disabled:opacity-40">Reject and request re-upload</button>
+                          <button onClick={() => { setRejecting(null); setReason(''); }} className="px-3 py-1.5 rounded-full text-xs font-bold border border-slate-200 text-slate-700">Cancel</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2 mt-2">
+                        {d.status !== 'APPROVED' && <button onClick={() => reviewDoc(d.id, 'APPROVED')} className="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-cas-green border border-emerald-200">Approve</button>}
+                        {d.status !== 'REJECTED' && <button onClick={() => { setRejecting(d.id); setReason(''); }} className="px-3 py-1.5 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">Reject</button>}
+                      </div>
+                    )}
+                  </div>
                 ))}
-                {missing.length > 0 && <div className="text-xs font-bold text-rose-600 mt-1">Missing: {missing.map((t) => docLabels[t]).join(', ')}</div>}
+                {missing.length > 0 && <div className="text-xs font-bold text-rose-600 mt-1">Not uploaded: {missing.map((t) => docLabels[t]).join(', ')}</div>}
               </div>
               {c?.registrationNumber && (
                 <a href="https://search.cac.gov.ng/home" target="_blank" rel="noreferrer" className="text-xs font-bold text-cas-green underline block mb-4">Open CAC public search</a>
@@ -305,7 +346,7 @@ export default function AdminDashboard({ user }) {
                 {isVerified ? (
                   <button disabled={saving} onClick={() => handleVerify(u.id, true)} className="px-4 py-2 rounded-full text-sm font-bold bg-rose-600 text-white disabled:opacity-50">Revoke verification</button>
                 ) : (
-                  <button disabled={!allChecked || missing.length > 0 || saving} onClick={() => handleVerify(u.id, false)} className="px-4 py-2 rounded-full text-sm font-bold bg-cas-green text-white disabled:opacity-40">Approve and verify</button>
+                  <button disabled={!allChecked || notApproved.length > 0 || saving} onClick={() => handleVerify(u.id, false)} className="px-4 py-2 rounded-full text-sm font-bold bg-cas-green text-white disabled:opacity-40">Approve and verify</button>
                 )}
               </div>
             </div>
