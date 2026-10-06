@@ -33,7 +33,7 @@ export default function KycUpload({ types }) {
   return (
     <div className="p-4 mb-6 bg-white border-2 border-cas-border rounded-xl">
       <h2 className="font-extrabold text-base text-cas-slate mb-1">Verification documents</h2>
-      <p className="text-xs text-cas-muted mb-4">PDF, JPG or PNG, up to 5 MB each. An admin will review each document and either approve it or ask you to upload a new one.</p>
+      <p className="text-xs text-cas-muted mb-4">PDF, JPG or PNG, up to 5 MB each. An admin will either approve or reject each document.</p>
       <div className="space-y-3">
         {types.map((type) => {
           const doc = docs.find((d) => d.documentType === type);
