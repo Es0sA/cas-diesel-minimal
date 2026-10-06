@@ -186,7 +186,7 @@ export default function SupplierPortal() {
                   id="moq"
                   type="number"
                   min="1"
-                  step="1000"
+                  step="1"
                   value={minOrderVolume}
                   onChange={(e) => setMinOrderVolume(Number(e.target.value))}
                   className="w-full p-3 bg-white border border-slate-300 rounded-lg font-mono font-bold text-sm text-cas-slate focus:border-cas-amber"

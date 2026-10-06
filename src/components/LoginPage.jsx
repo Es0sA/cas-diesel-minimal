@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Building2, 
   UserCheck, 
@@ -169,6 +169,15 @@ export default function LoginPage({
   // Status & Modal States
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const alertRef = useRef(null);
+
+  // Bring the error into view and focus it so a failed submit is never silent
+  useEffect(() => {
+    if (errorMessage && alertRef.current) {
+      alertRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      alertRef.current.focus({ preventScroll: true });
+    }
+  }, [errorMessage]);
   const [successNotice, setSuccessNotice] = useState('');
   const [showAssistanceModal, setShowAssistanceModal] = useState(false);
 
@@ -522,7 +531,7 @@ export default function LoginPage({
 
             {/* Error & Success Alerts */}
             {errorMessage && (
-              <div className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2.5 animate-fadeIn">
+              <div ref={alertRef} role="alert" tabIndex={-1} className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2.5 animate-fadeIn focus:outline-none">
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-700" aria-hidden="true" />
                 <div className="flex-1">
                   <p className="font-semibold">{errorMessage}</p>
