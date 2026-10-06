@@ -92,6 +92,7 @@ export const api = {
   },
   kyc: {
     mine: () => request('/kyc/mine'),
+    status: () => request('/kyc/status'),
     upload: async (documentType, file) => {
       const form = new FormData();
       form.append('documentType', documentType);

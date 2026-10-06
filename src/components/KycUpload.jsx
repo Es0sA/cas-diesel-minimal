@@ -12,9 +12,15 @@ export default function KycUpload({ types }) {
   const [docs, setDocs] = useState([]);
   const [busy, setBusy] = useState(null);
   const [error, setError] = useState('');
+  const [verified, setVerified] = useState(false);
 
   const load = () => api.kyc.mine().then(setDocs).catch(() => {});
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    api.kyc.status().then((r) => setVerified(r.verified)).catch(() => {});
+  }, []);
+
+  if (verified) return null;
 
   const onPick = async (type, file) => {
     if (!file) return;
