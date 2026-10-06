@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../api';
 import { 
   BarChart, Users, AlertTriangle, ShieldCheck, 
-  CheckCircle, XCircle, ArrowRight 
+  CheckCircle, XCircle, ArrowRight, X 
 } from 'lucide-react';
 
 export default function AdminDashboard({ user }) {
@@ -11,6 +11,9 @@ export default function AdminDashboard({ user }) {
   const [usersList, setUsersList] = useState([]);
   const [disputesList, setDisputesList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [reviewing, setReviewing] = useState(null);
+  const [checks, setChecks] = useState({});
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (user?.role !== 'ADMIN') return;
@@ -38,13 +41,31 @@ export default function AdminDashboard({ user }) {
     fetchAdminData();
   }, [activeTab, user]);
 
+  const openDoc = async (docId) => {
+    try {
+      const { url } = await api.admin.getKycUrl(docId);
+      window.open(url, '_blank', 'noopener');
+    } catch (err) {
+      alert('Could not open document');
+    }
+  };
+
+  const openReview = (u) => {
+    setChecks({});
+    setReviewing(u);
+  };
+
   const handleVerify = async (userId, currentState) => {
     try {
+      setSaving(true);
       await api.admin.verifyUser(userId, !currentState);
       const res = await api.admin.getUsers();
       setUsersList(res);
+      setReviewing(null);
     } catch (err) {
       alert('Failed to update verification');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -143,7 +164,7 @@ export default function AdminDashboard({ user }) {
                             <span className="text-xs text-cas-muted">N/A</span>
                           ) : (
                             <button
-                              onClick={() => handleVerify(u.id, isVerified)}
+                              onClick={() => openReview(u)}
                               className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 inline-flex ${
                                 isVerified 
                                   ? 'bg-emerald-50 text-cas-green border border-emerald-200 hover:bg-emerald-100'
@@ -151,7 +172,7 @@ export default function AdminDashboard({ user }) {
                               }`}
                             >
                               {isVerified ? <CheckCircle className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
-                              {isVerified ? 'Verified' : 'Unverified'}
+                              {isVerified ? 'Verified' : 'Review'}
                             </button>
                           )}
                         </td>
@@ -209,6 +230,88 @@ export default function AdminDashboard({ user }) {
           )}
         </div>
       )}
-    </div>
+          {reviewing && (() => {
+        const u = reviewing;
+        const c = u.companies?.[0];
+        const d = u.driverProfile;
+        const isVerified = c?.isVerified || d?.isVerified || false;
+        const rows = c ? [
+          ['Company name', c.companyName],
+          ['CAC registration no.', c.registrationNumber],
+          ['Business address', c.businessAddress],
+          ['Contact phone', c.contactPhone],
+          ['Login email', u.email],
+          ['Signed up', new Date(u.createdAt).toLocaleDateString()]
+        ] : [
+          ['Name', d ? `${d.firstName} ${d.lastName}` : null],
+          ['Licence number', d?.licenseNumber],
+          ['Truck plate', d?.truckPlateNumber],
+          ['Truck capacity (L)', d?.truckCapacityLiters],
+          ['Login email', u.email],
+          ['Signed up', new Date(u.createdAt).toLocaleDateString()]
+        ];
+        const items = c
+          ? ['CAC number matches the registered company name on the CAC public search', 'NMDPRA depot or marketer licence confirmed with the issuer', 'Phone number called and the business confirmed', 'Address checked and matches the registration']
+          : ['Driving licence checked against the FRSC record', 'Truck plate matches the registered vehicle', 'Phone number called and identity confirmed'];
+        const docs = u.kycDocuments || [];
+        const docLabels = { CAC_CERT: 'CAC certificate', NMDPRA_LICENCE: 'NMDPRA licence', DRIVER_LICENCE: 'Driver licence' };
+        const required = c ? ['CAC_CERT', 'NMDPRA_LICENCE'] : ['DRIVER_LICENCE'];
+        const missing = required.filter((t) => !docs.some((d) => d.documentType === t));
+        const allChecked = items.every((_, i) => checks[i]);
+        return (
+          <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
+            <div className="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h2 className="text-lg font-extrabold text-cas-slate">{isVerified ? 'Verified account' : 'Review submitted details'}</h2>
+                  <p className="text-xs text-cas-muted">{u.role}</p>
+                </div>
+                <button onClick={() => setReviewing(null)} aria-label="Close" className="p-1 text-cas-muted hover:text-cas-slate"><X className="w-5 h-5" /></button>
+              </div>
+              <dl className="divide-y divide-slate-100 border border-slate-200 rounded-xl mb-4">
+                {rows.map(([k, v]) => (
+                  <div key={k} className="flex justify-between gap-4 p-3 text-sm">
+                    <dt className="text-cas-muted font-bold">{k}</dt>
+                    <dd className={`text-right break-words ${v ? 'text-slate-800' : 'text-rose-600 font-bold'}`}>{v || 'Not provided'}</dd>
+                  </div>
+                ))}
+              </dl>
+              <div className="mb-4">
+                <div className="text-xs font-bold text-cas-muted uppercase mb-2">Uploaded documents</div>
+                {docs.length === 0 && <div className="text-sm font-bold text-rose-600">No documents uploaded</div>}
+                {docs.map((d) => (
+                  <button key={d.id} onClick={() => openDoc(d.id)} className="block text-sm font-bold text-cas-green underline mb-1 text-left">
+                    View {docLabels[d.documentType] || d.documentType} ({d.fileName})
+                  </button>
+                ))}
+                {missing.length > 0 && <div className="text-xs font-bold text-rose-600 mt-1">Missing: {missing.map((t) => docLabels[t]).join(', ')}</div>}
+              </div>
+              {c?.registrationNumber && (
+                <a href="https://search.cac.gov.ng/home" target="_blank" rel="noreferrer" className="text-xs font-bold text-cas-green underline block mb-4">Open CAC public search</a>
+              )}
+              {!isVerified && (
+                <div className="space-y-2 mb-5">
+                  <div className="text-xs font-bold text-cas-muted uppercase">Confirm you have checked</div>
+                  {items.map((t, i) => (
+                    <label key={i} className="flex items-start gap-2 text-sm text-slate-700">
+                      <input type="checkbox" className="mt-1" checked={!!checks[i]} onChange={e => setChecks({ ...checks, [i]: e.target.checked })} />
+                      {t}
+                    </label>
+                  ))}
+                </div>
+              )}
+              <div className="flex gap-3 justify-end">
+                <button onClick={() => setReviewing(null)} className="px-4 py-2 rounded-full text-sm font-bold border border-slate-200 text-slate-700">Cancel</button>
+                {isVerified ? (
+                  <button disabled={saving} onClick={() => handleVerify(u.id, true)} className="px-4 py-2 rounded-full text-sm font-bold bg-rose-600 text-white disabled:opacity-50">Revoke verification</button>
+                ) : (
+                  <button disabled={!allChecked || missing.length > 0 || saving} onClick={() => handleVerify(u.id, false)} className="px-4 py-2 rounded-full text-sm font-bold bg-cas-green text-white disabled:opacity-40">Approve and verify</button>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+</div>
   );
 }

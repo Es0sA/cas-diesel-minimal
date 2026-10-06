@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { UserCheck, CheckCircle2, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
+import KycUpload from './KycUpload';
 import { DEPOTS } from '../data/depots';
 
 const ACTIVE_STATUSES = ['FUNDED', 'IN_TRANSIT', 'ARRIVED'];
@@ -118,6 +119,8 @@ export default function SupplierPortal() {
             No company profile found for this account. Complete your company profile before publishing rates.
           </div>
         )}
+
+        {profile && !profile.isVerified && <KycUpload types={['CAC_CERT', 'NMDPRA_LICENCE']} />}
 
         {profile && !profile.isVerified && (
           <div className="p-4 mb-6 bg-amber-50 border-2 border-amber-300 rounded-xl text-amber-900 text-sm font-bold">

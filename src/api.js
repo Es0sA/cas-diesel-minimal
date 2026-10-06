@@ -77,6 +77,7 @@ export const api = {
     getStats: () => request('/admin/stats'),
     getUsers: () => request('/admin/users'),
     getDisputes: () => request('/admin/disputes'),
+    getKycUrl: (docId) => request(`/admin/kyc/${docId}/url`),
     verifyUser: (id, isVerified) => request(`/admin/users/${id}/verify`, { method: 'PUT', body: JSON.stringify({ isVerified }) }),
     resolveDispute: (id, resolution) => request(`/admin/disputes/${id}/resolve`, { method: 'POST', body: JSON.stringify({ resolution }) }),
   },
@@ -87,6 +88,18 @@ export const api = {
   },
   telemetry: {
     ping: (orderId, data) => request(`/telemetry/ping/${orderId}`, { method: 'POST', body: JSON.stringify(data) }),
+  },
+  kyc: {
+    mine: () => request('/kyc/mine'),
+    upload: async (documentType, file) => {
+      const form = new FormData();
+      form.append('documentType', documentType);
+      form.append('file', file);
+      const res = await fetch(`${API_URL}/kyc/upload`, { method: 'POST', body: form, credentials: 'include' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      return data;
+    },
   },
   compliance: {
     upload: (orderId, data) => request(`/compliance/upload/${orderId}`, { method: 'POST', body: JSON.stringify(data) }),

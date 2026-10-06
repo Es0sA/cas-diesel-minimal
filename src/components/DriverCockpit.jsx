@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Truck, Navigation, MapPin, CheckCircle2, AlertCircle, UserPlus, Radio } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
+import KycUpload from './KycUpload';
 
 const PING_INTERVAL_MS = 15000;
 const STEPS = [
@@ -128,6 +129,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
   return (
     <section id="driver-cockpit" className="bg-cas-canvas py-6 sm:py-12 md:py-20 border-b border-cas-border">
       <div className="max-w-3xl mx-auto px-3 sm:px-8">
+        {!authError && !loading && <KycUpload types={['DRIVER_LICENCE']} />}
         <div className="bg-white rounded-2xl border-2 border-cas-border shadow-md overflow-hidden">
 
           <div className="bg-cas-slate text-white p-4 sm:p-6 border-b border-slate-700">
