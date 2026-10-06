@@ -46,7 +46,7 @@ function HomePage({ user, handleOpenRegistration }) {
       />
 
 
-      <section className="bg-white py-14 sm:py-20 border-b border-cas-border">
+      <section id="how-it-works" className="bg-white py-14 sm:py-20 border-b border-cas-border scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-100 text-cas-slate text-xs font-bold uppercase tracking-wider mb-3">
