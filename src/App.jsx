@@ -54,10 +54,10 @@ function HomePage({ user, handleOpenRegistration }) {
               <span>How CAS Energy Operates</span>
             </div>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
-              What We Do Across The Downstream Chain
+              Licensed Marketers Meet The Companies That Need Diesel
             </h2>
             <p className="text-base sm:text-lg text-cas-muted mt-2">
-              We eliminate middlemen markups and delivery uncertainty by connecting corporate facilities directly with loading terminals through an escrow-backed logistics network.
+              Stop chasing quotes and phone calls. Browse verified marketers, compare prices by depot and order in minutes. Your payment stays in escrow until the diesel is delivered.
             </p>
           </div>
 
