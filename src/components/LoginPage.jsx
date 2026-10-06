@@ -243,7 +243,8 @@ export default function LoginPage({
     try {
       const response = await api.auth.login({
         email: email.trim(),
-        password: password
+        password: password,
+        expectedRole: activeConfig.apiRole
       });
 
       const serverRole = response.role ? response.role.toUpperCase() : activeConfig.apiRole;
