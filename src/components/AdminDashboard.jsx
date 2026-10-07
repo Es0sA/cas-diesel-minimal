@@ -15,6 +15,8 @@ export default function AdminDashboard({ user }) {
   const [reviewing, setReviewing] = useState(null);
   const [checks, setChecks] = useState({});
   const [saving, setSaving] = useState(false);
+  const [userRole, setUserRole] = useState('ALL');
+  const [userStatus, setUserStatus] = useState('ALL');
 
   useEffect(() => {
     if (user?.role !== 'ADMIN') return;
@@ -158,8 +160,65 @@ export default function AdminDashboard({ user }) {
           )}
 
           {/* USERS TAB */}
-          {activeTab === 'users' && (
+          {activeTab === 'users' && (() => {
+            const verifiedOf = (u) => Boolean(u.companies?.[0]?.isVerified || u.driverProfile?.isVerified);
+            const needsReview = (u) => (u.role === 'SUPPLIER' || u.role === 'DRIVER') && !verifiedOf(u);
+            const roleTabs = [
+              { id: 'ALL', label: 'All' },
+              { id: 'BUYER', label: 'Buyers' },
+              { id: 'SUPPLIER', label: 'Marketers' },
+              { id: 'DRIVER', label: 'Drivers' },
+            ];
+            const inRole = (u) => userRole === 'ALL' || u.role === userRole;
+            const visibleUsers = usersList.filter((u) => {
+              if (!inRole(u)) return false;
+              if (userStatus === 'PENDING') return needsReview(u);
+              if (userStatus === 'VERIFIED') return (u.role === 'SUPPLIER' || u.role === 'DRIVER') && verifiedOf(u);
+              return true;
+            });
+            return (
             <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+              <div className="p-4 border-b border-slate-200 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-wrap gap-2" role="tablist" aria-label="Filter by account type">
+                  {roleTabs.map((t) => {
+                    const total = usersList.filter((u) => t.id === 'ALL' || u.role === t.id).length;
+                    const pending = usersList.filter((u) => (t.id === 'ALL' || u.role === t.id) && needsReview(u)).length;
+                    return (
+                      <button
+                        key={t.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={userRole === t.id}
+                        onClick={() => setUserRole(t.id)}
+                        className={`px-3.5 py-2 rounded-full text-sm font-bold flex items-center gap-2 border transition-colors ${
+                          userRole === t.id ? 'bg-cas-slate text-white border-cas-slate' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                        }`}
+                      >
+                        {t.label}
+                        <span className={`text-xs ${userRole === t.id ? 'text-slate-300' : 'text-cas-muted'}`}>{total}</span>
+                        {pending > 0 && (
+                          <span className="text-xs font-extrabold px-1.5 py-0.5 rounded-full bg-amber-100 text-cas-amberDark">{pending} pending</span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="flex gap-1 p-1 bg-slate-100 rounded-lg self-start" role="group" aria-label="Filter by status">
+                  {[['ALL', 'All'], ['PENDING', 'Pending'], ['VERIFIED', 'Verified']].map(([id, label]) => (
+                    <button
+                      key={id}
+                      type="button"
+                      aria-pressed={userStatus === id}
+                      onClick={() => setUserStatus(id)}
+                      className={`px-3 py-1.5 rounded-md text-xs font-bold transition-colors ${
+                        userStatus === id ? 'bg-white text-cas-slate shadow-sm' : 'text-slate-600 hover:text-black'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-slate-50 border-b border-slate-200">
@@ -170,7 +229,7 @@ export default function AdminDashboard({ user }) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {usersList.map(u => {
+                  {visibleUsers.map(u => {
                     const isVerified = u.companies?.[0]?.isVerified || u.driverProfile?.isVerified || false;
                     const entityName = u.companies?.[0]?.companyName || (u.driverProfile ? `${u.driverProfile.firstName} ${u.driverProfile.lastName}` : 'N/A');
                     
@@ -199,10 +258,14 @@ export default function AdminDashboard({ user }) {
                       </tr>
                     );
                   })}
+                  {visibleUsers.length === 0 && (
+                    <tr><td colSpan={4} className="p-8 text-center text-sm text-cas-muted">No accounts match this filter.</td></tr>
+                  )}
                 </tbody>
               </table>
             </div>
-          )}
+            );
+          })()}
 
           {/* ORDERS TAB */}
           {activeTab === 'orders' && <AdminOrders />}
