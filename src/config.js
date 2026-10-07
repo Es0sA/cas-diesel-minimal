@@ -7,3 +7,14 @@ export const CONTACT = {
 };
 
 export const hasContact = Object.values(CONTACT).some(Boolean);
+
+// Legal identity shown in the Terms and Privacy Policy. Fill these in once the
+// operating company is registered. Empty values are left out of the text.
+export const LEGAL = {
+  entityName: '',
+  rcNumber: '',
+  registeredAddress: '',
+  privacyEmail: '',
+  paymentProvider: '',
+  lastUpdated: '7 October 2026'
+};

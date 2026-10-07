@@ -188,7 +188,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
             )}
           </div>
           <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-500">
-            {[['terms', 'Escrow Terms'], ['privacy', 'NDPR Privacy'], ['refund', 'Refunds & Demurrage'], ['cookies', 'Cookie Policy']].map(([k, t]) => (
+            {[['terms', 'Terms of Service'], ['privacy', 'Privacy Policy'], ['refund', 'Refunds and Disputes'], ['cookies', 'Cookie Policy']].map(([k, t]) => (
               <button key={k} type="button" onClick={() => { setMobileOpen(false); onOpenLegalModal(k); }} className="underline underline-offset-2 hover:text-black">
                 {t}
               </button>

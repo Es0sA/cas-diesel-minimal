@@ -1,6 +1,6 @@
 import React from 'react';
 import { Phone, Mail, MapPin } from 'lucide-react';
-import { CONTACT, hasContact } from '../config';
+import { CONTACT, LEGAL, hasContact } from '../config';
 
 const LEGAL_LINKS = [
   { key: 'terms', label: 'Terms of Service' },
@@ -77,7 +77,7 @@ export default function Footer({ onOpenLegalModal }) {
           Estimated arrival times depend on depot queues and road conditions. Escrow secures your funds and verifies delivery. It does not guarantee transit speed.
         </p>
 
-        <div className="mt-6 text-xs text-slate-400">&copy; {new Date().getFullYear()} CAS Energy. All rights reserved.</div>
+        <div className="mt-6 text-xs text-slate-400">&copy; {new Date().getFullYear()} {LEGAL.entityName || 'CAS Energy'}. All rights reserved.</div>
       </div>
     </footer>
   );
