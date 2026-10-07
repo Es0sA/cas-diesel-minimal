@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'https://cas-diesel-backend.onrender.com/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://api.casdiesel.com/api';
 
 export const request = async (endpoint, options = {}) => {
   const headers = {
