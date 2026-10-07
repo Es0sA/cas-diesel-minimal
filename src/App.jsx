@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { api } from './api';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -177,6 +177,10 @@ function HomePage({ user, handleOpenRegistration }) {
   );
 }
 
+// Admins have their own dashboard and never use the marketer or driver workspaces.
+const NotForAdmin = ({ user, children }) =>
+  (user?.role || '').toUpperCase() === 'ADMIN' ? <Navigate to="/admin" replace /> : children;
+
 export default function App() {
   const [user, setUser] = useState(null);
   const [activeLegalModal, setActiveLegalModal] = useState(null);
@@ -249,8 +253,8 @@ export default function App() {
           <Route path="/" element={<HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
           <Route path="/register" element={<LoginPage initialRole={registerInitialRole} initialMode="register" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
-          <Route path="/marketer" element={<SupplierPortal />} />
-          <Route path="/driver" element={<DriverCockpit onNavigateToRegister={() => handleOpenRegistration('driver')} />} />
+          <Route path="/marketer" element={<NotForAdmin user={user}><SupplierPortal /></NotForAdmin>} />
+          <Route path="/driver" element={<NotForAdmin user={user}><DriverCockpit onNavigateToRegister={() => handleOpenRegistration('driver')} /></NotForAdmin>} />
           <Route path="/orders/:id" element={<OrderDetail user={user} />} />
           <Route path="/profile" element={<ProfileSettings user={user} />} />
           <Route path="/admin" element={<AdminDashboard user={user} />} />
