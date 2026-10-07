@@ -77,6 +77,21 @@ export const api = {
     getStats: () => request('/admin/stats'),
     getUsers: () => request('/admin/users'),
     getDisputes: () => request('/admin/disputes'),
+    getOrders: (params = {}) => request(`/admin/orders?${new URLSearchParams(params)}`),
+    exportOrdersCsv: async (params = {}) => {
+      const response = await fetch(`${API_URL}/admin/orders/export?${new URLSearchParams(params)}`, { credentials: 'include' });
+      if (!response.ok) {
+        let message = 'Could not export orders.';
+        try { message = (await response.json()).error || message; } catch { /* non-JSON error body */ }
+        throw new Error(message);
+      }
+      const url = URL.createObjectURL(await response.blob());
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'orders.csv';
+      link.click();
+      URL.revokeObjectURL(url);
+    },
     reviewKycDoc: (docId, status, reason) => request(`/admin/kyc/${docId}/review`, { method: 'PUT', body: JSON.stringify({ status, reason }) }),
     getKycUrl: (docId) => request(`/admin/kyc/${docId}/url`),
     verifyUser: (id, isVerified) => request(`/admin/users/${id}/verify`, { method: 'PUT', body: JSON.stringify({ isVerified }) }),

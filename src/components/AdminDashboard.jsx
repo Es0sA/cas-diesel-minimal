@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../api';
+import AdminOrders from './AdminOrders';
 import { 
-  BarChart, Users, AlertTriangle, ShieldCheck, 
+  BarChart, Users, AlertTriangle, ShieldCheck, ClipboardList, 
   CheckCircle, XCircle, ArrowRight, X 
 } from 'lucide-react';
 
@@ -113,6 +114,7 @@ export default function AdminDashboard({ user }) {
         {[
           { id: 'overview', label: 'System Overview', short: 'Overview', icon: BarChart },
           { id: 'users', label: 'User Verification', short: 'Users', icon: Users },
+          { id: 'orders', label: 'Orders', short: 'Orders', icon: ClipboardList },
           { id: 'disputes', label: 'Dispute Resolution', short: 'Disputes', icon: AlertTriangle }
         ].map(tab => (
           <button
@@ -201,6 +203,9 @@ export default function AdminDashboard({ user }) {
               </table>
             </div>
           )}
+
+          {/* ORDERS TAB */}
+          {activeTab === 'orders' && <AdminOrders />}
 
           {/* DISPUTES TAB */}
           {activeTab === 'disputes' && (

@@ -266,8 +266,8 @@ export default function LoginPage({
       return;
     }
 
-    if (password.length < 12) {
-      setErrorMessage('Password must be at least 12 characters long for financial terminal compliance.');
+    if (password.length < 6 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+      setErrorMessage('Password must be at least 6 characters with an uppercase letter and a number.');
       return;
     }
 
@@ -668,7 +668,7 @@ export default function LoginPage({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label htmlFor="fld-password-min-12-chars-2" className="block text-xs font-bold text-slate-700 mb-1">
-                        Password (min 12 chars)
+                        Password (min 6 chars, 1 capital, 1 number)
                       </label>
                       <input id="fld-password-min-12-chars-2"
                         type={showPassword ? 'text' : 'password'}
