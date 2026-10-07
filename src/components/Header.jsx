@@ -27,7 +27,8 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
   const navigate = useNavigate();
 
   const role = user?.role ? user.role.toUpperCase() : null;
-  const links = user ? ROLE_LINKS[role] || [] : PUBLIC_LINKS;
+  const onAuthPage = location.pathname === '/login' || location.pathname === '/register';
+  const links = user ? ROLE_LINKS[role] || [] : onAuthPage ? [] : PUBLIC_LINKS;
   const roleLabel = role ? role.charAt(0) + role.slice(1).toLowerCase() : '';
 
   useEffect(() => {
