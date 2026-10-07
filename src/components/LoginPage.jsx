@@ -16,7 +16,6 @@ import {
   HelpCircle, 
   X,
   Loader2,
-  Sparkles,
   MapPin,
   Navigation
 } from 'lucide-react';
@@ -35,7 +34,7 @@ const ROLE_CONFIGS = {
     signinSubtitle: 'Sign in to access bulk spot prices, manage locked escrow accounts, and monitor gate GPS discharge radar.',
     registerSubtitle: 'Register your corporate facility, set up escrow-protected payments, and pin your facility discharge gate.',
     emailLabel: 'Corporate Procurement Email',
-    emailPlaceholder: 'you@company.com',
+    emailPlaceholder: 'example@mail.com',
     accentColor: 'text-cas-blue',
     accentBg: 'bg-sky-50 text-cas-blue border-sky-200',
     destination: '/',
@@ -49,8 +48,7 @@ const ROLE_CONFIGS = {
       'Escrow-protected payment for zero cash transit risk.',
       'Mandatory discharge gate GPS pin drop to eliminate lost tanker diversions.',
       'Compare prices from verified marketers.'
-    ],
-    sampleEmail: 'buyer@corporate.com'
+    ]
   },
   supplier: {
     id: 'supplier',
@@ -62,7 +60,7 @@ const ROLE_CONFIGS = {
     signinSubtitle: 'Sign in to broadcast daily spot prices, review verified buyer orders, and dispatch tanker fleets.',
     registerSubtitle: 'Register your downstream marketing entity with NMDPRA credentials and start receiving verified escrow orders.',
     emailLabel: 'Marketer Terminal Email',
-    emailPlaceholder: 'you@company.com',
+    emailPlaceholder: 'example@mail.com',
     accentColor: 'text-cas-amberDark',
     accentBg: 'bg-amber-50 text-cas-amberDark border-amber-200',
     destination: '/marketer',
@@ -77,8 +75,7 @@ const ROLE_CONFIGS = {
       'Publish your daily price directly to verified corporate buyers.',
       'Buyer payment is held in escrow before you dispatch.',
       'Assign verified drivers to each delivery.'
-    ],
-    sampleEmail: 'marketer@depot.ng'
+    ]
   },
   driver: {
     id: 'driver',
@@ -90,7 +87,7 @@ const ROLE_CONFIGS = {
     signinSubtitle: 'Sign in to view assigned tanker dispatches, digital waypoint seals, and one-tap discharge gate GPS routing.',
     registerSubtitle: 'Register as an independent tanker driver to receive verified dispatch manifests and turn-by-turn routing.',
     emailLabel: 'Driver Email or Phone ID',
-    emailPlaceholder: 'driver01@logistics.ng',
+    emailPlaceholder: 'example@mail.com',
     accentColor: 'text-cas-green',
     accentBg: 'bg-emerald-50 text-cas-green border-emerald-200',
     destination: '/driver',
@@ -105,8 +102,7 @@ const ROLE_CONFIGS = {
       'Accept dispatch manifests from verified downstream marketers across Nigeria.',
       'Clear gate GPS coordinates with truck clearance verification prevent site rejection.',
       'Instant electronic proof-of-delivery sign-off upon completion.'
-    ],
-    sampleEmail: 'driver@fleet.ng'
+    ]
   }
 };
 
@@ -141,8 +137,6 @@ export default function LoginPage({
 
   // Buyer Specific Registration States
   const [buyerCompany, setBuyerCompany] = useState('');
-  const [buyerRcNumber, setBuyerRcNumber] = useState('');
-  const [buyerCategory, setBuyerCategory] = useState('manufacturing');
   const [latitude, setLatitude] = useState('6.595200');
   const [longitude, setLongitude] = useState('3.342100');
   const [geolocating, setGeolocating] = useState(false);
@@ -216,12 +210,6 @@ export default function LoginPage({
     }
   };
 
-  const handleQuickDemoFill = () => {
-    setEmail(activeConfig.sampleEmail);
-    setPassword('securepassword123');
-    setErrorMessage('');
-  };
-
   // Sign In Handler
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -292,8 +280,8 @@ export default function LoginPage({
 
     try {
       if (selectedRole === 'buyer') {
-        if (!buyerCompany.trim() || !buyerRcNumber.trim()) {
-          setErrorMessage('Company Name and CAC RC Number are required.');
+        if (!buyerCompany.trim()) {
+          setErrorMessage('Name is required.');
           setLoading(false);
           return;
         }
@@ -311,8 +299,7 @@ export default function LoginPage({
 
         await api.companies.updateProfile({
           companyName: buyerCompany.trim(),
-          registrationNumber: buyerRcNumber.trim(),
-          businessAddress: `Category: ${buyerCategory} | Gate: (${latitude}, ${longitude}) | Clearance: ${truckClearance}L`,
+          businessAddress: `Gate: (${latitude}, ${longitude}) | Clearance: ${truckClearance}L`,
           gateLatitude: parseFloat(latitude),
           gateLongitude: parseFloat(longitude),
           contactPhone: receivingOfficerPhone.trim()
@@ -518,16 +505,6 @@ export default function LoginPage({
                 </button>
 
               </div>
-              
-              {/* Dynamic Context Ribbon */}
-              <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 text-xs px-3 py-2 rounded-lg bg-slate-50 border border-slate-200">
-                <span className="font-semibold text-slate-700">
-                  {activeConfig.title} <span className="font-normal text-slate-500">({activeConfig.tagline})</span>
-                </span>
-                <span className="font-mono text-xs font-bold text-slate-600 bg-white px-2 py-0.5 rounded border border-slate-200 shadow-2xs">
-                  {activeConfig.badge}
-                </span>
-              </div>
             </div>
 
             {/* Error & Success Alerts */}
@@ -626,7 +603,7 @@ export default function LoginPage({
                   </div>
                 </div>
 
-                {/* Remember me & Quick Fill */}
+                {/* Remember me */}
                 <div className="flex items-center justify-between pt-1">
                   <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-600 font-medium">
                     <input
@@ -637,15 +614,6 @@ export default function LoginPage({
                     />
                     <span>Keep session active</span>
                   </label>
-
-                  <button
-                    type="button"
-                    onClick={handleQuickDemoFill}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-cas-amberDark hover:text-black transition-colors"
-                  >
-                    <Sparkles className="w-3 h-3 text-cas-amber" aria-hidden="true" />
-                    <span>Demo fill</span>
-                  </button>
                 </div>
 
                 {/* Primary Action Button */}
@@ -680,12 +648,12 @@ export default function LoginPage({
                 <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                   <div className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
                     <Lock className="w-3.5 h-3.5 text-cas-amberDark" aria-hidden="true" />
-                    <span>Terminal Credentials</span>
+                    <span>Account</span>
                   </div>
 
                   <div>
                     <label htmlFor="fld-official-account-email-1" className="block text-xs font-bold text-slate-700 mb-1">
-                      Official Account Email
+                      Email
                     </label>
                     <input id="fld-official-account-email-1"
                       type="email"
@@ -732,47 +700,21 @@ export default function LoginPage({
                   <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
                     <div className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
                       <Building2 className="w-3.5 h-3.5 text-cas-blue" aria-hidden="true" />
-                      <span>Corporate Buyer & Gate Verification</span>
+                      <span>Delivery Location</span>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 gap-3">
                       <div>
-                        <label htmlFor="fld-company-name-4" className="block text-xs font-bold text-slate-700 mb-1">Company Name</label>
+                        <label htmlFor="fld-company-name-4" className="block text-xs font-bold text-slate-700 mb-1">Name</label>
                         <input id="fld-company-name-4"
                           type="text"
                           required
                           value={buyerCompany}
                           onChange={(e) => setBuyerCompany(e.target.value)}
-                          placeholder="Registered company name"
+                          placeholder="Business, school, church or your name"
                           className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-medium"
                         />
                       </div>
-                      <div>
-                        <label htmlFor="fld-cac-rc-number-5" className="block text-xs font-bold text-slate-700 mb-1">CAC RC Number</label>
-                        <input id="fld-cac-rc-number-5"
-                          type="text"
-                          required
-                          value={buyerRcNumber}
-                          onChange={(e) => setBuyerRcNumber(e.target.value)}
-                          placeholder="RC 123456"
-                          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono font-bold"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label htmlFor="fld-facility-category-6" className="block text-xs font-bold text-slate-700 mb-1">Facility Category</label>
-                      <select id="fld-facility-category-6"
-                        value={buyerCategory}
-                        onChange={(e) => setBuyerCategory(e.target.value)}
-                        className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-medium"
-                      >
-                        <option value="manufacturing">Manufacturing Plant</option>
-                        <option value="logistics">Haulage & Fleet Yard</option>
-                        <option value="telecom">Telecommunications Infrastructure</option>
-                        <option value="realestate">Commercial Facility / Estate</option>
-                        <option value="agro">Agro-Processing & Milling</option>
-                      </select>
                     </div>
 
                     {/* Geofence Gate Coordinates */}
@@ -1098,9 +1040,6 @@ export default function LoginPage({
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-300">
                 {activeConfig.shortLabel} {authMode === 'signin' ? 'Safeguards' : 'Capabilities'}
-              </span>
-              <span className="text-xs px-2 py-0.5 rounded bg-black/40 text-slate-200 border border-white/10">
-                {authMode === 'signin' ? 'Sign in' : 'Onboarding'}
               </span>
             </div>
 

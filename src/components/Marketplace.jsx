@@ -204,8 +204,6 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
                   <span>Reg. No: {supplier.nmdpraLicense}</span>
                   <span>|</span>
                   <span>Depot: <strong className="text-cas-slate">{supplier.primaryDepot}</strong></span>
-                  <span>|</span>
-                  <span>Fleet: {supplier.fleetSize} tankers</span>
                 </div>
               </div>
 

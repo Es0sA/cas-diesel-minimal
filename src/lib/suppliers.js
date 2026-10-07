@@ -9,6 +9,5 @@ export function normalizeSuppliers(data) {
     nmdpraLicense: s.registrationNumber || 'Not provided',
     pricePerLitre: s.pricePerLitre ?? 0,
     minOrderVolume: s.minOrderVolume ?? 0,
-    fleetSize: s.fleetSize ?? 0
   }));
 }
