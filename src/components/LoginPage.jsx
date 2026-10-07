@@ -402,7 +402,7 @@ export default function LoginPage({
                 className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" aria-hidden="true" />
-                <span>Return to Portal</span>
+                <span>Back to home</span>
               </button>
             </div>
 
@@ -413,11 +413,11 @@ export default function LoginPage({
                   CAS
                 </div>
                 <span className="font-extrabold text-xl text-cas-slate tracking-tight">
-                  CAS Energy Terminal
+                  CAS Energy
                 </span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-cas-slate tracking-tight">
-                {authMode === 'signin' ? 'Sign In to Terminal' : 'Create Terminal Account'}
+                {authMode === 'signin' ? 'Sign In' : 'Create Account'}
               </h1>
               <p className="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">
                 {authMode === 'signin' ? activeConfig.signinSubtitle : activeConfig.registerSubtitle}
@@ -585,7 +585,7 @@ export default function LoginPage({
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Enter terminal password"
+                      placeholder="Enter your password"
                       className="w-full pl-10 pr-11 py-3 bg-slate-50 hover:bg-slate-100/60 focus:bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder:text-slate-500 focus:outline-none transition-all"
                     />
                     <button
@@ -993,7 +993,7 @@ export default function LoginPage({
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
               <span className="text-slate-600">
                 {authMode === 'signin' 
-                  ? 'Need a new corporate terminal profile?' 
+                  ? 'Need a new account?' 
                   : 'Already hold a verified account?'}
               </span>
               <button
