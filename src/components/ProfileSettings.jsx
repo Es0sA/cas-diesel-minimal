@@ -25,6 +25,7 @@ export default function ProfileSettings({ user }) {
   const isDriver = role === 'DRIVER';
 
   useEffect(() => {
+    if (role === 'ADMIN') { navigate('/admin', { replace: true }); return undefined; }
     const fetchProfile = async () => {
       try {
         if (!isDriver) {
@@ -38,7 +39,7 @@ export default function ProfileSettings({ user }) {
       }
     };
     fetchProfile();
-  }, [isDriver]);
+  }, [isDriver, role, navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

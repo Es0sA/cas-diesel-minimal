@@ -117,10 +117,12 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
               </button>
               {menuOpen && (
                 <div role="menu" className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg py-1.5 animate-fadeIn">
+                  {role !== 'ADMIN' && (
                   <Link to="/profile" role="menuitem" className="flex items-center gap-2 px-3.5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">
                     <Settings className="w-4 h-4" aria-hidden="true" />
                     Profile
                   </Link>
+                  )}
                   <button
                     type="button"
                     role="menuitem"
@@ -168,10 +170,12 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
               </div>
             ) : (
               <>
+                {role !== 'ADMIN' && (
                 <Link to="/profile" onClick={() => setMobileOpen(false)} className="flex items-center justify-between p-3.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50">
                   <span>Profile ({roleLabel})</span>
                   <ArrowRight className="w-4 h-4 text-slate-500" aria-hidden="true" />
                 </Link>
+                )}
                 <button
                   type="button"
                   onClick={() => { setMobileOpen(false); if (onLogout) onLogout(); }}
