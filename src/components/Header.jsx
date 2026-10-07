@@ -7,12 +7,8 @@ const ROLE_LINKS = {
   BUYER: [{ label: 'Marketers', hash: 'marketplace' }],
   SUPPLIER: [{ label: 'Supplier Desk', to: '/marketer' }],
   DRIVER: [{ label: 'Driver Cockpit', to: '/driver' }],
-  ADMIN: [
-    { label: 'Admin', to: '/admin' },
-    { label: 'Marketers', hash: 'marketplace' },
-    { label: 'Supplier Desk', to: '/marketer' },
-    { label: 'Driver Cockpit', to: '/driver' },
-  ],
+  ADMIN: [{ label: 'Admin', to: '/admin' }],
+
 };
 const PUBLIC_LINKS = [
   { label: 'How it works', hash: 'how-it-works' },
