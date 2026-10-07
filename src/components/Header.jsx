@@ -95,7 +95,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
-          {!user ? (
+          {!user && onAuthPage ? null : !user ? (
             <>
               <Link to="/login" className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 hover:text-black hover:bg-slate-50">
                 Sign in
@@ -161,7 +161,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
                 className="flex items-center justify-between p-3.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50"
               />
             ))}
-            {!user ? (
+            {!user && onAuthPage ? null : !user ? (
               <div className="grid grid-cols-2 gap-2 mt-2">
                 <Link to="/login" onClick={() => setMobileOpen(false)} className="text-center p-3 rounded-xl text-sm font-semibold border border-slate-300 text-slate-800">
                   Sign in
