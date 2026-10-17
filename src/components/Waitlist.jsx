@@ -94,7 +94,7 @@ export default function Waitlist() {
 
     setSubmitting(true);
 
-    const generatedRef = `CAS-WL-${Math.floor(1000 + Math.random() * 9000)}`;
+    const generatedRef = `CAS-WL-${Date.now().toString(36).toUpperCase().slice(-4)}${Math.floor(1000 + Math.random() * 9000)}`;
     const payload = {
       refCode: generatedRef,
       timestamp: new Date().toISOString(),
