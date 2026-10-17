@@ -3,11 +3,14 @@ import { ShieldCheck, X } from 'lucide-react';
 
 export default function CookieBanner({ onOpenPolicy }) {
   const [dismissed, setDismissed] = useState(true);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem('cas_cookie_consent');
     if (!saved) {
       setDismissed(false);
+      const timer = setTimeout(() => setVisible(true), 3000);
+      return () => clearTimeout(timer);
     }
   }, []);
 
@@ -16,7 +19,7 @@ export default function CookieBanner({ onOpenPolicy }) {
     setDismissed(true);
   };
 
-  if (dismissed) return null;
+  if (dismissed || !visible) return null;
 
   return (
     <aside 

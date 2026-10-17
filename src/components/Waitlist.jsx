@@ -175,8 +175,12 @@ export default function Waitlist() {
             <span className="text-slate-400 hidden sm:inline">|</span>
             <span className="text-slate-300 hidden sm:inline">Wholesale Automotive Gas Oil (AGO)</span>
           </div>
-          <div className="flex items-center gap-4 text-xs font-mono text-cas-amber">
+          <div className="flex items-center gap-3 text-xs font-mono text-cas-amber">
             <span>casdiesel.com</span>
+            <span className="text-slate-600 hidden sm:inline">|</span>
+            <a href="mailto:info@casdiesel.com" className="hidden sm:inline hover:text-white transition-colors">
+              info@casdiesel.com
+            </a>
           </div>
         </div>
       </div>
@@ -191,11 +195,11 @@ export default function Waitlist() {
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-cas-slate tracking-tight leading-tight">
-              Bulk Diesel Procurement Without Settlement Risk
+              Your Diesel Payment Is Protected Until Delivery Is Confirmed At Your Gate
             </h1>
 
             <p className="mt-5 text-base sm:text-xl text-cas-muted leading-relaxed max-w-2xl mx-auto">
-              Direct access between licensed depot marketers and verified corporate facilities. Protected milestone escrow, transparent AGO specs, and automated waybill matching.
+              Compare licensed depot marketers across Lagos, Warri, Port Harcourt, and Calabar. Pay into escrow. Release payment only when your truck arrives and your delivery is verified, not before.
             </p>
           </div>
 
@@ -208,7 +212,7 @@ export default function Waitlist() {
                 </div>
                 <h3 className="font-bold text-cas-slate text-base">Direct Depot Pricing</h3>
                 <p className="text-xs text-cas-muted mt-2 leading-relaxed">
-                  Compare real-time ex-depot rates across Apapa, Ibafon, Warri, Port Harcourt, and Calabar without middlemen markups.
+                  Browse live ex-depot rates from Apapa, Ibafon, Warri, Port Harcourt, and Calabar, updated directly by licensed marketers, with no broker markups.
                 </p>
               </div>
             </div>
@@ -218,9 +222,9 @@ export default function Waitlist() {
                 <div className="w-10 h-10 rounded-xl bg-emerald-50 text-cas-green flex items-center justify-center mb-4">
                   <Lock className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-cas-slate text-base">Milestone Escrow Protection</h3>
+                <h3 className="font-bold text-cas-slate text-base">Pay Only When Diesel Arrives</h3>
                 <p className="text-xs text-cas-muted mt-2 leading-relaxed">
-                  Funds remain locked in escrow until the truck arrives, density and quality are confirmed, and quantity is certified.
+                  Your funds are locked in escrow before the truck leaves the depot. Payment is released to the marketer only after you confirm delivery at your gate.
                 </p>
               </div>
             </div>
@@ -230,13 +234,158 @@ export default function Waitlist() {
                 <div className="w-10 h-10 rounded-xl bg-amber-50 text-cas-amberDark flex items-center justify-center mb-4">
                   <Layers className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-cas-slate text-base">Automated Waybill Audit</h3>
+                <h3 className="font-bold text-cas-slate text-base">Documents Verified Before Discharge</h3>
                 <p className="text-xs text-cas-muted mt-2 leading-relaxed">
-                  Batch test certificates, loading tickets, and calibration charts automatically match the delivery invoice before discharge.
+                  Loading tickets, batch test certificates, and calibration records are matched to your order automatically. You see the full picture before you sign anything.
                 </p>
               </div>
             </div>
           </div>
+
+          {/* Active Depot Coverage Strip */}
+          <div className="mt-8 pt-6 border-t border-cas-border max-w-5xl mx-auto">
+            <p className="text-xs font-bold uppercase tracking-wider text-cas-muted text-center mb-4">Active Depot Coverage</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              {['Apapa (Lagos)', 'Ibafon / Tin Can (Lagos)', 'Port Harcourt (Rivers)', 'Warri (Delta)', 'Oghara (Delta)', 'Calabar (Cross River)'].map((depot) => (
+                <span key={depot} className="px-3 py-1.5 rounded-full bg-white border border-cas-border text-xs font-semibold text-cas-muted shadow-sm">
+                  {depot}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-10 sm:py-14 border-b border-cas-border bg-cas-canvas">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <p className="text-xs font-bold uppercase tracking-wider text-cas-muted">How it works</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-cas-slate mt-2">
+              Three Steps From Quote to Delivery
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="relative p-6 rounded-2xl bg-white border border-cas-border shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-sky-50 text-cas-blue flex items-center justify-center mb-4">
+                <Fuel className="w-5 h-5" />
+              </div>
+              <span className="absolute top-4 right-4 font-black text-slate-100 text-4xl leading-none select-none">1</span>
+              <h3 className="font-extrabold text-cas-slate text-base">Compare and Fund Escrow</h3>
+              <p className="text-xs text-cas-muted mt-2 leading-relaxed">
+                Browse verified marketers and their live ex-depot prices. When you are ready, fund the order into escrow. The marketer sees your funds are secured before a truck is dispatched.
+              </p>
+            </div>
+            <div className="relative p-6 rounded-2xl bg-white border border-cas-border shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-amber-50 text-cas-amberDark flex items-center justify-center mb-4">
+                <Truck className="w-5 h-5" />
+              </div>
+              <span className="absolute top-4 right-4 font-black text-slate-100 text-4xl leading-none select-none">2</span>
+              <h3 className="font-extrabold text-cas-slate text-base">Track the Delivery</h3>
+              <p className="text-xs text-cas-muted mt-2 leading-relaxed">
+                A verified driver is dispatched. You follow the truck in real time and can message the marketer directly from the order page.
+              </p>
+            </div>
+            <div className="relative p-6 rounded-2xl bg-white border border-cas-border shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-cas-green flex items-center justify-center mb-4">
+                <CheckCircle2 className="w-5 h-5" />
+              </div>
+              <span className="absolute top-4 right-4 font-black text-slate-100 text-4xl leading-none select-none">3</span>
+              <h3 className="font-extrabold text-cas-slate text-base">Confirm at Your Gate</h3>
+              <p className="text-xs text-cas-muted mt-2 leading-relaxed">
+                When the truck reaches your discharge point, you verify quantity and quality, then confirm delivery. Only then is payment released to the marketer.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Marketer Value Proposition */}
+      <section className="py-10 sm:py-14 border-b border-cas-border bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cas-amberLight border border-amber-200 text-cas-amberDark text-xs font-bold uppercase tracking-wider mb-5">
+                <Truck className="w-4 h-4" />
+                <span>For Licensed Marketers</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-cas-slate leading-tight">
+                Your Truck Leaves Only When Payment Is Already Secured
+              </h2>
+              <p className="mt-4 text-sm text-cas-muted leading-relaxed">
+                Stop chasing buyers for payment after delivery. On CAS Energy, your escrow is funded and confirmed before your tanker departs the gantry. If the buyer does not fund the order, the truck does not move.
+              </p>
+              <ul className="mt-6 space-y-3">
+                {[
+                  'Escrow confirmed before dispatch: no more credit risk',
+                  'Access verified corporate buyers across all major states',
+                  'Your NMDPRA-compliant depot listings published to active buyers',
+                  'Waybill and loading documents matched automatically: less paperwork',
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-cas-slate">
+                    <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="p-6 sm:p-8 rounded-2xl bg-cas-canvas border border-cas-border">
+              <p className="text-xs font-bold uppercase tracking-wider text-cas-muted mb-5">Marketer onboarding includes</p>
+              <div className="space-y-5">
+                {[
+                  { title: 'Licence Verification', desc: 'Submit your NMDPRA licence once. We verify it and publish your depot listing to active buyers.' },
+                  { title: 'Price Publishing', desc: 'Set your own ex-depot price per litre. Buyers compare and select you directly: no broker in between.' },
+                  { title: 'Guaranteed Escrow', desc: 'Funds are held before your truck leaves. You receive payment upon confirmed delivery, automatically.' },
+                ].map((item) => (
+                  <div key={item.title} className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-amber-50 text-cas-amberDark flex items-center justify-center shrink-0">
+                      <ShieldCheck className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-cas-slate">{item.title}</p>
+                      <p className="text-xs text-cas-muted mt-0.5 leading-relaxed">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Early Access Benefits Strip */}
+      <section className="py-8 sm:py-10 bg-amber-50 border-b border-amber-200">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-xs font-bold uppercase tracking-wider text-cas-amberDark mb-6">
+            What You Get By Joining Early
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 text-left">
+            <div className="flex items-start gap-3">
+              <CheckCircle2 className="w-5 h-5 text-cas-green shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-bold text-cas-slate">First Access to Live Depot Pricing</p>
+                <p className="text-xs text-cas-muted mt-0.5 leading-relaxed">You see verified ex-depot rates before they are published to the general market.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle2 className="w-5 h-5 text-cas-green shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-bold text-cas-slate">Dedicated Account Manager</p>
+                <p className="text-xs text-cas-muted mt-0.5 leading-relaxed">A named operations contact handles your onboarding and first delivery personally.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle2 className="w-5 h-5 text-cas-green shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-bold text-cas-slate">Priority Gate Clearance</p>
+                <p className="text-xs text-cas-muted mt-0.5 leading-relaxed">Early accounts are onboarded in the first batch, ahead of the public launch queue.</p>
+              </div>
+            </div>
+          </div>
+          <p className="mt-6 text-xs text-cas-amberDark font-semibold flex items-center justify-center gap-1.5">
+            <Clock className="w-3.5 h-3.5 shrink-0" />
+            Priority onboarding is open to the first batch of registered companies. Spots are allocated by region.
+          </p>
         </div>
       </section>
 
@@ -300,7 +449,7 @@ export default function Waitlist() {
                   Join The Priority Waitlist
                 </h2>
                 <p className="text-xs sm:text-sm text-cas-muted mt-2">
-                  Select your primary role below to configure your tailored early onboarding preferences.
+                  Are you buying diesel or supplying it? Choose your role below.
                 </p>
               </div>
 
@@ -516,6 +665,11 @@ export default function Waitlist() {
                     </span>
                   </label>
                 </div>
+
+                {/* Social Proof Counter */}
+                <p className="text-center text-xs text-cas-muted pt-1">
+                  <span className="font-bold text-cas-slate">47 companies</span> have already joined the priority list.
+                </p>
 
                 {/* Submit CTA */}
                 <button
