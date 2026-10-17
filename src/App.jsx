@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { api } from './api';
+import { WAITLIST } from './config';
 import Header from './components/Header';
 import Hero from './components/Hero';
+import Waitlist from './components/Waitlist';
 import Marketplace from './components/Marketplace';
 import LoginPage from './components/LoginPage';
 import SupplierPortal from './components/SupplierPortal';
@@ -250,7 +252,9 @@ export default function App() {
       {/* Main Body */}
       <main className="flex-1 pb-20 md:pb-0">
         <Routes>
-          <Route path="/" element={<HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
+          <Route path="/" element={WAITLIST.enabled && !user ? <Waitlist /> : <HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
+          <Route path="/waitlist" element={<Waitlist />} />
+          <Route path="/portal" element={<HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
           <Route path="/register" element={<LoginPage initialRole={registerInitialRole} initialMode="register" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/marketer" element={<NotForAdmin user={user}><SupplierPortal /></NotForAdmin>} />
