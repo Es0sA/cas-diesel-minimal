@@ -402,7 +402,7 @@ export default function Waitlist() {
                           <input
                             type="email"
                             required
-                            placeholder="e.g. name@company.com or name@gmail.com"
+                            placeholder="e.g. name@email.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate"
