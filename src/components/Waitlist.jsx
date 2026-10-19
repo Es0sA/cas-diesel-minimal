@@ -164,7 +164,7 @@ export default function Waitlist() {
   };
 
   return (
-    <div className="bg-cas-canvas text-cas-slate min-h-screen">
+    <div className="bg-cas-canvas text-cas-slate min-h-screen overflow-x-hidden">
       {/* Top Pre-Launch Banner */}
       <div className="bg-cas-slate text-white border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between text-xs sm:text-sm">
@@ -185,12 +185,12 @@ export default function Waitlist() {
       </div>
 
       {/* Hero & Form Section: Above-the-fold split layout */}
-      <section className="relative overflow-hidden pt-8 pb-12 sm:pt-14 sm:pb-16 border-b border-cas-border bg-gradient-to-b from-white via-white to-cas-canvas">
+      <section className="relative pt-8 pb-12 sm:pt-14 sm:pb-16 border-b border-cas-border bg-gradient-to-b from-white via-white to-cas-canvas">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start w-full">
             
             {/* Left Column: Direct value proposition */}
-            <div className="lg:col-span-5 space-y-6 pt-2">
+            <div className="lg:col-span-5 min-w-0 space-y-6 pt-2">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-cas-amberDark text-xs font-bold uppercase tracking-wider">
                 <Sparkles className="w-3.5 h-3.5 text-cas-amber" />
                 <span>Priority Access Allocation</span>
@@ -259,7 +259,7 @@ export default function Waitlist() {
             </div>
 
             {/* Right Column: The Waitlist Form Card (Right above the fold!) */}
-            <div id="waitlist-form" className="lg:col-span-7 scroll-mt-20">
+            <div id="waitlist-form" className="lg:col-span-7 min-w-0 w-full scroll-mt-20">
               <div className="bg-white rounded-2xl border border-cas-border shadow-md overflow-hidden">
                 {submitted ? (
                   /* Confirmation State */
