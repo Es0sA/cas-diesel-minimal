@@ -353,38 +353,18 @@ export default function Waitlist() {
         </div>
       </section>
 
-      {/* Early Access Benefits Strip */}
-      <section className="py-8 sm:py-10 bg-amber-50 border-b border-amber-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-xs font-bold uppercase tracking-wider text-cas-amberDark mb-6">
-            What You Get By Joining Early
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 text-left">
-            <div className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-cas-green shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-bold text-cas-slate">First Access to Live Depot Pricing</p>
-                <p className="text-xs text-cas-muted mt-0.5 leading-relaxed">You see verified ex-depot rates before they are published to the general market.</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-cas-green shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-bold text-cas-slate">Dedicated Account Manager</p>
-                <p className="text-xs text-cas-muted mt-0.5 leading-relaxed">A named operations contact handles your onboarding and first delivery personally.</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-cas-green shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-bold text-cas-slate">Priority Gate Clearance</p>
-                <p className="text-xs text-cas-muted mt-0.5 leading-relaxed">Early accounts are onboarded in the first batch, ahead of the public launch queue.</p>
-              </div>
-            </div>
+      {/* Launch Notification Notice Strip */}
+      <section className="py-8 sm:py-10 bg-slate-50 border-b border-cas-border">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-cas-amberDark text-xs font-bold uppercase tracking-wider mb-3">
+            <Clock className="w-3.5 h-3.5 text-cas-amber" />
+            <span>Launch Alert & Priority Onboarding</span>
           </div>
-          <p className="mt-6 text-xs text-cas-amberDark font-semibold flex items-center justify-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 shrink-0" />
-            Priority onboarding is open to the first batch of registered companies. Spots are allocated by region.
+          <h3 className="text-xl sm:text-2xl font-extrabold text-cas-slate">
+            Don't waste time checking back on the site.
+          </h3>
+          <p className="mt-2 text-sm text-cas-muted leading-relaxed max-w-xl mx-auto">
+            When our launch date is set, registered buyers and marketers receive a direct WhatsApp message and email with the official countdown and their priority onboarding pass.
           </p>
         </div>
       </section>
@@ -426,7 +406,7 @@ export default function Waitlist() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" />
-                    <span>Early accounts receive dedicated account manager assignment and expedited gate clearance.</span>
+                    <span>When our launch date is confirmed, you will receive your official countdown and priority pass via WhatsApp and email.</span>
                   </li>
                 </ul>
               </div>
@@ -666,9 +646,9 @@ export default function Waitlist() {
                   </label>
                 </div>
 
-                {/* Social Proof Counter */}
+                {/* Priority Notice */}
                 <p className="text-center text-xs text-cas-muted pt-1">
-                  <span className="font-bold text-cas-slate">47 companies</span> have already joined the priority list.
+                  Registered companies receive direct launch notifications and priority onboarding.
                 </p>
 
                 {/* Submit CTA */}
