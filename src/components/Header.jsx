@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, LogOut, Settings, ChevronDown, ArrowRight } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { WAITLIST } from '../config';
 
 // One workspace link per role. Public visitors get anchors on the home page.
 const ROLE_LINKS = {
@@ -14,6 +15,9 @@ const PUBLIC_LINKS = [
   { label: 'How it works', hash: 'how-it-works' },
   { label: 'Marketers', hash: 'marketplace' },
 ];
+const WAITLIST_LINKS = [
+  { label: 'Priority Access', hash: 'waitlist-form' },
+];
 
 export default function Header({ user, onLogout, onOpenLegalModal }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -24,7 +28,8 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
 
   const role = user?.role ? user.role.toUpperCase() : null;
   const onAuthPage = location.pathname === '/login' || location.pathname === '/register';
-  const links = user ? ROLE_LINKS[role] || [] : onAuthPage ? [] : PUBLIC_LINKS;
+  const publicLinks = WAITLIST.enabled ? WAITLIST_LINKS : PUBLIC_LINKS;
+  const links = user ? ROLE_LINKS[role] || [] : onAuthPage ? [] : publicLinks;
   const roleLabel = role ? role.charAt(0) + role.slice(1).toLowerCase() : '';
 
   useEffect(() => {
@@ -91,7 +96,20 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
-          {!user && onAuthPage ? null : !user ? (
+          {!user && onAuthPage ? null : !user && WAITLIST.enabled ? (
+            <>
+              <Link to="/login" className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 hover:text-black hover:bg-slate-50">
+                Sign in
+              </Link>
+              <button
+                type="button"
+                onClick={() => scrollTo('waitlist-form')}
+                className="px-4 py-2 rounded-lg text-sm font-bold bg-cas-slate hover:bg-black text-white transition-colors"
+              >
+                Join Waitlist
+              </button>
+            </>
+          ) : !user ? (
             <>
               <Link to="/login" className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 hover:text-black hover:bg-slate-50">
                 Sign in
@@ -159,7 +177,20 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
                 className="flex items-center justify-between p-3.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50"
               />
             ))}
-            {!user && onAuthPage ? null : !user ? (
+            {!user && onAuthPage ? null : !user && WAITLIST.enabled ? (
+              <div className="grid grid-cols-2 gap-2 mt-2">
+                <Link to="/login" onClick={() => setMobileOpen(false)} className="text-center p-3 rounded-xl text-sm font-semibold border border-slate-300 text-slate-800">
+                  Sign in
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => { setMobileOpen(false); scrollTo('waitlist-form'); }}
+                  className="text-center p-3 rounded-xl text-sm font-bold bg-cas-slate text-white"
+                >
+                  Join Waitlist
+                </button>
+              </div>
+            ) : !user ? (
               <div className="grid grid-cols-2 gap-2 mt-2">
                 <Link to="/login" onClick={() => setMobileOpen(false)} className="text-center p-3 rounded-xl text-sm font-semibold border border-slate-300 text-slate-800">
                   Sign in
