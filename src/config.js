@@ -25,5 +25,7 @@ export const WAITLIST = {
   enabled: import.meta.env.VITE_WAITLIST_ENABLED !== 'false',
   // Google Apps Script Web App deployment URL
   sheetUrl: import.meta.env.VITE_WAITLIST_SHEET_URL || 'https://script.google.com/macros/s/AKfycbxaUecxzlKGMfw3V1pkU2WUInJ8cJZMTLNnxFGKEgx7TgohKKiqM0jzkDi5VP8cU86G/exec',
-  storageKey: 'cas_diesel_waitlist_signups'
+  storageKey: 'cas_diesel_waitlist_signups',
+  lastSubmitKey: 'cas_diesel_waitlist_last_submit',
+  failedKey: 'cas_diesel_waitlist_failed_signups'
 };

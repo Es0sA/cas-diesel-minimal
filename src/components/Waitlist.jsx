@@ -71,6 +71,9 @@ export default function Waitlist() {
   const [errorMsg, setErrorMsg] = useState('');
   const [refCode, setRefCode] = useState('');
 
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const RESUBMIT_COOLDOWN_MS = 60 * 1000;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
@@ -86,9 +89,31 @@ export default function Waitlist() {
       return;
     }
 
+    if (!EMAIL_RE.test(email.trim())) {
+      setErrorMsg('Please enter a valid email address.');
+      return;
+    }
+
+    const phoneDigits = whatsapp.replace(/\D/g, '');
+    if (phoneDigits.length < 10) {
+      setErrorMsg('Please enter a valid WhatsApp phone number.');
+      return;
+    }
+
     if (!consent) {
       setErrorMsg('Please check the consent box to receive access updates.');
       return;
+    }
+
+    // Cooldown guard: block rapid repeat submissions from this browser
+    try {
+      const lastSubmitAt = Number(localStorage.getItem(WAITLIST.lastSubmitKey) || 0);
+      if (Date.now() - lastSubmitAt < RESUBMIT_COOLDOWN_MS) {
+        setErrorMsg('You already submitted recently. Please wait a moment before trying again.');
+        return;
+      }
+    } catch (storageErr) {
+      console.warn('Cooldown check failed:', storageErr);
     }
 
     setSubmitting(true);
@@ -114,20 +139,34 @@ export default function Waitlist() {
         const stored = JSON.parse(localStorage.getItem(WAITLIST.storageKey) || '[]');
         stored.push(payload);
         localStorage.setItem(WAITLIST.storageKey, JSON.stringify(stored));
+        localStorage.setItem(WAITLIST.lastSubmitKey, String(Date.now()));
       } catch (storageErr) {
         console.warn('LocalStorage backup failed:', storageErr);
       }
 
       // 2. Post to Google Apps Script Webhook if configured
       if (WAITLIST.sheetUrl && WAITLIST.sheetUrl.trim() !== '') {
-        await fetch(WAITLIST.sheetUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
+        try {
+          await fetch(WAITLIST.sheetUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+        } catch (webhookErr) {
+          // no-cors gives an opaque response, so this only catches network-level
+          // failures. Keep a visible record instead of losing it silently.
+          console.error('Waitlist webhook post failed:', webhookErr);
+          try {
+            const failed = JSON.parse(localStorage.getItem(WAITLIST.failedKey) || '[]');
+            failed.push({ ...payload, failedReason: String(webhookErr) });
+            localStorage.setItem(WAITLIST.failedKey, JSON.stringify(failed));
+          } catch (storageErr) {
+            console.warn('Failed-submission backup failed:', storageErr);
+          }
+        }
       }
 
       setRefCode(generatedRef);
