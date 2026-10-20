@@ -387,8 +387,9 @@ export default function Waitlist() {
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
-                      {/* Honeypot field for bot protection */}
-                      <div style={{ display: 'none' }} aria-hidden="true">
+                      {/* Honeypot field for bot protection: off-screen rather than display:none,
+                          which some bots specifically pattern-match and skip */}
+                      <div style={{ position: 'absolute', left: '-9999px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }} aria-hidden="true">
                         <label htmlFor="website_trap">Leave this blank</label>
                         <input
                           type="text"
@@ -404,10 +405,11 @@ export default function Waitlist() {
                       {/* Row 1: Name and WhatsApp */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-bold text-cas-slate mb-1">
+                          <label htmlFor="wl-fullName" className="block text-xs font-bold text-cas-slate mb-1">
                             Full Name <span className="text-rose-500">*</span>
                           </label>
                           <input
+                            id="wl-fullName"
                             type="text"
                             required
                             placeholder="e.g. Aliko Mohammed"
@@ -418,10 +420,11 @@ export default function Waitlist() {
                         </div>
 
                         <div>
-                          <label className="block text-xs font-bold text-cas-slate mb-1">
+                          <label htmlFor="wl-whatsapp" className="block text-xs font-bold text-cas-slate mb-1">
                             WhatsApp Phone <span className="text-rose-500">*</span>
                           </label>
                           <input
+                            id="wl-whatsapp"
                             type="tel"
                             required
                             placeholder="e.g. 0803 123 4567"
@@ -435,10 +438,11 @@ export default function Waitlist() {
                       {/* Row 2: Email and Company */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-bold text-cas-slate mb-1">
+                          <label htmlFor="wl-email" className="block text-xs font-bold text-cas-slate mb-1">
                             Work or Personal Email <span className="text-rose-500">*</span>
                           </label>
                           <input
+                            id="wl-email"
                             type="email"
                             required
                             placeholder="e.g. name@email.com"
@@ -449,10 +453,11 @@ export default function Waitlist() {
                         </div>
 
                         <div>
-                          <label className="block text-xs font-bold text-cas-slate mb-1">
+                          <label htmlFor="wl-company" className="block text-xs font-bold text-cas-slate mb-1">
                             Company Name
                           </label>
                           <input
+                            id="wl-company"
                             type="text"
                             placeholder={role === 'BUYER' ? 'e.g. Pinnacle Mills Ltd' : 'e.g. Sahara Downstream Ltd'}
                             value={company}
@@ -465,10 +470,11 @@ export default function Waitlist() {
                       {/* Row 3: Location and Volume Tier */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-bold text-cas-slate mb-1">
+                          <label htmlFor="wl-location" className="block text-xs font-bold text-cas-slate mb-1">
                             {role === 'BUYER' ? 'Delivery State' : 'Primary Supply Depot'}
                           </label>
                           <select
+                            id="wl-location"
                             value={location}
                             onChange={(e) => setLocation(e.target.value)}
                             className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate bg-white"
@@ -481,10 +487,11 @@ export default function Waitlist() {
                         </div>
 
                         <div>
-                          <label className="block text-xs font-bold text-cas-slate mb-1">
+                          <label htmlFor="wl-volume" className="block text-xs font-bold text-cas-slate mb-1">
                             {role === 'BUYER' ? 'Monthly Consumption' : 'Supply Capacity'}
                           </label>
                           <select
+                            id="wl-volume"
                             value={volume}
                             onChange={(e) => setVolume(e.target.value)}
                             className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate bg-white"
@@ -499,10 +506,11 @@ export default function Waitlist() {
 
                       {/* Row 4: Referral Source */}
                       <div>
-                        <label className="block text-xs font-bold text-cas-slate mb-1">
+                        <label htmlFor="wl-referral" className="block text-xs font-bold text-cas-slate mb-1">
                           How Did You Hear About CAS Diesel? (Optional)
                         </label>
                         <select
+                          id="wl-referral"
                           value={referral}
                           onChange={(e) => setReferral(e.target.value)}
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate bg-white"

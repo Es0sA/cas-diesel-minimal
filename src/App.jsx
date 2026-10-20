@@ -183,6 +183,11 @@ function HomePage({ user, handleOpenRegistration }) {
 const NotForAdmin = ({ user, children }) =>
   (user?.role || '').toUpperCase() === 'ADMIN' ? <Navigate to="/admin" replace /> : children;
 
+// While the waitlist gate is on, /portal is not a public page: logged-out visitors
+// get redirected to the waitlist instead of seeing the live marketplace early.
+const GateWhileWaitlisted = ({ user, children }) =>
+  WAITLIST.enabled && !user ? <Navigate to="/" replace /> : children;
+
 export default function App() {
   const [user, setUser] = useState(null);
   const [activeLegalModal, setActiveLegalModal] = useState(null);
@@ -254,7 +259,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={WAITLIST.enabled && !user ? <Waitlist /> : <HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
           <Route path="/waitlist" element={<Waitlist />} />
-          <Route path="/portal" element={<HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
+          <Route path="/portal" element={<GateWhileWaitlisted user={user}><HomePage user={user} handleOpenRegistration={handleOpenRegistration} /></GateWhileWaitlisted>} />
           <Route path="/register" element={<LoginPage initialRole={registerInitialRole} initialMode="register" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/marketer" element={<NotForAdmin user={user}><SupplierPortal /></NotForAdmin>} />
