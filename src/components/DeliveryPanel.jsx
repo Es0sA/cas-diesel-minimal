@@ -104,7 +104,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
 
   const myUploadTypes = viewerRole === 'DRIVER'
     ? ['DRIVER_ID']
-    : viewerRole === 'SUPPLIER'
+    : viewerRole === 'VENDOR'
       ? Object.keys(DOC_LABELS).filter((t) => t !== 'DRIVER_ID')
       : [];
   const missingMine = checklist ? checklist.missing.filter((t) => myUploadTypes.includes(t)) : [];
@@ -210,31 +210,31 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
         )
       )}
 
-      {/* Waiting for the supplier */}
+      {/* Waiting for the vendor */}
       {settling && verification && (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
-          <h3 className="font-bold text-cas-slate">Verified, waiting for the supplier</h3>
+          <h3 className="font-bold text-cas-slate">Verified, waiting for the vendor</h3>
           <dl className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-3 text-sm">
             <div><dt className="text-xs text-cas-muted">Weighbridge</dt><dd className="font-bold">{litres(verification.weighbridgeL)}</dd></div>
             <div><dt className="text-xs text-cas-muted">Tank received</dt><dd className="font-bold">{litres(verification.tankReceivedL)}</dd></div>
             <div><dt className="text-xs text-cas-muted">Final verified</dt><dd className="font-bold">{litres(verification.finalVerifiedL)}</dd></div>
             <div><dt className="text-xs text-cas-muted">Difference</dt><dd className="font-bold">{verification.discrepancyPct}%</dd></div>
-            <div><dt className="text-xs text-cas-muted">To supplier</dt><dd className="font-bold text-cas-green">{naira(order.amountPayable)}</dd></div>
+            <div><dt className="text-xs text-cas-muted">To vendor</dt><dd className="font-bold text-cas-green">{naira(order.amountPayable)}</dd></div>
             <div><dt className="text-xs text-cas-muted">Back to buyer</dt><dd className="font-bold">{naira(order.refundAmount)}</dd></div>
           </dl>
           <p className="text-sm text-slate-700 mt-4 flex items-center gap-2">
             <Timer className="w-4 h-4 shrink-0" aria-hidden="true" />
-            <span>{viewerRole === 'SUPPLIER'
+            <span>{viewerRole === 'VENDOR'
               ? <>Accept or contest within <strong><Countdown until={order.settleAfter} /></strong>{'. '}Silence releases the payment.</>
-              : <>The supplier has <strong><Countdown until={order.settleAfter} /></strong> to accept or contest{'. '}Silence releases the payment.</>}</span>
+              : <>The vendor has <strong><Countdown until={order.settleAfter} /></strong> to accept or contest{'. '}Silence releases the payment.</>}</span>
           </p>
-          {viewerRole === 'SUPPLIER' && !contesting && (
+          {viewerRole === 'VENDOR' && !contesting && (
             <div className="flex flex-wrap gap-3 mt-4">
               <button disabled={busy} onClick={() => run(() => api.orders.acceptVerification(order.id), 'Accepted. Payment settled.')} className="px-5 py-2.5 bg-cas-green text-white text-sm font-bold rounded-lg disabled:opacity-50">Accept and get paid</button>
               <button disabled={busy} onClick={() => setContesting(true)} className="px-5 py-2.5 bg-white border border-rose-300 text-rose-700 text-sm font-bold rounded-lg">Contest the quantity</button>
             </div>
           )}
-          {viewerRole === 'SUPPLIER' && contesting && (
+          {viewerRole === 'VENDOR' && contesting && (
             <form onSubmit={(e) => { e.preventDefault(); run(() => api.orders.contestVerification(order.id, reason), 'Contested. Funds stay locked while CAS reviews.'); }} className="mt-4 space-y-3">
               <Field label="What is wrong with the verification?" hint="At least 10 characters. CAS reviews the readings and documents.">
                 <textarea required minLength={10} maxLength={2000} rows={3} value={reason} onChange={(e) => setReason(e.target.value)} className={inputCls} />
@@ -249,7 +249,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
       )}
 
       {/* Settled, or held in dispute with measurements */}
-      {order.status === 'DISPUTED' && (viewerRole === 'BUYER' || viewerRole === 'SUPPLIER') && (
+      {order.status === 'DISPUTED' && (viewerRole === 'BUYER' || viewerRole === 'VENDOR') && (
         <div className="mb-5 p-4 rounded-xl border border-amber-200 bg-amber-50">
           <h3 className="text-sm font-bold text-cas-slate mb-1">Negotiate a split</h3>
           <p className="text-xs text-cas-muted mb-3">
@@ -257,7 +257,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
           </p>
           {order.splitProposal && (
             <div className="mb-3 text-sm">
-              <p><strong>{order.splitProposal.byRole === viewerRole ? 'Your offer' : `Offer from the ${order.splitProposal.byRole.toLowerCase()}`}:</strong> {naira(order.splitProposal.releaseAmount)} to the supplier, {naira(order.splitProposal.refundAmount)} back to the buyer.</p>
+              <p><strong>{order.splitProposal.byRole === viewerRole ? 'Your offer' : `Offer from the ${order.splitProposal.byRole.toLowerCase()}`}:</strong> {naira(order.splitProposal.releaseAmount)} to the vendor, {naira(order.splitProposal.refundAmount)} back to the buyer.</p>
               {order.splitProposal.note && <p className="text-xs text-cas-muted mt-1">{order.splitProposal.note}</p>}
               {order.splitProposal.byRole !== viewerRole && (
                 <button type="button" disabled={busy} onClick={() => run(() => api.orders.acceptSplit(order.id, order.splitProposal.releaseAmount), 'Agreement reached. Payment settled.')} className="mt-2 px-4 py-2 rounded-lg bg-cas-blue text-white text-sm font-bold disabled:opacity-50">Accept this split</button>
@@ -265,7 +265,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
             </div>
           )}
           <form className="flex flex-wrap gap-2 items-end" onSubmit={(e) => { e.preventDefault(); run(() => api.orders.proposeSplit(order.id, offer.amount, offer.note), 'Offer sent.'); }}>
-            <Field label="Amount to the supplier (naira)"><input type="number" min="0" max={order.totalEscrowAmount} step="0.01" required value={offer.amount} onChange={(e) => setOffer((o) => ({ ...o, amount: e.target.value }))} className={inputCls} /></Field>
+            <Field label="Amount to the vendor (naira)"><input type="number" min="0" max={order.totalEscrowAmount} step="0.01" required value={offer.amount} onChange={(e) => setOffer((o) => ({ ...o, amount: e.target.value }))} className={inputCls} /></Field>
             <Field label="Note (optional)"><input type="text" maxLength={500} value={offer.note} onChange={(e) => setOffer((o) => ({ ...o, note: e.target.value }))} className={inputCls} /></Field>
             <button type="submit" disabled={busy} className="px-4 py-2 rounded-lg border border-cas-border bg-white text-sm font-bold disabled:opacity-50">{order.splitProposal ? 'Counter offer' : 'Send offer'}</button>
           </form>
@@ -275,13 +275,13 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
       {!settling && verification && (
         <div className={`rounded-xl border p-4 ${finished ? 'border-green-200 bg-cas-greenLight/40' : 'border-rose-200 bg-rose-50'}`}>
           <h3 className="font-bold text-cas-slate">
-            {finished ? 'Settled on the verified quantity' : verification.status === 'CONTESTED' ? 'Contested by the supplier, funds locked' : 'Verification suspended, funds locked'}
+            {finished ? 'Settled on the verified quantity' : verification.status === 'CONTESTED' ? 'Contested by the vendor, funds locked' : 'Verification suspended, funds locked'}
           </h3>
           <dl className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-3 text-sm">
             <div><dt className="text-xs text-cas-muted">Final verified</dt><dd className="font-bold">{litres(verification.finalVerifiedL)}</dd></div>
             <div><dt className="text-xs text-cas-muted">Difference</dt><dd className="font-bold">{verification.discrepancyPct}%</dd></div>
             <div><dt className="text-xs text-cas-muted">Seals</dt><dd className="font-bold">{verification.sealsIntact ? 'Intact' : 'Broken'}</dd></div>
-            {finished && <div><dt className="text-xs text-cas-muted">Paid to supplier</dt><dd className="font-bold text-cas-green">{naira(order.amountPayable)}</dd></div>}
+            {finished && <div><dt className="text-xs text-cas-muted">Paid to vendor</dt><dd className="font-bold text-cas-green">{naira(order.amountPayable)}</dd></div>}
           </dl>
           {verification.suspendReason && <p className="text-sm text-slate-700 mt-3 break-words">{verification.suspendReason}</p>}
         </div>
@@ -301,7 +301,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
                   <tr key={e.id} className="border-t border-slate-100">
                     <td className="py-2 pr-3 whitespace-nowrap text-cas-muted">{new Date(e.createdAt).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</td>
                     <td className="py-2 pr-3 font-semibold">{e.kind === 'FUND' ? 'Funded' : e.kind === 'RELEASE' ? 'Released' : 'Refunded'}</td>
-                    <td className="py-2 pr-3 text-cas-muted">{e.party === 'ESCROW' ? 'Escrow' : e.party === 'SUPPLIER' ? 'Supplier' : 'Buyer'}</td>
+                    <td className="py-2 pr-3 text-cas-muted">{e.party === 'ESCROW' ? 'Escrow' : e.party === 'SUPPLIER' ? 'Vendor' : 'Buyer'}</td>
                     <td className="py-2 pr-3 text-right font-mono">{naira(e.amount)}</td>
                   </tr>
                 ))}

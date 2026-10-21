@@ -32,7 +32,7 @@ import {
 } from 'lucide-react';
 
 function HomePage({ user, handleOpenRegistration }) {
-  usePageTitle(null, "Browse verified diesel marketers by depot and price, and order with escrow-protected payment on CAS Energy.");
+  usePageTitle(null, "Browse verified diesel vendors by depot and price, and order with escrow-protected payment on CAS Energy.");
   const [checkoutSupplier, setCheckoutSupplier] = useState(null);
   const navigate = useNavigate();
 
@@ -62,10 +62,10 @@ function HomePage({ user, handleOpenRegistration }) {
               <span>How CAS Energy Operates</span>
             </div>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
-              Licensed Marketers Meet The Companies That Need Diesel
+              Vendors Meet The Companies That Need Diesel
             </h2>
             <p className="text-base sm:text-lg text-cas-muted mt-2">
-              Stop chasing quotes and phone calls. Browse verified marketers, compare prices by depot and order in minutes. Your payment stays in escrow until the diesel is delivered.
+              Stop chasing quotes and phone calls. Browse verified vendors, compare prices by depot and order in minutes. Your payment stays in escrow until the diesel is delivered.
             </p>
           </div>
 
@@ -106,7 +106,7 @@ function HomePage({ user, handleOpenRegistration }) {
                 <div className="w-12 h-12 rounded-xl bg-amber-100 text-cas-amberDark flex items-center justify-center mb-6">
                   <UserCheck className="w-6 h-6" aria-hidden="true" />
                 </div>
-                <h3 className="text-xl font-extrabold text-cas-slate mb-2">For Licensed Marketers</h3>
+                <h3 className="text-xl font-extrabold text-cas-slate mb-2">For Vendors</h3>
                 <p className="text-sm text-cas-muted leading-relaxed mb-6">
                   Publish your own spot price per litre and available volumes. Once your truck departs the gantry, the order is non-cancellable, protecting your capital.
                 </p>
@@ -125,7 +125,7 @@ function HomePage({ user, handleOpenRegistration }) {
                   onClick={() => handleOpenRegistration('supplier')}
                   className="w-full py-3 px-4 bg-cas-slate hover:bg-black text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
-                  <span>Register As A Marketer</span>
+                  <span>Register As A Vendor</span>
                   <ArrowRight className="w-4 h-4 text-cas-amber" aria-hidden="true" />
                 </button>
               </div>
@@ -138,7 +138,7 @@ function HomePage({ user, handleOpenRegistration }) {
                 </div>
                 <h3 className="text-xl font-extrabold text-cas-slate mb-2">For Fleet Tanker Drivers</h3>
                 <p className="text-sm text-cas-muted leading-relaxed mb-6">
-                  Register under your marketer. Receive verified dispatch orders with exact gate coordinates and turn-by-turn route navigation.
+                  Register under your vendor. Receive verified dispatch orders with exact gate coordinates and turn-by-turn route navigation.
                 </p>
               </div>
 
@@ -185,7 +185,7 @@ function HomePage({ user, handleOpenRegistration }) {
   );
 }
 
-// Admins have their own dashboard and never use the marketer or driver workspaces.
+// Admins have their own dashboard and never use the vendor or driver workspaces.
 const NotForAdmin = ({ user, children }) =>
   (user?.role || '').toUpperCase() === 'ADMIN' ? <Navigate to="/admin" replace /> : children;
 
@@ -243,8 +243,8 @@ export default function App() {
       navigate('/admin');
     } else if (await profileMissing(normalizedRole)) {
       navigate('/onboarding');
-    } else if (normalizedRole === 'SUPPLIER') {
-      navigate('/marketer');
+    } else if (normalizedRole === 'VENDOR') {
+      navigate('/vendor');
     } else if (normalizedRole === 'DRIVER') {
       navigate('/driver');
     } else {
@@ -275,7 +275,7 @@ export default function App() {
           <Route path="/portal" element={<GateWhileWaitlisted user={user}><HomePage user={user} handleOpenRegistration={handleOpenRegistration} /></GateWhileWaitlisted>} />
           <Route path="/register" element={<LoginPage initialRole={registerInitialRole} initialMode="register" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
-          <Route path="/marketer" element={<NotForAdmin user={user}><SupplierPortal /></NotForAdmin>} />
+          <Route path="/vendor" element={<NotForAdmin user={user}><SupplierPortal /></NotForAdmin>} />
           <Route path="/driver" element={<NotForAdmin user={user}><DriverCockpit onNavigateToRegister={() => handleOpenRegistration('driver')} /></NotForAdmin>} />
           <Route path="/onboarding" element={<Onboarding user={user} />} />
           <Route path="/rfqs" element={<Rfqs user={user} />} />

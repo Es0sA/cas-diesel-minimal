@@ -57,8 +57,8 @@ const REFERRAL_SOURCES = [
 ];
 
 export default function Waitlist({ onOpenLegalModal }) {
-  usePageTitle('Join The Priority Waitlist', 'Join the CAS Energy priority waitlist for escrow-protected wholesale diesel. Corporate buyers and licensed marketers get early access before public launch.');
-  const [role, setRole] = useState('BUYER'); // BUYER or MARKETER
+  usePageTitle('Join The Priority Waitlist', 'Join the CAS Energy priority waitlist for escrow-protected wholesale diesel. Corporate buyers and vendors get early access before public launch.');
+  const [role, setRole] = useState('BUYER'); // BUYER or VENDOR
   const [fullName, setFullName] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [email, setEmail] = useState('');
@@ -126,7 +126,7 @@ export default function Waitlist({ onOpenLegalModal }) {
     const payload = {
       refCode: generatedRef,
       timestamp: new Date().toISOString(),
-      role: role === 'BUYER' ? 'Corporate Buyer' : 'Licensed Marketer',
+      role: role === 'BUYER' ? 'Corporate Buyer' : 'Vendor',
       name: fullName.trim(),
       whatsapp: whatsapp.trim(),
       email: email.trim(),
@@ -267,7 +267,7 @@ export default function Waitlist({ onOpenLegalModal }) {
               </h1>
 
               <p className="text-base sm:text-lg text-cas-muted leading-relaxed">
-                Connect directly with licensed depot marketers across Lagos, Warri, Port Harcourt, and Calabar. Your payment stays securely locked in escrow until the truck arrives and diesel is confirmed at your gate.
+                Connect directly with licensed depot vendors across Lagos, Warri, Port Harcourt, and Calabar. Your payment stays securely locked in escrow until the truck arrives and diesel is confirmed at your gate.
               </p>
 
               {/* Three Core Guarantees (Desktop column highlights) */}
@@ -278,7 +278,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                   </div>
                   <div>
                     <h2 className="text-sm font-bold text-cas-slate">Direct Ex-Depot Pricing</h2>
-                    <p className="text-xs text-cas-muted mt-0.5">Live rates published directly by licensed marketers with zero broker markups.</p>
+                    <p className="text-xs text-cas-muted mt-0.5">Live rates published directly by vendors with zero broker markups.</p>
                   </div>
                 </div>
 
@@ -319,7 +319,7 @@ export default function Waitlist({ onOpenLegalModal }) {
               <div className="hidden lg:flex p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-cas-muted items-start gap-2.5">
                 <ShieldCheck className="w-4 h-4 text-cas-slate shrink-0 mt-0.5" />
                 <span>
-                  Registered buyers and marketers receive priority onboarding passes and real-time depot price alerts via WhatsApp before public launch.
+                  Registered buyers and vendors receive priority onboarding passes and real-time depot price alerts via WhatsApp before public launch.
                 </span>
               </div>
             </div>
@@ -401,15 +401,15 @@ export default function Waitlist({ onOpenLegalModal }) {
 
                       <button
                         type="button"
-                        onClick={() => setRole('MARKETER')}
+                        onClick={() => setRole('VENDOR')}
                         className={`py-2.5 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
-                          role === 'MARKETER'
+                          role === 'VENDOR'
                             ? 'bg-cas-amberDark text-white shadow-xs'
                             : 'text-cas-muted hover:text-cas-slate'
                         }`}
                       >
                         <Truck className="w-3.5 h-3.5" />
-                        <span>Licensed Marketer</span>
+                        <span>Vendor</span>
                       </button>
                     </div>
 
@@ -639,7 +639,7 @@ export default function Waitlist({ onOpenLegalModal }) {
               </div>
               <h4 className="font-bold text-cas-slate text-base">Compare & Fund Escrow</h4>
               <p className="text-xs text-cas-muted mt-2 leading-relaxed">
-                Review verified depot prices from licensed marketers. Lock payment in secure escrow so suppliers see funds are secured before trucks load.
+                Review verified depot prices from vendors. Lock payment in secure escrow so suppliers see funds are secured before trucks load.
               </p>
             </div>
 
@@ -659,7 +659,7 @@ export default function Waitlist({ onOpenLegalModal }) {
               </div>
               <h4 className="font-bold text-cas-slate text-base">Confirm & Release</h4>
               <p className="text-xs text-cas-muted mt-2 leading-relaxed">
-                Inspect quantity and test quality at your facility gate. Once you confirm receipt, escrow releases payout directly to the marketer.
+                Inspect quantity and test quality at your facility gate. Once you confirm receipt, escrow releases payout directly to the vendor.
               </p>
             </div>
           </div>
@@ -692,11 +692,11 @@ export default function Waitlist({ onOpenLegalModal }) {
               </ul>
             </div>
 
-            {/* Marketer Card */}
+            {/* Vendor Card */}
             <div className="p-6 sm:p-8 rounded-2xl bg-white border border-cas-border">
               <div className="flex items-center gap-2 text-cas-slate font-bold text-base mb-3">
                 <Truck className="w-5 h-5 text-cas-amberDark" />
-                <span>For Licensed Marketers</span>
+                <span>For Vendors</span>
               </div>
               <ul className="space-y-2.5 text-xs text-cas-muted">
                 <li className="flex items-start gap-2">

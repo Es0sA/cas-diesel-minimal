@@ -70,7 +70,7 @@ export default function ProfileSettings({ user }) {
   };
 
   const handleBack = () => {
-    if (role === 'SUPPLIER') navigate('/marketer');
+    if (role === 'VENDOR') navigate('/vendor');
     else if (role === 'DRIVER') navigate('/driver');
     else navigate('/');
   };
@@ -153,7 +153,7 @@ export default function ProfileSettings({ user }) {
                   />
                 </div>
 
-                {role === 'SUPPLIER' && (
+                {role === 'VENDOR' && (
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label htmlFor="fld-price-per-litre-4" className="block text-sm font-bold text-slate-700 mb-1.5">Price Per Litre (₦)</label>

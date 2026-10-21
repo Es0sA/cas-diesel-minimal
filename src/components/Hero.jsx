@@ -2,9 +2,9 @@ import React from 'react';
 import { ShieldCheck, MapPin, CheckCircle2, Lock, ArrowRight, Truck } from 'lucide-react';
 
 const STEPS = [
-  { icon: Lock, title: 'Fund escrow', text: 'Pick a verified marketer and pay into escrow. The marketer sees the funds are secured before dispatching.' },
-  { icon: Truck, title: 'Track the truck', text: 'A verified driver is dispatched. You follow the delivery and chat with the marketer on the order page.' },
-  { icon: MapPin, title: 'Confirm at your gate', text: 'When the truck reaches your gate you confirm delivery, and payment is released to the marketer.' }
+  { icon: Lock, title: 'Fund escrow', text: 'Pick a verified vendor and pay into escrow. The vendor sees the funds are secured before dispatching.' },
+  { icon: Truck, title: 'Track the truck', text: 'A verified driver is dispatched. You follow the delivery and chat with the vendor on the order page.' },
+  { icon: MapPin, title: 'Confirm at your gate', text: 'When the truck reaches your gate you confirm delivery, and payment is released to the vendor.' }
 ];
 
 export default function Hero({ onExploreMarketplace, onOpenRegister }) {
@@ -25,7 +25,7 @@ export default function Hero({ onExploreMarketplace, onOpenRegister }) {
             </h1>
 
             <p className="text-base sm:text-lg lg:text-xl text-cas-muted leading-relaxed mb-6 sm:mb-8">
-              Compare verified marketers, pay into escrow, and release payment only when your delivery is confirmed at your gate.
+              Compare verified vendors, pay into escrow, and release payment only when your delivery is confirmed at your gate.
             </p>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mb-8">
@@ -42,12 +42,12 @@ export default function Hero({ onExploreMarketplace, onOpenRegister }) {
                 onClick={onExploreMarketplace}
                 className="px-6 sm:px-8 py-3.5 sm:py-4 bg-white hover:bg-slate-50 text-cas-slate font-bold text-sm sm:text-base rounded-lg border-2 border-cas-slate transition-all flex items-center justify-center gap-2"
               >
-                <span>Compare Marketers</span>
+                <span>Compare Vendors</span>
               </button>
             </div>
 
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-semibold text-slate-600">
-              {['Escrow payment protection', '100-meter gate confirmation', 'Verified marketers and drivers'].map((t) => (
+              {['Escrow payment protection', '100-meter gate confirmation', 'Verified vendors and drivers'].map((t) => (
                 <span key={t} className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0" aria-hidden="true" />
                   <span>{t}</span>

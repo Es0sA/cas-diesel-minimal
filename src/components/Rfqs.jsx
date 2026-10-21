@@ -101,7 +101,7 @@ function BuyerRfqs() {
   };
 
   return (
-    <Shell title="Requests for quotes" subtitle="Say what you need once. Verified marketers answer with a price and a batch certificate, and you pick the offer that fits.">
+    <Shell title="Requests for quotes" subtitle="Say what you need once. Verified vendors answer with a price and a batch certificate, and you pick the offer that fits.">
       {error && <p role="alert" className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm">{error}</p>}
 
       {!open ? (
@@ -118,7 +118,7 @@ function BuyerRfqs() {
           </div>
           <Field label="Delivery address"><input type="text" maxLength={300} value={f.deliveryAddress} onChange={set('deliveryAddress')} className={inputCls} placeholder="Plant, street, town" /></Field>
           <div className="grid sm:grid-cols-2 gap-4">
-            <Field label="Gate latitude" hint="Used to detect arrival. Hidden from marketers until you award."><input type="number" step="any" value={f.targetLatitude} onChange={set('targetLatitude')} className={inputCls} /></Field>
+            <Field label="Gate latitude" hint="Used to detect arrival. Hidden from vendors until you award."><input type="number" step="any" value={f.targetLatitude} onChange={set('targetLatitude')} className={inputCls} /></Field>
             <Field label="Gate longitude"><input type="number" step="any" value={f.targetLongitude} onChange={set('targetLongitude')} className={inputCls} /></Field>
           </div>
           <details className="rounded-xl border border-slate-200 p-4">
@@ -133,7 +133,7 @@ function BuyerRfqs() {
             </div>
           </details>
           <div className="flex gap-3">
-            <button disabled={busy} className="px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-white text-sm font-bold rounded-lg disabled:opacity-50">{busy ? 'Sending' : 'Send to marketers'}</button>
+            <button disabled={busy} className="px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-white text-sm font-bold rounded-lg disabled:opacity-50">{busy ? 'Sending' : 'Send to vendors'}</button>
             <button type="button" onClick={() => setOpen(false)} className="px-4 py-2.5 text-sm font-semibold text-cas-muted">Cancel</button>
           </div>
         </form>
@@ -223,7 +223,7 @@ function BuyerRfqDetail({ id }) {
       </section>
 
       <h2 className="text-lg font-bold text-cas-slate mb-3">Quotes ({live.length})</h2>
-      {live.length === 0 && quotes.length === 0 && <div className="text-center p-10 border-2 border-dashed border-slate-200 rounded-2xl text-cas-muted">No quotes yet. Verified marketers can see your request and quote until it closes.</div>}
+      {live.length === 0 && quotes.length === 0 && <div className="text-center p-10 border-2 border-dashed border-slate-200 rounded-2xl text-cas-muted">No quotes yet. Verified vendors can see your request and quote until it closes.</div>}
       <ul className="space-y-4">
         {quotes.map((q) => {
           const deviates = !!q.deviations || q.specCheck?.pass === false;
@@ -255,7 +255,7 @@ function BuyerRfqDetail({ id }) {
                   {deviates && (
                     <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!okDev[q.id]} onChange={(e) => setOkDev((o) => ({ ...o, [q.id]: e.target.checked }))} /> I accept these deviations</label>
                   )}
-                  <button disabled={busy} onClick={() => accept(q)} className="px-5 py-2.5 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-lg disabled:opacity-50">Award to this marketer</button>
+                  <button disabled={busy} onClick={() => accept(q)} className="px-5 py-2.5 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-lg disabled:opacity-50">Award to this vendor</button>
                 </div>
               )}
             </li>
@@ -266,7 +266,7 @@ function BuyerRfqDetail({ id }) {
   );
 }
 
-/* ---------------- Marketer ---------------- */
+/* ---------------- Vendor ---------------- */
 
 const SPEC_FIELDS = [
   ['density', 'Density at 15 C (kg/L)', '0.835'],
@@ -416,7 +416,7 @@ function SupplierRfqs() {
   const act = (fn) => async () => { try { await fn(); load(); } catch (err) { setError(err.message); } };
 
   return (
-    <Shell title="Open requests" subtitle="Buyers post what they need. Quote with your price and a current batch certificate. Only verified marketers can quote.">
+    <Shell title="Open requests" subtitle="Buyers post what they need. Quote with your price and a current batch certificate. Only verified vendors can quote.">
       {error && <p role="alert" className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm">{error}</p>}
 
       {drafts.length > 0 && (
@@ -440,7 +440,7 @@ function SupplierRfqs() {
         <div className="text-center p-10 border-2 border-dashed border-slate-200 rounded-2xl text-cas-muted">
           <FileText className="w-8 h-8 mx-auto mb-2 opacity-50" aria-hidden="true" />
           <p>No open requests right now.</p>
-          <p className="text-xs mt-1">If you have not been verified yet, upload your documents in the Supplier Desk first.</p>
+          <p className="text-xs mt-1">If you have not been verified yet, upload your documents in the Vendor Desk first.</p>
         </div>
       ) : (
         <ul className="space-y-3">
@@ -503,9 +503,9 @@ export default function Rfqs({ user }) {
   const { id } = useParams();
   const role = (user?.role || '').toUpperCase();
   if (!role) {
-    return <Shell title="Requests for quotes"><p className="text-cas-muted"><Link to="/login" className="text-cas-blue underline font-semibold">Sign in</Link> as a buyer or a marketer to continue.</p></Shell>;
+    return <Shell title="Requests for quotes"><p className="text-cas-muted"><Link to="/login" className="text-cas-blue underline font-semibold">Sign in</Link> as a buyer or a vendor to continue.</p></Shell>;
   }
   if (role === 'BUYER') return id ? <BuyerRfqDetail id={id} /> : <BuyerRfqs />;
-  if (role === 'SUPPLIER') return id ? <SupplierRfqDetail id={id} /> : <SupplierRfqs />;
-  return <Shell title="Requests for quotes"><p className="text-cas-muted">Requests are available to buyers and marketers.</p></Shell>;
+  if (role === 'VENDOR') return id ? <SupplierRfqDetail id={id} /> : <SupplierRfqs />;
+  return <Shell title="Requests for quotes"><p className="text-cas-muted">Requests are available to buyers and vendors.</p></Shell>;
 }
