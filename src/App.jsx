@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-
 import { api } from './api';
 import { WAITLIST } from './config';
 import { scrollBehavior } from './lib/motion';
+import { usePageTitle } from './lib/usePageTitle';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Waitlist from './components/Waitlist';
@@ -17,6 +18,7 @@ import OrderCheckoutModal from './components/OrderCheckoutModal';
 import LegalModals from './components/LegalModals';
 import CookieBanner from './components/CookieBanner';
 import Footer from './components/Footer';
+import NotFound from './components/NotFound';
 import { 
   Building2, 
   UserCheck, 
@@ -28,6 +30,7 @@ import {
 } from 'lucide-react';
 
 function HomePage({ user, handleOpenRegistration }) {
+  usePageTitle(null, "Browse verified diesel marketers by depot and price, and order with escrow-protected payment on CAS Energy.");
   const [checkoutSupplier, setCheckoutSupplier] = useState(null);
   const navigate = useNavigate();
 
@@ -268,6 +271,7 @@ export default function App() {
           <Route path="/orders/:id" element={<OrderDetail user={user} />} />
           <Route path="/profile" element={<ProfileSettings user={user} />} />
           <Route path="/admin" element={<AdminDashboard user={user} />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
 

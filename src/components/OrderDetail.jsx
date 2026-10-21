@@ -6,12 +6,14 @@ import {
 } from 'lucide-react';
 import { api } from '../api';
 import ReviewForm from './ReviewForm';
+import { usePageTitle } from '../lib/usePageTitle';
 
 const TIMELINE_STATES = ['DRAFT', 'FUNDED', 'IN_TRANSIT', 'ARRIVED', 'DELIVERED'];
 
 export default function OrderDetail() {
   const { id: orderId } = useParams();
   const navigate = useNavigate();
+  usePageTitle('Order Details', 'Track delivery status, chat with your counterparty, and manage escrow on your CAS Energy order.');
   
   const [order, setOrder] = useState(null);
   const [viewerRole, setViewerRole] = useState(null);

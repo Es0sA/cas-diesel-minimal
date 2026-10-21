@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../api';
 import AdminOrders from './AdminOrders';
+import { usePageTitle } from '../lib/usePageTitle';
 import { 
   BarChart, Users, AlertTriangle, ShieldCheck, ClipboardList, 
   CheckCircle, XCircle, ArrowRight, X 
 } from 'lucide-react';
 
 export default function AdminDashboard({ user }) {
+  usePageTitle('Admin Console', 'CAS Energy admin operations console.');
   const [activeTab, setActiveTab] = useState('overview');
   const [stats, setStats] = useState(null);
   const [usersList, setUsersList] = useState([]);

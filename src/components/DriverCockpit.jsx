@@ -3,6 +3,7 @@ import { Truck, Navigation, MapPin, CheckCircle2, AlertCircle, UserPlus, Radio }
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import KycUpload from './KycUpload';
+import { usePageTitle } from '../lib/usePageTitle';
 
 const PING_INTERVAL_MS = 15000;
 const STEPS = [
@@ -96,6 +97,7 @@ function LocationSharing({ order, onStatusChange }) {
 }
 
 export default function DriverCockpit({ onNavigateToRegister }) {
+  usePageTitle('Driver Cockpit', 'Track dispatch manifests and get turn-by-turn navigation to the discharge gate on the CAS Energy driver cockpit.');
   const navigate = useNavigate();
   const viewOrder = (id) => navigate(`/orders/${id}`);
 

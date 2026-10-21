@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { scrollBehavior } from '../lib/motion';
+import { usePageTitle } from '../lib/usePageTitle';
 import { 
   Building2, 
   UserCheck, 
@@ -37,7 +38,6 @@ const ROLE_CONFIGS = {
     emailLabel: 'Corporate Procurement Email',
     emailPlaceholder: 'example@mail.com',
     accentColor: 'text-cas-blue',
-    accentBg: 'bg-sky-50 text-cas-blue border-sky-200',
     destination: '/',
     destinationLabel: 'Marketplace & Discharge Gate Radar',
     featureTitle: 'Escrow Custody Protection',
@@ -63,7 +63,6 @@ const ROLE_CONFIGS = {
     emailLabel: 'Marketer Terminal Email',
     emailPlaceholder: 'example@mail.com',
     accentColor: 'text-cas-amberDark',
-    accentBg: 'bg-amber-50 text-cas-amberDark border-amber-200',
     destination: '/marketer',
     destinationLabel: 'Supplier Pricing Desk & Allocations',
     featureTitle: 'In-Transit Capital Protection',
@@ -90,7 +89,6 @@ const ROLE_CONFIGS = {
     emailLabel: 'Driver Email or Phone ID',
     emailPlaceholder: 'example@mail.com',
     accentColor: 'text-cas-green',
-    accentBg: 'bg-emerald-50 text-cas-green border-emerald-200',
     destination: '/driver',
     destinationLabel: 'Driver Cockpit & Gate Navigation',
     featureTitle: 'One-Tap Turn-by-Turn Waypoints',
@@ -116,6 +114,12 @@ export default function LoginPage({
 }) {
   const [authMode, setAuthMode] = useState(initialMode); // 'signin' or 'register'
   const [selectedRole, setSelectedRole] = useState(initialRole);
+  usePageTitle(
+    authMode === 'register' ? `Create ${ROLE_CONFIGS[selectedRole]?.title || 'Account'}` : `Sign In — ${ROLE_CONFIGS[selectedRole]?.title || ''}`,
+    authMode === 'register'
+      ? 'Register your corporate facility, marketer desk, or driver profile on CAS Energy, the escrow-protected wholesale diesel marketplace.'
+      : 'Sign in to CAS Energy to manage escrow-protected orders, verified marketer pricing, and gate delivery tracking.'
+  );
 
   useEffect(() => {
     if (initialMode) {

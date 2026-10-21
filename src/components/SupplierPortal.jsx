@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import KycUpload from './KycUpload';
 import { DEPOTS } from '../data/depots';
+import { usePageTitle } from '../lib/usePageTitle';
 
 const ACTIVE_STATUSES = ['FUNDED', 'IN_TRANSIT', 'ARRIVED'];
 
 export default function SupplierPortal() {
+  usePageTitle('Marketer Desk', 'Publish your spot price, manage standing rates, and track escrow-protected orders on the CAS Energy marketer desk.');
   const navigate = useNavigate();
   const viewOrder = (id) => navigate(`/orders/${id}`);
 

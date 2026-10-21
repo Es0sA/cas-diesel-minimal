@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { WAITLIST } from '../config';
 import { scrollBehavior } from '../lib/motion';
+import { usePageTitle } from '../lib/usePageTitle';
 
 const VOLUME_TIERS = [
   'Under 10,000 Litres',
@@ -56,6 +57,7 @@ const REFERRAL_SOURCES = [
 ];
 
 export default function Waitlist({ onOpenLegalModal }) {
+  usePageTitle('Join The Priority Waitlist', 'Join the CAS Energy priority waitlist for escrow-protected wholesale diesel. Corporate buyers and licensed marketers get early access before public launch.');
   const [role, setRole] = useState('BUYER'); // BUYER or MARKETER
   const [fullName, setFullName] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
@@ -66,6 +68,7 @@ export default function Waitlist({ onOpenLegalModal }) {
   const [referral, setReferral] = useState('');
   const [consent, setConsent] = useState(false);
   const [honeyPot, setHoneyPot] = useState('');
+  const [showMoreDetails, setShowMoreDetails] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -201,6 +204,7 @@ export default function Waitlist({ onOpenLegalModal }) {
     setReferral('');
     setConsent(false);
     setRefCode('');
+    setShowMoreDetails(false);
   };
 
   return (
@@ -436,92 +440,101 @@ export default function Waitlist({ onOpenLegalModal }) {
                         </div>
                       </div>
 
-                      {/* Row 2: Email and Company */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <label htmlFor="wl-email" className="block text-xs font-bold text-cas-slate mb-1">
-                            Work or Personal Email <span className="text-rose-500">*</span>
-                          </label>
-                          <input
-                            id="wl-email"
-                            type="email"
-                            required
-                            placeholder="e.g. name@email.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate"
-                          />
-                        </div>
-
-                        <div>
-                          <label htmlFor="wl-company" className="block text-xs font-bold text-cas-slate mb-1">
-                            Company Name
-                          </label>
-                          <input
-                            id="wl-company"
-                            type="text"
-                            placeholder={role === 'BUYER' ? 'e.g. Pinnacle Mills Ltd' : 'e.g. Sahara Downstream Ltd'}
-                            value={company}
-                            onChange={(e) => setCompany(e.target.value)}
-                            className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Row 3: Location and Volume Tier */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <label htmlFor="wl-location" className="block text-xs font-bold text-cas-slate mb-1">
-                            {role === 'BUYER' ? 'Delivery State' : 'Primary Supply Depot'}
-                          </label>
-                          <select
-                            id="wl-location"
-                            value={location}
-                            onChange={(e) => setLocation(e.target.value)}
-                            className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate bg-white"
-                          >
-                            <option value="">Select location...</option>
-                            {(role === 'BUYER' ? STATES : DEPOTS).map((item) => (
-                              <option key={item} value={item}>{item}</option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <div>
-                          <label htmlFor="wl-volume" className="block text-xs font-bold text-cas-slate mb-1">
-                            {role === 'BUYER' ? 'Monthly Consumption' : 'Supply Capacity'}
-                          </label>
-                          <select
-                            id="wl-volume"
-                            value={volume}
-                            onChange={(e) => setVolume(e.target.value)}
-                            className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate bg-white"
-                          >
-                            <option value="">Select monthly volume...</option>
-                            {VOLUME_TIERS.map((tier) => (
-                              <option key={tier} value={tier}>{tier}</option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-
-                      {/* Row 4: Referral Source */}
+                      {/* Row 2: Email (full width, required) */}
                       <div>
-                        <label htmlFor="wl-referral" className="block text-xs font-bold text-cas-slate mb-1">
-                          How Did You Hear About CAS Diesel? (Optional)
+                        <label htmlFor="wl-email" className="block text-xs font-bold text-cas-slate mb-1">
+                          Work or Personal Email <span className="text-rose-500">*</span>
                         </label>
-                        <select
-                          id="wl-referral"
-                          value={referral}
-                          onChange={(e) => setReferral(e.target.value)}
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate bg-white"
-                        >
-                          <option value="">Select source...</option>
-                          {REFERRAL_SOURCES.map((src) => (
-                            <option key={src} value={src}>{src}</option>
-                          ))}
-                        </select>
+                        <input
+                          id="wl-email"
+                          type="email"
+                          required
+                          placeholder="e.g. name@email.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate"
+                        />
                       </div>
+
+                      {/* Optional details: collapsed by default to keep the first screen to three fields */}
+                      {!showMoreDetails ? (
+                        <button
+                          type="button"
+                          onClick={() => setShowMoreDetails(true)}
+                          className="text-xs font-bold text-cas-blue hover:text-cas-slate underline underline-offset-2"
+                        >
+                          + Add company & preferences (optional)
+                        </button>
+                      ) : (
+                        <>
+                          <div>
+                            <label htmlFor="wl-company" className="block text-xs font-bold text-cas-slate mb-1">
+                              Company Name
+                            </label>
+                            <input
+                              id="wl-company"
+                              type="text"
+                              placeholder={role === 'BUYER' ? 'e.g. Pinnacle Mills Ltd' : 'e.g. Sahara Downstream Ltd'}
+                              value={company}
+                              onChange={(e) => setCompany(e.target.value)}
+                              className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate"
+                            />
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                              <label htmlFor="wl-location" className="block text-xs font-bold text-cas-slate mb-1">
+                                {role === 'BUYER' ? 'Delivery State' : 'Primary Supply Depot'}
+                              </label>
+                              <select
+                                id="wl-location"
+                                value={location}
+                                onChange={(e) => setLocation(e.target.value)}
+                                className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate bg-white"
+                              >
+                                <option value="">Select location...</option>
+                                {(role === 'BUYER' ? STATES : DEPOTS).map((item) => (
+                                  <option key={item} value={item}>{item}</option>
+                                ))}
+                              </select>
+                            </div>
+
+                            <div>
+                              <label htmlFor="wl-volume" className="block text-xs font-bold text-cas-slate mb-1">
+                                {role === 'BUYER' ? 'Monthly Consumption' : 'Supply Capacity'}
+                              </label>
+                              <select
+                                id="wl-volume"
+                                value={volume}
+                                onChange={(e) => setVolume(e.target.value)}
+                                className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate bg-white"
+                              >
+                                <option value="">Select monthly volume...</option>
+                                {VOLUME_TIERS.map((tier) => (
+                                  <option key={tier} value={tier}>{tier}</option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+
+                          <div>
+                            <label htmlFor="wl-referral" className="block text-xs font-bold text-cas-slate mb-1">
+                              How Did You Hear About CAS Diesel? (Optional)
+                            </label>
+                            <select
+                              id="wl-referral"
+                              value={referral}
+                              onChange={(e) => setReferral(e.target.value)}
+                              className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate bg-white"
+                            >
+                              <option value="">Select source...</option>
+                              {REFERRAL_SOURCES.map((src) => (
+                                <option key={src} value={src}>{src}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </>
+                      )}
 
                       {/* Error Banner */}
                       {errorMsg && (

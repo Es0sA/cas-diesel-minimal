@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Settings, Save, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
+import { usePageTitle } from '../lib/usePageTitle';
 
 export default function ProfileSettings({ user }) {
+  usePageTitle('Profile Settings', 'Manage your CAS Energy account and company profile.');
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     companyName: '',
