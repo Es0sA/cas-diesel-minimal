@@ -278,7 +278,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                   </div>
                   <div>
                     <h2 className="text-sm font-bold text-cas-slate">Direct Ex-Depot Pricing</h2>
-                    <p className="text-xs text-cas-muted mt-0.5">Live rates published directly by vendors with zero broker markups.</p>
+                    <p className="text-xs text-cas-muted mt-0.5">Live depot prices posted by CAS, with no broker markups.</p>
                   </div>
                 </div>
 
@@ -639,7 +639,7 @@ export default function Waitlist({ onOpenLegalModal }) {
               </div>
               <h4 className="font-bold text-cas-slate text-base">Compare & Fund Escrow</h4>
               <p className="text-xs text-cas-muted mt-2 leading-relaxed">
-                Review verified depot prices from vendors. Lock payment in secure escrow so suppliers see funds are secured before trucks load.
+                Review verified depot prices from vendors. Lock payment in secure escrow so vendors see funds are secured before trucks load.
               </p>
             </div>
 

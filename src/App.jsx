@@ -80,7 +80,7 @@ function HomePage({ user, handleOpenRegistration }) {
                 </div>
                 <h3 className="text-xl font-extrabold text-cas-slate mb-2">For Corporate Buyers</h3>
                 <p className="text-sm text-cas-muted leading-relaxed mb-6">
-                  Procurement managers choose suppliers by price and depot location. Funds are held in escrow. During registration, you map your exact GPS discharge gate so trucks never get lost.
+                  Procurement managers pick a depot by price, then vendors quote to supply it. Funds are held in escrow. During registration, you map your exact GPS discharge gate so trucks never get lost.
                 </p>
               </div>
 
@@ -110,7 +110,7 @@ function HomePage({ user, handleOpenRegistration }) {
                 </div>
                 <h3 className="text-xl font-extrabold text-cas-slate mb-2">For Vendors</h3>
                 <p className="text-sm text-cas-muted leading-relaxed mb-6">
-                  Publish your own spot price per litre and available volumes. Once your truck departs the gantry, the order is non-cancellable, protecting your capital.
+                  Get buyer requests, quote one all-in price, and see the money secured in escrow before you load. You never chase payment after delivery.
                 </p>
               </div>
 

@@ -187,7 +187,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
             </div>
           ) : orders.length === 0 ? (
             <div className="p-8 text-center text-cas-muted text-sm font-bold">
-              {filterStatus === 'Active' ? 'No active deliveries. You will see a job here once a supplier dispatches you.' : 'No completed deliveries yet.'}
+              {filterStatus === 'Active' ? 'No active deliveries. You will see a job here once a vendor dispatches you.' : 'No completed deliveries yet.'}
             </div>
           ) : (
             orders.map((order) => {

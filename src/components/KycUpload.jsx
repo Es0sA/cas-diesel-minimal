@@ -10,7 +10,7 @@ const LABELS = {
 };
 const NEEDS_EXPIRY = ['DRIVER_LICENCE', 'TRUCK_CALIBRATION'];
 const HINTS = {
-  DRIVER_LICENCE: 'Attached to every order you drive, so suppliers never upload it.',
+  DRIVER_LICENCE: 'Attached to every order you drive, so vendors never upload it.',
   TRUCK_CALIBRATION: 'Attached to every order you drive. Upload the chart for your current truck.'
 };
 
