@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../api';
 import AdminOrders from './AdminOrders';
 import AdminDepotPrices from './AdminDepotPrices';
+import AdminCommission from './AdminCommission';
 import { usePageTitle } from '../lib/usePageTitle';
 import { 
   BarChart, Users, AlertTriangle, ShieldCheck, ClipboardList, 
-  CheckCircle, XCircle, ArrowRight, X, Fuel 
+  CheckCircle, XCircle, ArrowRight, X, Fuel, Coins 
 } from 'lucide-react';
 
 export default function AdminDashboard({ user }) {
@@ -134,6 +135,7 @@ export default function AdminDashboard({ user }) {
           { id: 'users', label: 'User Verification', short: 'Users', icon: Users },
           { id: 'orders', label: 'Orders', short: 'Orders', icon: ClipboardList },
           { id: 'depots', label: 'Depot Prices', short: 'Prices', icon: Fuel },
+          { id: 'commission', label: 'Commission', short: 'Fees', icon: Coins },
           { id: 'disputes', label: 'Dispute Resolution', short: 'Disputes', icon: AlertTriangle }
         ].map(tab => (
           <button
@@ -287,6 +289,7 @@ export default function AdminDashboard({ user }) {
           {/* ORDERS TAB */}
           {activeTab === 'orders' && <AdminOrders />}
           {activeTab === 'depots' && <AdminDepotPrices />}
+          {activeTab === 'commission' && <AdminCommission />}
 
           {/* DISPUTES TAB */}
           {activeTab === 'disputes' && (

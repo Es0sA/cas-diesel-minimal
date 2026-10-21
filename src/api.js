@@ -139,6 +139,10 @@ export const api = {
     setPrice: (data) => request('/depots/prices', { method: 'PUT', body: JSON.stringify(data) }),
     removePrice: (id) => request(`/depots/prices/${id}`, { method: 'DELETE' }),
   },
+  commission: {
+    tiers: () => request('/commission/tiers'),
+    saveTiers: (tiers) => request('/commission/tiers', { method: 'PUT', body: JSON.stringify({ tiers }) }),
+  },
   standingRates: {
     list: () => request('/standing-rates'),
     create: (data) => request('/standing-rates', { method: 'POST', body: JSON.stringify(data) }),
