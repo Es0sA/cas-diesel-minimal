@@ -5,7 +5,7 @@ import { api } from '../api';
 import { DEPOTS } from '../data/depots';
 import { usePageTitle } from '../lib/usePageTitle';
 
-const STATES = ['All', ...Array.from(new Set(DEPOTS.map((d) => d.state)))];
+const AREAS = ['All', ...Array.from(new Set(DEPOTS.map((d) => d.area)))];
 const naira = (n) => `₦${Number(n).toLocaleString('en-NG', { maximumFractionDigits: 2 })}`;
 const ago = (iso) => new Date(iso).toLocaleString('en-NG', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 
@@ -14,7 +14,7 @@ export default function Depots({ user }) {
   const [prices, setPrices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [state, setState] = useState('All');
+  const [area, setArea] = useState('All');
 
   useEffect(() => {
     api.depots.prices().then(setPrices).catch(() => setError('Could not load depot prices. Please try again.')).finally(() => setLoading(false));
@@ -26,7 +26,7 @@ export default function Depots({ user }) {
     return m;
   }, [prices]);
 
-  const rows = DEPOTS.filter((d) => state === 'All' || d.state === state)
+  const rows = DEPOTS.filter((d) => area === 'All' || d.area === area)
     .map((d) => ({ ...d, price: byDepot[d.id]?.AGO }))
     .sort((a, b) => (a.price ? a.price.price : Infinity) - (b.price ? b.price.price : Infinity));
 
@@ -38,10 +38,10 @@ export default function Depots({ user }) {
         <p className="mt-3 text-cas-muted max-w-2xl">Pick the depot you want your product loaded from, then post a request. Vendors quote the supply and delivery on top of the depot price.</p>
 
         <p className="mt-6 inline-flex items-center px-3 py-1.5 rounded-full bg-cas-slate text-white text-xs font-bold">Diesel (AGO), price per litre</p>
-        <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="State">
-          {STATES.map((s) => (
-            <button key={s} onClick={() => setState(s)} aria-pressed={state === s}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${state === s ? 'bg-cas-amber/20 text-cas-slate border-cas-amber' : 'bg-white text-cas-muted border-cas-border hover:border-slate-400'}`}>
+        <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Area">
+          {AREAS.map((s) => (
+            <button key={s} onClick={() => setArea(s)} aria-pressed={area === s}
+              className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${area === s ? 'bg-cas-amber/20 text-cas-slate border-cas-amber' : 'bg-white text-cas-muted border-cas-border hover:border-slate-400'}`}>
               {s}
             </button>
           ))}

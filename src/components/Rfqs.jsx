@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, FileText, CheckCircle2, AlertTriangle, Clock, Plus } from 'lucide-react';
 import { api } from '../api';
-import { DEPOTS } from '../data/depots';
+import { DEPOTS, depotName } from '../data/depots';
 
 const naira = (n) => `₦${Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
 const when = (d) => new Date(d).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
@@ -405,7 +405,7 @@ function SupplierRfqs() {
   const [myQuotes, setMyQuotes] = useState([]);
   const [rates, setRates] = useState([]);
   const [error, setError] = useState(null);
-  const [rate, setRate] = useState({ depotId: 'ijegun', pricePerLitre: '', minVolume: '', maxVolume: '', certificateUrl: '', certificateDate: new Date().toISOString().slice(0, 10), autoSubmit: false });
+  const [rate, setRate] = useState({ depotId: DEPOTS[0].id, pricePerLitre: '', minVolume: '', maxVolume: '', certificateUrl: '', certificateDate: new Date().toISOString().slice(0, 10), autoSubmit: false });
   const [specs, setSpecs] = useState({});
   const [saving, setSaving] = useState(false);
 
@@ -492,7 +492,7 @@ function SupplierRfqs() {
           <ul className="space-y-2 mb-6">
             {rates.map((r) => (
               <li key={r.id} className="flex flex-wrap items-center justify-between gap-3 bg-white border border-cas-border rounded-lg px-4 py-3 text-sm">
-                <span><strong>{DEPOTS.find((d) => d.id === r.depotId)?.name || r.depotId}</strong> · {naira(r.pricePerLitre)} per litre · {Number(r.minVolume).toLocaleString()}{r.maxVolume ? ` to ${Number(r.maxVolume).toLocaleString()}` : '+'} L · {r.autoSubmit ? 'auto-send' : 'confirm first'}</span>
+                <span><strong>{depotName(r.depotId)}</strong> · {naira(r.pricePerLitre)} per litre · {Number(r.minVolume).toLocaleString()}{r.maxVolume ? ` to ${Number(r.maxVolume).toLocaleString()}` : '+'} L · {r.autoSubmit ? 'auto-send' : 'confirm first'}</span>
                 <button onClick={act(() => api.standingRates.remove(r.id))} className="font-semibold text-rose-700 hover:underline">Remove</button>
               </li>
             ))}

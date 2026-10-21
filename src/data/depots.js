@@ -1,9 +1,21 @@
-// Loading depots a vendor can operate from.
+// Loading depots a vendor can load from. Each entry is placed at a known location by at least two independent
+// sources (regulator and industry reports, plus depot price listings). Add more only once they are confirmed.
 export const DEPOTS = [
-  { id: 'apapa', name: 'Apapa Marine Terminal', hub: 'Lagos Island & Port Area', state: 'Lagos' },
-  { id: 'ijegun', name: 'Ijegun Egba Tank Farm Cluster', hub: 'Amuwo Odofin & Satellite Town', state: 'Lagos' },
-  { id: 'oghara', name: 'Oghara Water Depot', hub: 'Ethiope West Hub', state: 'Delta' },
-  { id: 'ph', name: 'Port Harcourt Marine Base', hub: 'Rivers Downstream Corridor', state: 'Rivers' },
-  { id: 'warri', name: 'Warri Depot Complex', hub: 'Delta Coastal Route', state: 'Delta' },
-  { id: 'calabar', name: 'Calabar Free Trade Depot', hub: 'Cross River Port Access', state: 'Cross River' },
+  { id: 'honeywell', name: 'Honeywell Oil & Gas (HOGL Energy)', hub: 'Apapa', area: 'Apapa', state: 'Lagos' },
+  { id: 'ibeto', name: 'Ibeto Petrochemical Industries', hub: 'Ibafon, Apapa', area: 'Apapa', state: 'Lagos' },
+  { id: 'aiteo', name: 'Aiteo Group', hub: 'Apapa', area: 'Apapa', state: 'Lagos' },
+  { id: 'wosbab', name: 'Wosbab Energy Solutions', hub: 'Ijegun-Egba, Satellite Town', area: 'Ijegun-Egba', state: 'Lagos' },
+  { id: 'emadeb', name: 'Emadeb Energy Services', hub: 'Ijegun-Egba, Satellite Town', area: 'Ijegun-Egba', state: 'Lagos' },
+  { id: 'mao', name: 'MAO Petroleum', hub: 'Ijegun-Egba, Satellite Town', area: 'Ijegun-Egba', state: 'Lagos' },
+  { id: 'menj', name: 'Menj Oil', hub: 'Ijegun-Egba, Satellite Town', area: 'Ijegun-Egba', state: 'Lagos' },
+  { id: 'oceanpride', name: 'Ocean Pride Energy Services', hub: 'Ijegun-Egba, Satellite Town', area: 'Ijegun-Egba', state: 'Lagos' },
+  { id: 'aarano', name: 'A.A. Rano Energy', hub: 'Ijegun-Egba, Satellite Town', area: 'Ijegun-Egba', state: 'Lagos' },
+  { id: 'rainoil', name: 'Rainoil', hub: 'Ijegun-Egba, Satellite Town', area: 'Ijegun-Egba', state: 'Lagos' },
 ];
+
+// Depot ids saved before this list was confirmed
+export const LEGACY_DEPOTS = {
+  ijegun: 'Ijegun-Egba tank farms, Satellite Town',
+};
+
+export const depotName = (id) => DEPOTS.find((d) => d.id === id)?.name || LEGACY_DEPOTS[id] || id;
