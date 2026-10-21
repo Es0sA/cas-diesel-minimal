@@ -92,13 +92,26 @@ export default function AdminDashboard({ user }) {
     }
   };
 
-  const handleResolve = async (orderId, resolution) => {
+  const [splitAmounts, setSplitAmounts] = useState({});
+  const [sweepMsg, setSweepMsg] = useState('');
+
+  const handleResolve = async (orderId, resolution, releaseAmount) => {
     try {
-      await api.admin.resolveDispute(orderId, resolution);
+      await api.admin.resolveDispute(orderId, resolution, releaseAmount);
       const res = await api.admin.getDisputes();
       setDisputesList(res.orders || []);
     } catch (err) {
-      alert('Failed to resolve dispute');
+      alert(err.message || 'Failed to resolve dispute');
+    }
+  };
+
+  const handleSweep = async () => {
+    try {
+      setSweepMsg('Running...');
+      const res = await api.admin.runSweep();
+      setSweepMsg(`Done: ${JSON.stringify(res)}`);
+    } catch (err) {
+      setSweepMsg(err.message || 'Sweep failed');
     }
   };
 
@@ -275,6 +288,10 @@ export default function AdminDashboard({ user }) {
           {/* DISPUTES TAB */}
           {activeTab === 'disputes' && (
             <div className="space-y-4">
+              <div className="bg-white p-4 rounded-2xl border border-slate-200 flex flex-wrap items-center gap-3">
+                <button type="button" onClick={handleSweep} className="px-4 py-2 rounded-lg bg-cas-slate text-white text-sm font-bold hover:bg-black">Run deadline sweep now</button>
+                {sweepMsg && <span className="text-xs text-slate-600 break-all">{sweepMsg}</span>}
+              </div>
               {disputesList.length === 0 ? (
                 <div className="p-8 text-center text-cas-muted text-sm font-bold bg-white rounded-2xl border border-slate-200">
                   No active disputes.
@@ -310,6 +327,26 @@ export default function AdminDashboard({ user }) {
                       >
                         Release to Supplier (Delivered)
                       </button>
+                      <div className="flex gap-2">
+                        <input
+                          type="number"
+                          min="0"
+                          max={order.totalEscrowAmount || 0}
+                          value={splitAmounts[order.id] ?? ''}
+                          onChange={(e) => setSplitAmounts((s) => ({ ...s, [order.id]: e.target.value }))}
+                          placeholder="Amount to supplier"
+                          aria-label="Amount to release to supplier"
+                          className="w-40 px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm"
+                        />
+                        <button
+                          type="button"
+                          disabled={splitAmounts[order.id] === undefined || splitAmounts[order.id] === ''}
+                          onClick={() => handleResolve(order.id, 'SPLIT', Number(splitAmounts[order.id]))}
+                          className="px-4 py-2 bg-slate-50 text-slate-700 hover:bg-slate-100 font-bold text-sm rounded-lg border border-slate-300 disabled:opacity-40"
+                        >
+                          Split
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))

@@ -6,8 +6,8 @@ import { scrollBehavior } from '../lib/motion';
 
 // One workspace link per role. Public visitors get anchors on the home page.
 const ROLE_LINKS = {
-  BUYER: [{ label: 'Marketers', hash: 'marketplace' }],
-  SUPPLIER: [{ label: 'Supplier Desk', to: '/marketer' }],
+  BUYER: [{ label: 'Request quotes', to: '/rfqs' }, { label: 'Marketers', hash: 'marketplace' }],
+  SUPPLIER: [{ label: 'Open requests', to: '/rfqs' }, { label: 'Supplier Desk', to: '/marketer' }],
   DRIVER: [{ label: 'Driver Cockpit', to: '/driver' }],
   ADMIN: [{ label: 'Admin', to: '/admin' }],
 

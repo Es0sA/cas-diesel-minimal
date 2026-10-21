@@ -131,7 +131,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
   return (
     <section id="driver-cockpit" className="bg-cas-canvas py-6 sm:py-12 md:py-20 border-b border-cas-border">
       <div className="max-w-3xl mx-auto px-3 sm:px-8">
-        {!authError && !loading && <KycUpload types={['DRIVER_LICENCE']} />}
+        {!authError && !loading && <KycUpload types={['DRIVER_LICENCE', 'TRUCK_CALIBRATION']} />}
         <div className="bg-white rounded-2xl border-2 border-cas-border shadow-md overflow-hidden">
 
           <div className="bg-cas-slate text-white p-4 sm:p-6 border-b border-slate-700">

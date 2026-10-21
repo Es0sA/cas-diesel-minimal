@@ -18,6 +18,7 @@ import OrderCheckoutModal from './components/OrderCheckoutModal';
 import LegalModals from './components/LegalModals';
 import CookieBanner from './components/CookieBanner';
 import Footer from './components/Footer';
+import Rfqs from './components/Rfqs';
 import NotFound from './components/NotFound';
 import { 
   Building2, 
@@ -268,6 +269,8 @@ export default function App() {
           <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/marketer" element={<NotForAdmin user={user}><SupplierPortal /></NotForAdmin>} />
           <Route path="/driver" element={<NotForAdmin user={user}><DriverCockpit onNavigateToRegister={() => handleOpenRegistration('driver')} /></NotForAdmin>} />
+          <Route path="/rfqs" element={<Rfqs user={user} />} />
+          <Route path="/rfqs/:id" element={<Rfqs user={user} />} />
           <Route path="/orders/:id" element={<OrderDetail user={user} />} />
           <Route path="/profile" element={<ProfileSettings user={user} />} />
           <Route path="/admin" element={<AdminDashboard user={user} />} />

@@ -5,7 +5,13 @@ import { FileCheck2, Upload } from 'lucide-react';
 const LABELS = {
   CAC_CERT: 'CAC registration certificate',
   NMDPRA_LICENCE: 'NMDPRA licence',
-  DRIVER_LICENCE: 'Driver licence'
+  DRIVER_LICENCE: 'Driver licence',
+  TRUCK_CALIBRATION: 'Truck calibration chart'
+};
+const NEEDS_EXPIRY = ['DRIVER_LICENCE', 'TRUCK_CALIBRATION'];
+const HINTS = {
+  DRIVER_LICENCE: 'Attached to every order you drive, so suppliers never upload it.',
+  TRUCK_CALIBRATION: 'Attached to every order you drive. Upload the chart for your current truck.'
 };
 
 export default function KycUpload({ types }) {
@@ -13,6 +19,8 @@ export default function KycUpload({ types }) {
   const [busy, setBusy] = useState(null);
   const [error, setError] = useState('');
   const [verified, setVerified] = useState(false);
+  const [expiry, setExpiry] = useState({});
+  const [tomorrow] = useState(() => new Date(Date.now() + 86400000).toISOString().slice(0, 10));
 
   const load = () => api.kyc.mine().then(setDocs).catch(() => {});
   useEffect(() => {
@@ -20,14 +28,16 @@ export default function KycUpload({ types }) {
     api.kyc.status().then((r) => setVerified(r.verified)).catch(() => {});
   }, []);
 
-  if (verified) return null;
+  const driverDocs = types.some((t) => NEEDS_EXPIRY.includes(t));
+  if (verified && !driverDocs) return null;
 
   const onPick = async (type, file) => {
     if (!file) return;
     setError('');
     setBusy(type);
     try {
-      await api.kyc.upload(type, file);
+      if (NEEDS_EXPIRY.includes(type) && !expiry[type]) throw new Error('Enter the expiry date first.');
+      await api.kyc.upload(type, file, expiry[type]);
       await load();
     } catch (err) {
       setError(err.message);
@@ -50,12 +60,20 @@ export default function KycUpload({ types }) {
                 <div className={`text-xs truncate ${doc ? 'text-slate-600' : 'text-cas-muted'}`}>
                   {doc ? (<span className="inline-flex items-center gap-1"><FileCheck2 className="w-3 h-3" aria-hidden="true" />{doc.fileName}</span>) : 'Not uploaded'}
                 </div>
+                {HINTS[type] && <div className="text-xs text-cas-muted mt-0.5">{HINTS[type]}</div>}
+                {doc?.expiresAt && <div className="text-xs text-cas-muted">Expires {new Date(doc.expiresAt).toLocaleDateString()}</div>}
                 {doc && (
                   <div className={`text-xs font-bold ${doc.status === 'APPROVED' ? 'text-cas-green' : doc.status === 'REJECTED' ? 'text-rose-600' : 'text-amber-700'}`}>
                     {doc.status === 'APPROVED' ? 'Approved' : doc.status === 'REJECTED' ? `Rejected: ${doc.rejectReason}. Please upload a new one.` : 'Waiting for admin review'}
                   </div>
                 )}
               </div>
+              {NEEDS_EXPIRY.includes(type) && (
+                <label className="shrink-0 text-xs font-bold text-cas-slate">
+                  <span className="block mb-0.5">Expiry date</span>
+                  <input type="date" min={tomorrow} value={expiry[type] || ''} onChange={(e) => setExpiry((x) => ({ ...x, [type]: e.target.value }))} className="border border-slate-300 rounded-lg px-2 py-1 text-xs font-normal" />
+                </label>
+              )}
               <label className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border border-slate-300 text-cas-slate cursor-pointer hover:border-cas-amber">
                 <Upload className="w-3 h-3" aria-hidden="true" />
                 {busy === type ? 'Uploading...' : doc ? (doc.status === 'REJECTED' ? 'Re-upload' : 'Replace') : 'Upload'}

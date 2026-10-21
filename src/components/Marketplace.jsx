@@ -43,6 +43,39 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
     return 0;
   });
 
+  if (!loading && suppliers.length === 0) {
+    return (
+      <section id="marketplace" className="bg-white py-14 md:py-20 border-b border-cas-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8">
+          <div className="max-w-3xl mb-10">
+            <div className="text-xs font-bold uppercase tracking-wider text-cas-amberDark mb-2">Marketer directory</div>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">Prefer to order straight from a marketer?</h2>
+            <p className="text-base text-cas-muted mt-3 leading-relaxed">
+              Browse verified marketers by depot, compare price per litre and minimum order, then order at the listed price. Ideal for repeat purchases.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5" aria-label="Directory preview">
+            {[['Marketer A', 'Apapa Marine Terminal', 1172, 11000, '4.8'], ['Marketer B', 'Ijegun Egba Tank Farm', 1168, 22000, '4.9'], ['Marketer C', 'Warri Depot Complex', 1176, 15000, '4.7']].map(([n, d, p, m, r]) => (
+              <div key={n} className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-extrabold text-cas-slate">{n}</h3>
+                  <span className="inline-flex items-center gap-1 text-xs font-bold text-cas-green"><ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />Verified</span>
+                </div>
+                <p className="text-sm text-cas-muted mt-1">{d}</p>
+                <div className="mt-4 text-3xl font-black text-cas-slate tracking-tight">&#8358;{p.toLocaleString()}<span className="text-sm font-bold text-slate-500"> /L</span></div>
+                <div className="mt-2 flex items-center justify-between text-xs font-semibold text-slate-600">
+                  <span>Minimum {m.toLocaleString()} L</span><span>Rating {r}</span>
+                </div>
+                <div className="mt-5 w-full py-2.5 rounded-lg bg-cas-slate text-white text-xs font-bold text-center">Order via Escrow</div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Illustrative preview</div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="marketplace" className="bg-white py-12 md:py-20 border-b border-cas-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
@@ -57,7 +90,7 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
               Marketer Directory
             </h2>
             <p className="text-base text-cas-muted mt-1 max-w-2xl">
-              Compare verified marketers by price and depot. Every marketer listed here has been verified by CAS Energy.
+              Compare verified marketers by price and depot. Every marketer listed here has been verified by CAS.
             </p>
           </div>
 

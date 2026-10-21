@@ -6,9 +6,11 @@ import {
 } from 'lucide-react';
 import { api } from '../api';
 import ReviewForm from './ReviewForm';
+import DeliveryPanel from './DeliveryPanel';
 import { usePageTitle } from '../lib/usePageTitle';
 
-const TIMELINE_STATES = ['DRAFT', 'FUNDED', 'IN_TRANSIT', 'ARRIVED', 'DELIVERED'];
+const TIMELINE_STATES = ['DRAFT', 'FUNDED', 'IN_TRANSIT', 'ARRIVED', 'SETTLING', 'DELIVERED'];
+const STATE_LABELS = { SETTLING: 'VERIFIED' };
 
 export default function OrderDetail() {
   const { id: orderId } = useParams();
@@ -24,9 +26,9 @@ export default function OrderDetail() {
   const [chatInput, setChatInput] = useState('');
   const chatEndRef = useRef(null);
 
-  const fetchData = async () => {
+  const fetchData = async (silent = false) => {
     try {
-      setLoading(true);
+      if (silent !== true) setLoading(true);
       setError(null);
       
       const [ordersRes, docsRes, chatRes] = await Promise.all([
@@ -60,11 +62,10 @@ export default function OrderDetail() {
     if (panel) panel.scrollTop = panel.scrollHeight;
   }, [messages]);
 
-  
-  const handleConfirmDelivery = async () => {
-    if (!window.confirm('Confirm that the fuel was delivered and discharged? This releases the escrow payment to the supplier.')) return;
+  const handleOverdueCancel = async () => {
+    if (!window.confirm('The supplier missed a deadline. Cancel this order and refund the escrow in full?')) return;
     try {
-      await api.orders.confirmDelivery(orderId);
+      await api.orders.cancel(orderId, { reason: order.overdueFlag });
       await fetchData();
     } catch (err) {
       alert(err.message);
@@ -167,7 +168,7 @@ export default function OrderDetail() {
           <h1 className="text-2xl font-extrabold text-cas-slate flex items-center gap-3">
             Order #{order.id?.slice(0,8).toUpperCase()}
             <span className="text-sm font-bold px-3 py-1 bg-cas-blueLight text-cas-blue rounded-full">
-              {order.status}
+              {STATE_LABELS[order.status] || order.status}
             </span>
           </h1>
           <p className="text-cas-muted mt-1">Created on {new Date(order.createdAt).toLocaleDateString()}</p>
@@ -184,15 +185,15 @@ export default function OrderDetail() {
               Download Waybill (PDF)
             </button>
           )}
-          {viewerRole === 'BUYER' && ['IN_TRANSIT', 'ARRIVED'].includes(order.status) && (
+          {viewerRole === 'BUYER' && order.overdueFlag && ['FUNDED', 'IN_TRANSIT', 'ARRIVED'].includes(order.status) && (
             <button
-              onClick={handleConfirmDelivery}
-              className="mt-3 px-4 py-2 bg-cas-green hover:opacity-90 text-white text-sm font-bold rounded-lg transition-colors"
+              onClick={handleOverdueCancel}
+              className="mt-3 px-4 py-2 bg-white hover:bg-slate-50 text-cas-slate border border-slate-300 text-sm font-bold rounded-lg transition-colors"
             >
-              Confirm Delivery and Release Escrow
+              Cancel and refund (deadline missed)
             </button>
           )}
-          {['FUNDED', 'IN_TRANSIT', 'ARRIVED'].includes(order.status) && (
+          {viewerRole === 'BUYER' && ['FUNDED', 'IN_TRANSIT', 'ARRIVED'].includes(order.status) && (
             <button 
               onClick={handleDispute}
               className="mt-3 px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-sm font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
@@ -220,7 +221,9 @@ export default function OrderDetail() {
         </div>
       )}
 
-      <ReviewForm order={order} onSubmitted={fetchData} />
+      <DeliveryPanel order={order} viewerRole={viewerRole} onChanged={() => fetchData(true)} />
+
+      <ReviewForm order={order} onSubmitted={() => fetchData(true)} />
 
       {/* Timeline */}
       <div className="bg-white p-6 rounded-2xl border border-cas-border mb-8 shadow-sm">
@@ -246,9 +249,9 @@ export default function OrderDetail() {
                 <span className={`hidden sm:block text-xs font-bold ${
                   isCurrent ? 'text-cas-blue' : (isCompleted ? 'text-cas-slate' : 'text-slate-500')
                 }`}>
-                  {status.replace('_', ' ')}
+                  {(STATE_LABELS[status] || status).replace('_', ' ')}
                 </span>
-                <span className="sr-only sm:hidden">{status.replace('_', ' ')}{isCurrent ? ' (current)' : ''}</span>
+                <span className="sr-only sm:hidden">{(STATE_LABELS[status] || status).replace('_', ' ')}{isCurrent ? ' (current)' : ''}</span>
               </div>
             );
           })}
@@ -353,21 +356,32 @@ export default function OrderDetail() {
               </div>
             ) : (
               <ul className="space-y-3">
-                {documents.map((doc, i) => (
-                  <li key={i} className="flex items-center justify-between p-3 border border-slate-100 rounded-lg hover:border-slate-300 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-cas-blueLight rounded text-cas-blue">
-                        <FileText className="w-4 h-4" />
-                      </div>
-                      <span className="text-sm font-medium text-cas-slate">{doc.documentType}</span>
-                    </div>
-                    {doc.verified ? (
-                      <CheckCircle className="w-4 h-4 text-cas-green" />
-                    ) : (
-                      <span className="text-xs bg-slate-100 text-cas-muted px-2 py-1 rounded">Pending</span>
-                    )}
-                  </li>
-                ))}
+                {documents.map((doc, i) => {
+                  const canOpen = !(doc.source === 'KYC' && !['DRIVER', 'ADMIN'].includes(viewerRole));
+                  const open = async () => {
+                    try {
+                      const { url } = await api.compliance.documentUrl(orderId, doc.id);
+                      window.open(url, '_blank', 'noopener,noreferrer');
+                    } catch (err) {
+                      alert(err.message);
+                    }
+                  };
+                  const Row = canOpen ? 'button' : 'div';
+                  return (
+                    <li key={doc.id || i}>
+                      <Row {...(canOpen ? { type: 'button', onClick: open } : {})} className={`w-full text-left flex items-center justify-between gap-2 p-3 border border-slate-100 rounded-lg transition-colors ${canOpen ? 'hover:border-slate-300 cursor-pointer' : ''}`}>
+                        <span className="flex items-center gap-3 min-w-0">
+                          <span className="p-2 bg-cas-blueLight rounded text-cas-blue shrink-0"><FileText className="w-4 h-4" /></span>
+                          <span className="min-w-0">
+                            <span className="block text-sm font-medium text-cas-slate break-words">{doc.documentType.replace(/_/g, ' ')}</span>
+                            {doc.fileName && <span className="block text-xs text-cas-muted truncate">{doc.fileName}</span>}
+                          </span>
+                        </span>
+                        <span className="text-xs bg-slate-100 text-cas-muted px-2 py-1 rounded shrink-0">{canOpen ? 'Open' : 'On file'}</span>
+                      </Row>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>

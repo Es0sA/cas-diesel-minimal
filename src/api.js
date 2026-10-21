@@ -16,7 +16,9 @@ export const request = async (endpoint, options = {}) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.error || 'API request failed');
+    const err = new Error(data.error || 'API request failed');
+    err.data = data;
+    throw err;
   }
 
   return data;
@@ -56,7 +58,14 @@ export const api = {
     fundWebhook: (id, data) => request(`/orders/${id}/fund-webhook`, { method: 'POST', body: JSON.stringify(data) }),
     dispatch: (id, data) => request(`/orders/${id}/dispatch`, { method: 'POST', body: JSON.stringify(data) }),
     cancel: (id, data) => request(`/orders/${id}/cancel`, { method: 'POST', body: JSON.stringify(data) }),
-    confirmDelivery: (id) => request(`/orders/${id}/confirm-delivery`, { method: 'POST' }),
+    checklist: (id) => request(`/orders/${id}/checklist`),
+    ledger: (id) => request(`/orders/${id}/ledger`),
+    verification: (id) => request(`/orders/${id}/verification`),
+    verify: (id, data) => request(`/orders/${id}/verification`, { method: 'POST', body: JSON.stringify(data) }),
+    acceptVerification: (id) => request(`/orders/${id}/verification/accept`, { method: 'POST' }),
+    proposeSplit: (id, releaseAmount, note) => request(`/orders/${id}/dispute/propose`, { method: 'POST', body: JSON.stringify({ releaseAmount, note }) }),
+    acceptSplit: (id, releaseAmount) => request(`/orders/${id}/dispute/accept-proposal`, { method: 'POST', body: JSON.stringify({ releaseAmount }) }),
+    contestVerification: (id, reason) => request(`/orders/${id}/verification/dispute`, { method: 'POST', body: JSON.stringify({ reason }) }),
     downloadWaybill: async (id) => {
       const response = await fetch(`${API_URL}/orders/${id}/waybill`, { credentials: 'include' });
       if (!response.ok) {
@@ -95,7 +104,26 @@ export const api = {
     reviewKycDoc: (docId, status, reason) => request(`/admin/kyc/${docId}/review`, { method: 'PUT', body: JSON.stringify({ status, reason }) }),
     getKycUrl: (docId) => request(`/admin/kyc/${docId}/url`),
     verifyUser: (id, isVerified) => request(`/admin/users/${id}/verify`, { method: 'PUT', body: JSON.stringify({ isVerified }) }),
-    resolveDispute: (id, resolution) => request(`/admin/disputes/${id}/resolve`, { method: 'POST', body: JSON.stringify({ resolution }) }),
+    resolveDispute: (id, resolution, releaseAmount) => request(`/admin/disputes/${id}/resolve`, { method: 'POST', body: JSON.stringify({ resolution, releaseAmount }) }),
+    runSweep: () => request('/admin/sweep', { method: 'POST' }),
+    orderLedger: (id) => request(`/admin/orders/${id}/ledger`),
+  },
+  rfqs: {
+    list: () => request('/rfqs'),
+    get: (id) => request(`/rfqs/${id}`),
+    create: (data) => request('/rfqs', { method: 'POST', body: JSON.stringify(data) }),
+    cancel: (id) => request(`/rfqs/${id}/cancel`, { method: 'POST' }),
+    accept: (id, quoteId, acceptDeviations) => request(`/rfqs/${id}/accept`, { method: 'POST', body: JSON.stringify({ quoteId, acceptDeviations }) }),
+    quote: (id, data) => request(`/rfqs/${id}/quotes`, { method: 'POST', body: JSON.stringify(data) }),
+    myQuotes: () => request('/rfqs/quotes/mine/all'),
+    confirmQuote: (quoteId, data = {}) => request(`/rfqs/quotes/${quoteId}/confirm`, { method: 'POST', body: JSON.stringify(data) }),
+    withdrawQuote: (quoteId) => request(`/rfqs/quotes/${quoteId}/withdraw`, { method: 'PUT' }),
+  },
+  standingRates: {
+    list: () => request('/standing-rates'),
+    create: (data) => request('/standing-rates', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id, data) => request(`/standing-rates/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    remove: (id) => request(`/standing-rates/${id}`, { method: 'DELETE' }),
   },
   chat: {
     getMessages: (orderId, after) => request(`/chat/${orderId}${after ? `?after=${encodeURIComponent(after)}` : ''}`),
@@ -108,9 +136,10 @@ export const api = {
   kyc: {
     mine: () => request('/kyc/mine'),
     status: () => request('/kyc/status'),
-    upload: async (documentType, file) => {
+    upload: async (documentType, file, expiresAt) => {
       const form = new FormData();
       form.append('documentType', documentType);
+      if (expiresAt) form.append('expiresAt', expiresAt);
       form.append('file', file);
       const res = await fetch(`${API_URL}/kyc/upload`, { method: 'POST', body: form, credentials: 'include' });
       const data = await res.json();
@@ -121,5 +150,15 @@ export const api = {
   compliance: {
     upload: (orderId, data) => request(`/compliance/upload/${orderId}`, { method: 'POST', body: JSON.stringify(data) }),
     getDocuments: (orderId) => request(`/compliance/${orderId}`),
+    uploadFile: async (orderId, documentType, file) => {
+      const form = new FormData();
+      form.append('documentType', documentType);
+      form.append('file', file);
+      const res = await fetch(`${API_URL}/compliance/upload-file/${orderId}`, { method: 'POST', body: form, credentials: 'include' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      return data;
+    },
+    documentUrl: (orderId, docId) => request(`/compliance/${orderId}/${docId}/url`),
   },
 };

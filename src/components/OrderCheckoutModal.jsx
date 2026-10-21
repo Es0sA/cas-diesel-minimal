@@ -24,7 +24,7 @@ export default function OrderCheckoutModal({ supplier, onClose, onSuccess }) {
         targetLatitude: Number(lat),
         targetLongitude: Number(lng)
       });
-      onSuccess(order.id);
+      onSuccess(order.order?.id || order.id);
     } catch (err) {
       setError(err.message || 'Failed to create order. Make sure you are logged in as a Buyer.');
     } finally {
