@@ -114,61 +114,20 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
               <Filter className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Depot:</span>
             </span>
-            <button
-              type="button"
-              onClick={() => setSelectedDepotFilter('all')}
-              className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
-                selectedDepotFilter === 'all'
-                  ? 'bg-cas-slate text-white'
-                  : 'bg-white text-cas-slate border border-slate-200 hover:bg-slate-100'
-              }`}
-            >
-              All Depots
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedDepotFilter('ijegun')}
-              className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
-                selectedDepotFilter === 'ijegun'
-                  ? 'bg-cas-slate text-white'
-                  : 'bg-white text-cas-slate border border-slate-200 hover:bg-slate-100'
-              }`}
-            >
-              Ijegun
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedDepotFilter('apapa')}
-              className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
-                selectedDepotFilter === 'apapa'
-                  ? 'bg-cas-slate text-white'
-                  : 'bg-white text-cas-slate border border-slate-200 hover:bg-slate-100'
-              }`}
-            >
-              Apapa
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedDepotFilter('ph')}
-              className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
-                selectedDepotFilter === 'ph'
-                  ? 'bg-cas-slate text-white'
-                  : 'bg-white text-cas-slate border border-slate-200 hover:bg-slate-100'
-              }`}
-            >
-              Port Harcourt
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedDepotFilter('warri')}
-              className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
-                selectedDepotFilter === 'warri'
-                  ? 'bg-cas-slate text-white'
-                  : 'bg-white text-cas-slate border border-slate-200 hover:bg-slate-100'
-              }`}
-            >
-              Warri
-            </button>
+            {[{ id: 'all', label: 'All Depots' }, ...DEPOTS.map((d) => ({ id: d.id, label: d.name.split(' (')[0] }))].map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => setSelectedDepotFilter(f.id)}
+                className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
+                  selectedDepotFilter === f.id
+                    ? 'bg-cas-slate text-white'
+                    : 'bg-white text-cas-slate border border-slate-200 hover:bg-slate-100'
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
           </div>
 
           {/* Sort By Dropdown */}

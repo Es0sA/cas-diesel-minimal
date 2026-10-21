@@ -39,11 +39,9 @@ const STATES = [
 
 const DEPOTS = [
   'Apapa Depots (Lagos)',
-  'Ibafon / Tin Can Depots (Lagos)',
-  'Port Harcourt Depots (Rivers)',
-  'Warri Depots (Delta)',
-  'Calabar Depots (Cross River)',
-  'Oghara Depots (Delta)',
+  'Ibafon Depots (Lagos)',
+  'Ijegun-Egba Depots (Lagos)',
+  'Other depot outside Lagos',
   'Multiple Depots / Nationwide'
 ];
 
@@ -267,7 +265,7 @@ export default function Waitlist({ onOpenLegalModal }) {
               </h1>
 
               <p className="text-base sm:text-lg text-cas-muted leading-relaxed">
-                Connect directly with licensed depot vendors across Lagos, Warri, Port Harcourt, and Calabar. Your payment stays securely locked in escrow until the truck arrives and diesel is confirmed at your gate.
+                Connect directly with licensed depot vendors across Lagos, with more states coming. Your payment stays securely locked in escrow until the truck arrives and diesel is confirmed at your gate.
               </p>
 
               {/* Three Core Guarantees (Desktop column highlights) */}
@@ -307,7 +305,7 @@ export default function Waitlist({ onOpenLegalModal }) {
               <div className="hidden lg:block pt-4 border-t border-slate-200">
                 <p className="text-[11px] font-bold uppercase tracking-wider text-cas-muted mb-2.5">Depot Coverage</p>
                 <div className="flex flex-wrap gap-1.5">
-                  {['Apapa', 'Ibafon / Tin Can', 'Port Harcourt', 'Warri', 'Oghara', 'Calabar'].map((depot) => (
+                  {['Apapa', 'Ibafon', 'Ijegun-Egba'].map((depot) => (
                     <span key={depot} className="px-2.5 py-1 rounded-md bg-white border border-slate-200 text-xs font-semibold text-cas-slate shadow-2xs">
                       {depot}
                     </span>
