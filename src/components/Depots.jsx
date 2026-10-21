@@ -5,11 +5,6 @@ import { api } from '../api';
 import { DEPOTS } from '../data/depots';
 import { usePageTitle } from '../lib/usePageTitle';
 
-const PRODUCTS = [
-  { id: 'AGO', label: 'AGO (Diesel)', unit: 'per litre' },
-  { id: 'PMS', label: 'PMS (Petrol)', unit: 'per litre' },
-  { id: 'LPG', label: 'LPG (Gas)', unit: 'per tonne' },
-];
 const STATES = ['All', ...Array.from(new Set(DEPOTS.map((d) => d.state)))];
 const naira = (n) => `₦${Number(n).toLocaleString('en-NG', { maximumFractionDigits: 2 })}`;
 const ago = (iso) => new Date(iso).toLocaleString('en-NG', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
@@ -20,7 +15,6 @@ export default function Depots({ user }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [state, setState] = useState('All');
-  const [product, setProduct] = useState('AGO');
 
   useEffect(() => {
     api.depots.prices().then(setPrices).catch(() => setError('Could not load depot prices. Please try again.')).finally(() => setLoading(false));
@@ -33,9 +27,8 @@ export default function Depots({ user }) {
   }, [prices]);
 
   const rows = DEPOTS.filter((d) => state === 'All' || d.state === state)
-    .map((d) => ({ ...d, price: byDepot[d.id]?.[product] }))
+    .map((d) => ({ ...d, price: byDepot[d.id]?.AGO }))
     .sort((a, b) => (a.price ? a.price.price : Infinity) - (b.price ? b.price.price : Infinity));
-  const active = PRODUCTS.find((p) => p.id === product);
 
   return (
     <section className="bg-cas-canvas py-12 md:py-16">
@@ -44,15 +37,8 @@ export default function Depots({ user }) {
         <h1 className="text-3xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">Compare depot prices before you request</h1>
         <p className="mt-3 text-cas-muted max-w-2xl">Pick the depot you want your product loaded from, then post a request. Vendors quote the supply and delivery on top of the depot price.</p>
 
-        <div className="mt-8 flex flex-wrap gap-2" role="group" aria-label="Product">
-          {PRODUCTS.map((p) => (
-            <button key={p.id} onClick={() => setProduct(p.id)} aria-pressed={product === p.id}
-              className={`px-4 py-2 rounded-full text-sm font-bold border transition-colors ${product === p.id ? 'bg-cas-slate text-white border-cas-slate' : 'bg-white text-cas-slate border-cas-border hover:border-slate-400'}`}>
-              {p.label}
-            </button>
-          ))}
-        </div>
-        <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="State">
+        <p className="mt-6 inline-flex items-center px-3 py-1.5 rounded-full bg-cas-slate text-white text-xs font-bold">Diesel (AGO), price per litre</p>
+        <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="State">
           {STATES.map((s) => (
             <button key={s} onClick={() => setState(s)} aria-pressed={state === s}
               className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${state === s ? 'bg-cas-amber/20 text-cas-slate border-cas-amber' : 'bg-white text-cas-muted border-cas-border hover:border-slate-400'}`}>
@@ -75,7 +61,7 @@ export default function Depots({ user }) {
                 <div className="sm:text-right">
                   {d.price ? (
                     <>
-                      <div className="text-2xl font-extrabold text-cas-slate">{naira(d.price.price)}<span className="text-xs font-bold text-cas-muted ml-1">{active.unit}</span></div>
+                      <div className="text-2xl font-extrabold text-cas-slate">{naira(d.price.price)}<span className="text-xs font-bold text-cas-muted ml-1">per litre</span></div>
                       <div className="mt-0.5 flex sm:justify-end items-center gap-1 text-xs text-cas-muted"><Clock className="w-3 h-3" aria-hidden="true" />Updated {ago(d.price.updatedAt)}</div>
                     </>
                   ) : (
