@@ -18,10 +18,7 @@ import {
   HelpCircle, 
   X,
   Loader2,
-  MapPin,
-  Navigation
 } from 'lucide-react';
-import { DEPOTS } from '../data/depots';
 import { CONTACT } from '../config';
 import { api } from '../api';
 
@@ -140,30 +137,9 @@ export default function LoginPage({
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
 
-  // Buyer Specific Registration States
-  const [buyerCompany, setBuyerCompany] = useState('');
-  const [latitude, setLatitude] = useState('6.595200');
-  const [longitude, setLongitude] = useState('3.342100');
-  const [geolocating, setGeolocating] = useState(false);
-  const [truckClearance, setTruckClearance] = useState('33000');
-  const [receivingOfficerName, setReceivingOfficerName] = useState('');
-  const [receivingOfficerPhone, setReceivingOfficerPhone] = useState('');
-
-  // Marketer / Supplier Specific Registration States
-  const [supplierName, setSupplierName] = useState('');
-  const [supplierRc, setSupplierRc] = useState('');
-  const [supplierLicense, setSupplierLicense] = useState('');
-  const [primaryDepot, setPrimaryDepot] = useState('Ijegun Egba Tank Farm Cluster');
-  const [initialPrice, setInitialPrice] = useState(1175);
-  const [contactName, setContactName] = useState('');
-  const [contactPhone, setContactPhone] = useState('');
-
-  // Driver Specific Registration States
-  const [driverName, setDriverName] = useState('');
-  const [driverPhone, setDriverPhone] = useState('');
-  const [driverLicense, setDriverLicense] = useState('');
-  const [driverPlate, setDriverPlate] = useState('');
-  const [driverCapacity, setDriverCapacity] = useState('33000');
+  // Email verification step (shown after registering, or when signing in to an unverified account)
+  const [verifyEmail, setVerifyEmail] = useState(null);
+  const [code, setCode] = useState('');
 
   // Status & Modal States
   const [loading, setLoading] = useState(false);
@@ -192,27 +168,6 @@ export default function LoginPage({
     setSelectedRole(newRole);
     setErrorMessage('');
     setSuccessNotice('');
-  };
-
-  const handleTriggerGeolocation = () => {
-    setGeolocating(true);
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          setLatitude(pos.coords.latitude.toFixed(6));
-          setLongitude(pos.coords.longitude.toFixed(6));
-          setGeolocating(false);
-        },
-        () => {
-          setLatitude('6.595180');
-          setLongitude('3.342110');
-          setGeolocating(false);
-        },
-        { timeout: 8000 }
-      );
-    } else {
-      setGeolocating(false);
-    }
   };
 
   // Sign In Handler
@@ -250,6 +205,12 @@ export default function LoginPage({
       }, 700);
 
     } catch (err) {
+      if (err.data?.needsVerification) {
+        setVerifyEmail(err.data.email || email.trim());
+        setCode('');
+        setLoading(false);
+        return;
+      }
       const message = err.message || 'Authentication failed. Please verify credentials.';
       if (message.includes('Failed to fetch') || message.includes('NetworkError')) {
         setErrorMessage('Cannot reach CAS Energy authentication servers. If testing offline, you can use quick demo access.');
@@ -260,7 +221,7 @@ export default function LoginPage({
     }
   };
 
-  // Registration Handler
+  // Registration: credentials only. Role details and documents are collected after the email is verified.
   const handleRegister = async (e) => {
     e.preventDefault();
     setErrorMessage('');
@@ -284,111 +245,71 @@ export default function LoginPage({
     setLoading(true);
 
     try {
-      if (selectedRole === 'buyer') {
-        if (!buyerCompany.trim()) {
-          setErrorMessage('Name is required.');
-          setLoading(false);
-          return;
-        }
+      const result = await api.auth.register({
+        email: email.trim(),
+        password: password,
+        role: activeConfig.apiRole
+      });
 
-        await api.auth.register({
-          email: email.trim(),
-          password: password,
-          role: 'BUYER'
-        });
-
-        await api.auth.login({
-          email: email.trim(),
-          password: password
-        });
-
-        await api.companies.updateProfile({
-          companyName: buyerCompany.trim(),
-          businessAddress: `Gate: (${latitude}, ${longitude}) | Clearance: ${truckClearance}L`,
-          gateLatitude: parseFloat(latitude),
-          gateLongitude: parseFloat(longitude),
-          contactPhone: receivingOfficerPhone.trim()
-        });
-
-        setSuccessNotice('Corporate Buyer account established with geofenced gate coordinates. Redirecting...');
-        setTimeout(() => {
-          if (onRegistrationSuccess) onRegistrationSuccess('buyer');
-          else if (onLoginSuccess) onLoginSuccess('BUYER');
-        }, 800);
-
-      } else if (selectedRole === 'supplier') {
-        if (!supplierName.trim() || !supplierRc.trim() || !supplierLicense.trim()) {
-          setErrorMessage('Company name, CAC RC Number, and NMDPRA License are required.');
-          setLoading(false);
-          return;
-        }
-
-        await api.auth.register({
-          email: email.trim(),
-          password: password,
-          role: 'SUPPLIER'
-        });
-
-        await api.auth.login({
-          email: email.trim(),
-          password: password
-        });
-
-        await api.companies.updateProfile({
-          companyName: supplierName.trim(),
-          registrationNumber: supplierRc.trim(),
-          businessAddress: primaryDepot,
-          contactPhone: contactPhone.trim()
-        });
-
-        setSuccessNotice('Marketer account created. Redirecting to your desk...');
-        setTimeout(() => {
-          if (onRegistrationSuccess) onRegistrationSuccess('supplier');
-          else if (onLoginSuccess) onLoginSuccess('SUPPLIER');
-        }, 800);
-
-      } else if (selectedRole === 'driver') {
-        if (!driverName.trim() || !driverPhone.trim() || !driverLicense.trim()) {
-          setErrorMessage('Driver name, WhatsApp phone number, and license number are required.');
-          setLoading(false);
-          return;
-        }
-
-        await api.auth.register({
-          email: email.trim(),
-          password: password,
-          role: 'DRIVER'
-        });
-
-        await api.auth.login({
-          email: email.trim(),
-          password: password
-        });
-
-        const nameParts = driverName.trim().split(' ');
-        await api.drivers.updateProfile({
-          firstName: nameParts[0] || driverName.trim(),
-          lastName: nameParts.slice(1).join(' ') || 'Driver',
-          licenseNumber: driverLicense.trim(),
-          truckPlateNumber: driverPlate.trim() || 'UNREGISTERED',
-          truckCapacityLiters: parseInt(driverCapacity) || 33000
-        });
-
-        setSuccessNotice('Driver cockpit credentials approved. Redirecting to trip manifest...');
-        setTimeout(() => {
-          if (onRegistrationSuccess) onRegistrationSuccess('driver');
-          else if (onLoginSuccess) onLoginSuccess('DRIVER');
-        }, 800);
+      if (result.needsVerification) {
+        setVerifyEmail(result.email || email.trim());
+        setCode('');
+        setLoading(false);
+        return;
       }
 
+      // No mail provider configured: the account is usable straight away
+      await api.auth.login({ email: email.trim(), password: password });
+      setSuccessNotice('Account created. Let us set up your profile...');
+      setTimeout(() => {
+        if (onRegistrationSuccess) onRegistrationSuccess(activeConfig.apiRole);
+        else if (onLoginSuccess) onLoginSuccess(activeConfig.apiRole);
+      }, 600);
     } catch (err) {
-      const message = err.message || 'Registration failed. Please check submitted information.';
-      if (message.includes('Email already exists')) {
-        setErrorMessage('This email is already registered. Please switch to Sign In mode.');
-      } else {
-        setErrorMessage(message);
-      }
+      const message = err.message || 'Registration failed. Please try again.';
+      setErrorMessage(message);
       setLoading(false);
+    }
+  };
+
+  // Email verification: confirm the 6-digit code, then sign in with the password just chosen
+  const handleVerify = async (e) => {
+    e.preventDefault();
+    setErrorMessage('');
+    if (!/^\d{6}$/.test(code.trim())) {
+      setErrorMessage('Enter the 6-digit code from your email.');
+      return;
+    }
+    setLoading(true);
+    try {
+      await api.auth.verifyEmail({ email: verifyEmail, code: code.trim() });
+      if (!password) {
+        // Verified from the sign-in screen: ask them to sign in
+        setVerifyEmail(null);
+        setAuthMode('signin');
+        setSuccessNotice('Email verified. Sign in to continue.');
+        setLoading(false);
+        return;
+      }
+      await api.auth.login({ email: verifyEmail, password });
+      setSuccessNotice('Email verified. Let us set up your profile...');
+      setTimeout(() => {
+        if (onRegistrationSuccess) onRegistrationSuccess(activeConfig.apiRole);
+        else if (onLoginSuccess) onLoginSuccess(activeConfig.apiRole);
+      }, 600);
+    } catch (err) {
+      setErrorMessage(err.message || 'Could not verify the code. Please try again.');
+      setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    setErrorMessage('');
+    try {
+      await api.auth.resendCode({ email: verifyEmail });
+      setSuccessNotice('A new code is on its way. You can request another in a minute.');
+    } catch (err) {
+      setErrorMessage(err.message || 'Could not send a new code.');
     }
   };
 
@@ -545,7 +466,41 @@ export default function LoginPage({
             {/* ============================================================== */}
             {/* VIEW A: SIGN IN FORM */}
             {/* ============================================================== */}
-            {authMode === 'signin' && (
+            {verifyEmail && (
+              <form onSubmit={handleVerify} className="space-y-4 animate-fadeIn">
+                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                  <div className="text-xs font-bold uppercase tracking-wider text-slate-600">Verify your email</div>
+                  <p className="text-sm text-slate-700">We sent a 6-digit code to <strong>{verifyEmail}</strong>. It expires in 15 minutes.</p>
+                  <div>
+                    <label htmlFor="fld-verify-code" className="block text-xs font-bold text-slate-700 mb-1">Verification code</label>
+                    <input id="fld-verify-code"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                      maxLength={6}
+                      required
+                      value={code}
+                      onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
+                      placeholder="123456"
+                      className="w-full px-3 py-3 bg-white border border-slate-300 rounded-lg text-xl tracking-[0.4em] text-center font-mono text-slate-800 focus:outline-none focus:border-cas-amber"
+                    />
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-3.5 px-4 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-70 cursor-pointer"
+                >
+                  {loading ? <Loader2 className="w-4 h-4 animate-spin text-cas-amber" aria-hidden="true" /> : <span>Verify and continue</span>}
+                </button>
+                <div className="flex items-center justify-between text-xs">
+                  <button type="button" onClick={handleResend} className="font-bold text-cas-amberDark underline underline-offset-2 hover:text-black">Send a new code</button>
+                  <button type="button" onClick={() => { setVerifyEmail(null); setCode(''); setErrorMessage(''); setSuccessNotice(''); }} className="text-slate-600 underline underline-offset-2 hover:text-black">Use a different email</button>
+                </div>
+              </form>
+            )}
+
+            {!verifyEmail && authMode === 'signin' && (
               <form onSubmit={handleSignIn} className="space-y-4 animate-fadeIn">
                 
                 {/* Email / Identifier */}
@@ -650,7 +605,7 @@ export default function LoginPage({
             {/* ============================================================== */}
             {/* VIEW B: INTEGRATED REGISTRATION FORM */}
             {/* ============================================================== */}
-            {authMode === 'register' && (
+            {!verifyEmail && authMode === 'register' && (
               <form onSubmit={handleRegister} className="space-y-4 animate-fadeIn">
                 
                 {/* 1. Account Credentials */}
@@ -707,275 +662,6 @@ export default function LoginPage({
                   </div>
                 </div>
 
-                {/* 2. Role Specific KYC & Operations Fields */}
-                {selectedRole === 'buyer' && (
-                  <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                    <div className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                      <Building2 className="w-3.5 h-3.5 text-cas-blue" aria-hidden="true" />
-                      <span>Delivery Location</span>
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-3">
-                      <div>
-                        <label htmlFor="fld-company-name-4" className="block text-xs font-bold text-slate-700 mb-1">Name</label>
-                        <input id="fld-company-name-4"
-                          type="text"
-                          required
-                          value={buyerCompany}
-                          onChange={(e) => setBuyerCompany(e.target.value)}
-                          placeholder="Business, school, church or your name"
-                          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-medium"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Geofence Gate Coordinates */}
-                    <div className="p-3 bg-white rounded-lg border border-slate-200 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-slate-700 flex items-center gap-1">
-                          <MapPin className="w-3.5 h-3.5 text-cas-amberDark" aria-hidden="true" />
-                          <span>Discharge Gate Coordinates (100m Radar)</span>
-                        </span>
-                        <button
-                          type="button"
-                          onClick={handleTriggerGeolocation}
-                          disabled={geolocating}
-                          className="text-xs font-bold px-2 py-1 rounded bg-sky-50 text-cas-blue hover:bg-sky-100 flex items-center gap-1"
-                        >
-                          <Navigation className="w-3 h-3" aria-hidden="true" />
-                          <span>{geolocating ? 'Detecting...' : 'Detect Gate GPS'}</span>
-                        </button>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-2">
-                        <input
-                          type="text"
-                          required
-                          value={latitude}
-                          onChange={(e) => setLatitude(e.target.value)}
-                          placeholder="Latitude"
-                          className="px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded text-xs font-mono"
-                        />
-                        <input
-                          type="text"
-                          required
-                          value={longitude}
-                          onChange={(e) => setLongitude(e.target.value)}
-                          placeholder="Longitude"
-                          className="px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded text-xs font-mono"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label htmlFor="fld-tanker-discharge-clearance-7" className="block text-xs font-bold text-slate-700 mb-1">Tanker Discharge Clearance</label>
-                      <select id="fld-tanker-discharge-clearance-7"
-                        value={truckClearance}
-                        onChange={(e) => setTruckClearance(e.target.value)}
-                        className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-medium"
-                      >
-                        <option value="33000">33,000 Litres (Standard 2-Axle)</option>
-                        <option value="45000">45,000 Litres (Tri-Axle Tanker)</option>
-                        <option value="60000">60,000 Litres (Heavy Multi-Compartment)</option>
-                      </select>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label htmlFor="fld-receiving-officer-name-8" className="block text-xs font-bold text-slate-700 mb-1">Receiving Officer Name</label>
-                        <input id="fld-receiving-officer-name-8"
-                          type="text"
-                          required
-                          value={receivingOfficerName}
-                          onChange={(e) => setReceivingOfficerName(e.target.value)}
-                          placeholder="e.g. Engr. Tunde Adeleke"
-                          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="fld-receiving-officer-hotline-9" className="block text-xs font-bold text-slate-700 mb-1">Receiving Officer Hotline</label>
-                        <input id="fld-receiving-officer-hotline-9"
-                          type="tel"
-                          required
-                          value={receivingOfficerPhone}
-                          onChange={(e) => setReceivingOfficerPhone(e.target.value)}
-                          placeholder="+234 803 000 0000"
-                          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {selectedRole === 'supplier' && (
-                  <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                    <div className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                      <UserCheck className="w-3.5 h-3.5 text-cas-amberDark" aria-hidden="true" />
-                      <span>NMDPRA Downstream Marketer Verification</span>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label htmlFor="fld-marketer-company-name-10" className="block text-xs font-bold text-slate-700 mb-1">Marketer Company Name</label>
-                        <input id="fld-marketer-company-name-10"
-                          type="text"
-                          required
-                          value={supplierName}
-                          onChange={(e) => setSupplierName(e.target.value)}
-                          placeholder="Registered company name"
-                          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="fld-cac-rc-number-11" className="block text-xs font-bold text-slate-700 mb-1">CAC RC Number</label>
-                        <input id="fld-cac-rc-number-11"
-                          type="text"
-                          required
-                          value={supplierRc}
-                          onChange={(e) => setSupplierRc(e.target.value)}
-                          placeholder="RC 789012"
-                          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono font-bold"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label htmlFor="fld-nmdpra-downstream-license-no-12" className="block text-xs font-bold text-slate-700 mb-1">NMDPRA Downstream License No.</label>
-                      <input id="fld-nmdpra-downstream-license-no-12"
-                        type="text"
-                        required
-                        value={supplierLicense}
-                        onChange={(e) => setSupplierLicense(e.target.value)}
-                        placeholder="NMDPRA licence number"
-                        className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono font-bold"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label htmlFor="fld-primary-loading-depot-13" className="block text-xs font-bold text-slate-700 mb-1">Primary Loading Depot</label>
-                        <select id="fld-primary-loading-depot-13"
-                          value={primaryDepot}
-                          onChange={(e) => setPrimaryDepot(e.target.value)}
-                          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-medium"
-                        >
-                          {DEPOTS.map((d) => (
-                            <option key={d.id} value={d.name}>{d.name} ({d.state})</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label htmlFor="fld-initial-daily-spot-rate-l-14" className="block text-xs font-bold text-slate-700 mb-1">Initial Daily Spot Rate (₦/L)</label>
-                        <input id="fld-initial-daily-spot-rate-l-14"
-                          type="number"
-                          required
-                          min="1000"
-                          max="2000"
-                          value={initialPrice}
-                          onChange={(e) => setInitialPrice(Number(e.target.value))}
-                          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono font-bold"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label htmlFor="fld-gantry-dispatch-manager-15" className="block text-xs font-bold text-slate-700 mb-1">Gantry Dispatch Manager</label>
-                        <input id="fld-gantry-dispatch-manager-15"
-                          type="text"
-                          required
-                          value={contactName}
-                          onChange={(e) => setContactName(e.target.value)}
-                          placeholder="e.g. Alhaji Garba Shehu"
-                          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="fld-operations-hotline-16" className="block text-xs font-bold text-slate-700 mb-1">Operations Hotline</label>
-                        <input id="fld-operations-hotline-16"
-                          type="tel"
-                          required
-                          value={contactPhone}
-                          onChange={(e) => setContactPhone(e.target.value)}
-                          placeholder="+234 802 000 0000"
-                          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {selectedRole === 'driver' && (
-                  <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                    <div className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                      <Truck className="w-3.5 h-3.5 text-cas-green" aria-hidden="true" />
-                      <span>Driver Verification</span>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label htmlFor="fld-driver-full-name-17" className="block text-xs font-bold text-slate-700 mb-1">Driver Full Name</label>
-                        <input id="fld-driver-full-name-17"
-                          type="text"
-                          required
-                          value={driverName}
-                          onChange={(e) => setDriverName(e.target.value)}
-                          placeholder="e.g. Ibrahim Musa"
-                          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="fld-whatsapp-dispatch-phone-18" className="block text-xs font-bold text-slate-700 mb-1">WhatsApp Dispatch Phone</label>
-                        <input id="fld-whatsapp-dispatch-phone-18"
-                          type="tel"
-                          required
-                          value={driverPhone}
-                          onChange={(e) => setDriverPhone(e.target.value)}
-                          placeholder="+234 814 000 0000"
-                          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <div>
-                        <label htmlFor="fld-driver-license-no-19" className="block text-xs font-bold text-slate-700 mb-1">Driver License No.</label>
-                        <input id="fld-driver-license-no-19"
-                          type="text"
-                          required
-                          value={driverLicense}
-                          onChange={(e) => setDriverLicense(e.target.value)}
-                          placeholder="FRSC-DL-98213"
-                          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="fld-tanker-plate-no-20" className="block text-xs font-bold text-slate-700 mb-1">Tanker Plate No.</label>
-                        <input id="fld-tanker-plate-no-20"
-                          type="text"
-                          required
-                          value={driverPlate}
-                          onChange={(e) => setDriverPlate(e.target.value)}
-                          placeholder="APP-891-XY"
-                          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="fld-tanker-capacity-21" className="block text-xs font-bold text-slate-700 mb-1">Tanker Capacity</label>
-                        <select id="fld-tanker-capacity-21"
-                          value={driverCapacity}
-                          onChange={(e) => setDriverCapacity(e.target.value)}
-                          className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-medium"
-                        >
-                          <option value="33000">33,000 Litres</option>
-                          <option value="45000">45,000 Litres</option>
-                          <option value="60000">60,000 Litres</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
                 {/* Submit Register Button */}
                 <button
                   type="submit"
@@ -985,11 +671,11 @@ export default function LoginPage({
                   {loading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin text-cas-amber" aria-hidden="true" />
-                      <span>Creating Account & Securing Profile...</span>
+                      <span>Creating your account...</span>
                     </>
                   ) : (
                     <>
-                      <span>Complete {activeConfig.shortLabel} Registration</span>
+                      <span>Create account</span>
                       <ArrowRight className="w-4 h-4 text-cas-amber" aria-hidden="true" />
                     </>
                   )}

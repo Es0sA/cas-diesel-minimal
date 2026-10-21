@@ -29,6 +29,8 @@ export const api = {
     register: (data) => request('/auth/register', { method: 'POST', body: JSON.stringify(data) }),
     login: (data) => request('/auth/login', { method: 'POST', body: JSON.stringify(data) }),
     logout: () => request('/auth/logout', { method: 'POST' }),
+    verifyEmail: (data) => request('/auth/verify-email', { method: 'POST', body: JSON.stringify(data) }),
+    resendCode: (data) => request('/auth/resend-code', { method: 'POST', body: JSON.stringify(data) }),
     me: () => request('/auth/me'),
   },
   companies: {
@@ -46,6 +48,7 @@ export const api = {
   },
   drivers: {
     list: () => request('/drivers'),
+    getProfile: () => request('/drivers/profile'),
     updateProfile: (data) => request('/drivers/profile', { method: 'POST', body: JSON.stringify(data) }),
     editProfile: (data) => request('/drivers/profile', { method: 'PUT', body: JSON.stringify(data) }),
   },

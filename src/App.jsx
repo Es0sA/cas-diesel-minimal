@@ -19,6 +19,7 @@ import LegalModals from './components/LegalModals';
 import CookieBanner from './components/CookieBanner';
 import Footer from './components/Footer';
 import Rfqs from './components/Rfqs';
+import Onboarding from './components/Onboarding';
 import NotFound from './components/NotFound';
 import { 
   Building2, 
@@ -218,23 +219,30 @@ export default function App() {
   };
 
 
+  // New accounts finish their profile (and documents) right after verifying their email
   const handleRegistrationSuccess = (role) => {
     setUser({ role });
-    const normalizedRole = (role || '').toUpperCase();
-    if (normalizedRole === 'SUPPLIER') {
-      navigate('/marketer');
-    } else if (normalizedRole === 'DRIVER') {
-      navigate('/driver');
-    } else {
-      navigate('/');
+    navigate('/onboarding');
+  };
+
+  // Accounts that signed up but never finished their profile are sent back to it
+  const profileMissing = async (role) => {
+    try {
+      if (role === 'DRIVER') await api.drivers.getProfile();
+      else await api.companies.getProfile();
+      return false;
+    } catch (e) {
+      return /not found/i.test(e.message || '');
     }
   };
 
-  const handleLoginSuccess = (role) => {
+  const handleLoginSuccess = async (role) => {
     setUser({ role });
     const normalizedRole = (role || '').toUpperCase();
     if (normalizedRole === 'ADMIN') {
       navigate('/admin');
+    } else if (await profileMissing(normalizedRole)) {
+      navigate('/onboarding');
     } else if (normalizedRole === 'SUPPLIER') {
       navigate('/marketer');
     } else if (normalizedRole === 'DRIVER') {
@@ -269,6 +277,7 @@ export default function App() {
           <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/marketer" element={<NotForAdmin user={user}><SupplierPortal /></NotForAdmin>} />
           <Route path="/driver" element={<NotForAdmin user={user}><DriverCockpit onNavigateToRegister={() => handleOpenRegistration('driver')} /></NotForAdmin>} />
+          <Route path="/onboarding" element={<Onboarding user={user} />} />
           <Route path="/rfqs" element={<Rfqs user={user} />} />
           <Route path="/rfqs/:id" element={<Rfqs user={user} />} />
           <Route path="/orders/:id" element={<OrderDetail user={user} />} />
