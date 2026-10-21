@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { scrollBehavior } from '../lib/motion';
 import { 
   Building2, 
   UserCheck, 
@@ -168,7 +169,7 @@ export default function LoginPage({
   // Bring the error into view and focus it so a failed submit is never silent
   useEffect(() => {
     if (errorMessage && alertRef.current) {
-      alertRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      alertRef.current.scrollIntoView({ behavior: scrollBehavior(), block: 'center' });
       alertRef.current.focus({ preventScroll: true });
     }
   }, [errorMessage]);
@@ -392,7 +393,8 @@ export default function LoginPage({
       <div className="w-full max-w-5xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden grid grid-cols-1 lg:grid-cols-12 transition-all">
         
         {/* Left Column: Unified Auth Terminal (Sign In & Register) */}
-        <div className="p-6 sm:p-10 lg:p-12 lg:col-span-7 flex flex-col justify-between lg:max-h-[92vh] lg:overflow-y-auto">
+        <div className="relative lg:col-span-7">
+        <div className="p-6 sm:p-10 lg:p-12 flex flex-col justify-between lg:max-h-[92vh] lg:overflow-y-auto">
           <div>
             {/* Top Navigation & Status Bar */}
             <div className="flex items-center justify-between gap-4 mb-6">
@@ -1011,6 +1013,9 @@ export default function LoginPage({
             </div>
           </div>
 
+        </div>
+        {/* Bottom fade: hints that the panel above scrolls internally on tall forms */}
+        <div className="hidden lg:block absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white to-transparent pointer-events-none rounded-b-3xl" aria-hidden="true"></div>
         </div>
 
         {/* Right Column: Dynamic Visual Industrial Showcase */}

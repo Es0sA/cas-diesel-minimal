@@ -247,7 +247,7 @@ export default function AdminDashboard({ user }) {
                               className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 inline-flex ${
                                 isVerified 
                                   ? 'bg-emerald-50 text-cas-green border border-emerald-200 hover:bg-emerald-100'
-                                  : 'bg-amber-50 text-cas-amberDark border border-amber-200 hover:bg-amber-100'
+                                  : 'bg-cas-amberLight text-cas-amberDark border border-cas-amber/40 hover:bg-amber-200'
                               }`}
                             >
                               {isVerified ? <CheckCircle className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}

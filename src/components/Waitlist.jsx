@@ -13,6 +13,7 @@ import {
   Check
 } from 'lucide-react';
 import { WAITLIST } from '../config';
+import { scrollBehavior } from '../lib/motion';
 
 const VOLUME_TIERS = [
   'Under 10,000 Litres',
@@ -173,7 +174,7 @@ export default function Waitlist({ onOpenLegalModal }) {
       setSubmitted(true);
       setTimeout(() => {
         const formEl = document.getElementById('waitlist-form');
-        if (formEl) formEl.scrollIntoView({ behavior: 'smooth' });
+        if (formEl) formEl.scrollIntoView({ behavior: scrollBehavior() });
       }, 50);
     } catch (err) {
       console.error('Waitlist submission error:', err);
@@ -182,7 +183,7 @@ export default function Waitlist({ onOpenLegalModal }) {
       setSubmitted(true);
       setTimeout(() => {
         const formEl = document.getElementById('waitlist-form');
-        if (formEl) formEl.scrollIntoView({ behavior: 'smooth' });
+        if (formEl) formEl.scrollIntoView({ behavior: scrollBehavior() });
       }, 50);
     } finally {
       setSubmitting(false);
@@ -230,8 +231,8 @@ export default function Waitlist({ onOpenLegalModal }) {
             
             {/* Left Column: Direct value proposition */}
             <div className="lg:col-span-5 min-w-0 space-y-6 pt-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-cas-amberDark text-xs font-bold uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5 text-cas-amber" />
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cas-amberLight border border-cas-amber/40 text-cas-amberDark text-xs font-bold uppercase tracking-wider">
+                <Sparkles className="w-3.5 h-3.5 text-cas-amberDark" />
                 <span>Priority Access Allocation</span>
               </div>
 
@@ -266,7 +267,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-amber-50 text-cas-amberDark flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-lg bg-cas-amberLight text-cas-amberDark flex items-center justify-center shrink-0 mt-0.5">
                     <FileCheck className="w-4 h-4" />
                   </div>
                   <div>
@@ -605,7 +606,7 @@ export default function Waitlist({ onOpenLegalModal }) {
             </div>
 
             <div className="p-6 rounded-2xl bg-cas-canvas border border-cas-border">
-              <div className="w-9 h-9 rounded-lg bg-amber-50 text-cas-amberDark flex items-center justify-center mb-3.5 font-bold text-sm">
+              <div className="w-9 h-9 rounded-lg bg-cas-amberLight text-cas-amberDark flex items-center justify-center mb-3.5 font-bold text-sm">
                 2
               </div>
               <h4 className="font-bold text-cas-slate text-base">Track Truck Dispatch</h4>

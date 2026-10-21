@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { api } from './api';
 import { WAITLIST } from './config';
+import { scrollBehavior } from './lib/motion';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Waitlist from './components/Waitlist';
@@ -42,7 +43,7 @@ function HomePage({ user, handleOpenRegistration }) {
           <Hero 
         onExploreMarketplace={() => {
           const rates = document.getElementById('depot-rates') || document.getElementById('marketplace');
-          if (rates) rates.scrollIntoView({ behavior: 'smooth' });
+          if (rates) rates.scrollIntoView({ behavior: scrollBehavior() });
         }}
         onOpenRegister={() => handleOpenRegistration('buyer')}
       />
@@ -204,7 +205,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: scrollBehavior() });
   }, [location.pathname]);
 
   const handleOpenRegistration = (role = 'buyer') => {

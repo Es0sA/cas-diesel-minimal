@@ -51,3 +51,21 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #94A3B8;
 }
+
+/* Respect the OS-level reduced-motion preference: turn off smooth scrolling and
+   collapse every animation/transition to effectively instant, without removing
+   the end state (so fades still show their content, spinners still indicate
+   progress, just without the motion). */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -193,7 +193,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
               const hasGate = order.targetLatitude != null && order.targetLongitude != null;
               return (
                 <div key={order.id} className="p-4 sm:p-8 space-y-5 border-b border-slate-200 last:border-b-0">
-                  <div className="p-4 sm:p-5 bg-amber-50 border-2 border-cas-amber rounded-xl">
+                  <div className="p-4 sm:p-5 bg-cas-amberLight border-2 border-cas-amber rounded-xl">
                     <div className="text-xs sm:text-xs font-bold uppercase tracking-wider text-cas-amberDark mb-1">Dispatch Manifest</div>
                     <div className="text-lg sm:text-xl font-extrabold text-cas-slate">
                       Order #{order.id.slice(0, 8).toUpperCase()} ({order.volumeLiters.toLocaleString()} Litres AGO)

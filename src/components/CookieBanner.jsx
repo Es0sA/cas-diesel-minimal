@@ -22,11 +22,11 @@ export default function CookieBanner({ onOpenPolicy }) {
   if (dismissed || !visible) return null;
 
   return (
-    <aside 
+    <aside
       aria-label="Cookie consent banner"
-      className="fixed bottom-14 sm:bottom-6 left-3 right-3 sm:left-auto sm:right-6 sm:max-w-md z-30 bg-white border-2 border-cas-border rounded-xl shadow-2xl p-3 sm:p-5"
+      className="fixed top-16 left-0 right-0 rounded-none sm:top-auto sm:bottom-6 sm:left-auto sm:right-6 sm:max-w-md sm:rounded-xl z-30 bg-white border-b-2 sm:border-2 border-cas-border shadow-2xl p-3 sm:p-5"
     >
-      <div className="flex items-start gap-2.5 sm:gap-3">
+      <div className="flex items-start gap-2.5 sm:gap-3 max-w-7xl mx-auto">
         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded bg-cas-amberLight text-cas-amberDark flex items-center justify-center shrink-0 mt-0.5">
           <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
         </div>

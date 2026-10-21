@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, LogOut, Settings, ChevronDown, ArrowRight } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { WAITLIST } from '../config';
+import { scrollBehavior } from '../lib/motion';
 
 // One workspace link per role. Public visitors get anchors on the home page.
 const ROLE_LINKS = {
@@ -49,7 +50,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    if (el) el.scrollIntoView({ behavior: scrollBehavior() });
   };
 
   const go = (link) => (e) => {
