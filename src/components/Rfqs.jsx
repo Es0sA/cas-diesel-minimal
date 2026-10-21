@@ -68,12 +68,28 @@ function SpecTable({ requirements }) {
 
 /* ---------------- Buyer ---------------- */
 
+function SamplePhotos({ id, title = 'Buyer sample photos' }) {
+  const [samples, setSamples] = useState(null);
+  useEffect(() => { api.rfqs.samples(id).then((r) => setSamples(r.samples)).catch(() => setSamples([])); }, [id]);
+  if (!samples || samples.length === 0) return null;
+  return (
+    <section className="bg-white border border-cas-border rounded-2xl p-6 mb-8 shadow-sm">
+      <h2 className="text-lg font-bold text-cas-slate mb-1">{title}</h2>
+      <p className="text-xs text-cas-muted mb-3">The product loaded must match these samples.</p>
+      <div className="flex flex-wrap gap-3">
+        {samples.map((x) => <a key={x.id} href={x.url} target="_blank" rel="noopener noreferrer"><img src={x.url} alt={x.fileName} className="h-28 w-28 object-cover rounded-lg border border-slate-200" /></a>)}
+      </div>
+    </section>
+  );
+}
+
 function BuyerRfqs() {
   const navigate = useNavigate();
   const [rfqs, setRfqs] = useState(null);
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [photos, setPhotos] = useState([]);
   const [f, setF] = useState({ volumeLiters: 33000, depotId: '', deliveryAddress: '', targetLatitude: '', targetLongitude: '', validHours: 24, flashPointMin: '', densityMin: '', densityMax: '', sulphurMax: '', waterMax: '' });
   const set = (k) => (e) => setF((x) => ({ ...x, [k]: e.target.value }));
 
@@ -92,6 +108,9 @@ function BuyerRfqs() {
       if (f.deliveryAddress.trim()) body.deliveryAddress = f.deliveryAddress.trim();
       if (f.targetLatitude !== '' && f.targetLongitude !== '') { body.targetLatitude = Number(f.targetLatitude); body.targetLongitude = Number(f.targetLongitude); }
       const res = await api.rfqs.create(body);
+      for (const file of photos) {
+        try { await api.rfqs.uploadSample(res.rfq.id, file); } catch (err) { console.error('Sample photo upload failed:', err); }
+      }
       navigate(`/rfqs/${res.rfq.id}`);
     } catch (err) {
       setError(err.message);
@@ -121,6 +140,10 @@ function BuyerRfqs() {
             <Field label="Gate latitude" hint="Used to detect arrival. Hidden from vendors until you award."><input type="number" step="any" value={f.targetLatitude} onChange={set('targetLatitude')} className={inputCls} /></Field>
             <Field label="Gate longitude"><input type="number" step="any" value={f.targetLongitude} onChange={set('targetLongitude')} className={inputCls} /></Field>
           </div>
+          <Field label="Sample photos" hint="Up to 3 JPG or PNG photos of the product you want. The vendor compares these with the sample at the depot.">
+            <input type="file" accept="image/jpeg,image/png" multiple onChange={(e) => setPhotos(Array.from(e.target.files || []).slice(0, 3))} className={inputCls} />
+            {photos.length > 0 && <p className="text-xs text-cas-muted mt-1">{photos.length} photo{photos.length === 1 ? '' : 's'} selected</p>}
+          </Field>
           <details className="rounded-xl border border-slate-200 p-4">
             <summary className="cursor-pointer text-sm font-bold text-cas-slate">Product specification (prefilled with the AGO standard)</summary>
             <p className="text-xs text-cas-muted mt-2 mb-3">Leave a field blank to keep the standard value. Tighten it if you need to.</p>
@@ -221,6 +244,7 @@ function BuyerRfqDetail({ id }) {
         <SpecTable requirements={rfq.requirements} />
         <p className="text-xs text-cas-muted mt-3">Dispatch within {rfq.terms?.dispatchHours} hours of funding. Delivery within {rfq.terms?.deliveryWorkingDays} working days. The specification above governs the order, whatever the quote says.</p>
       </section>
+      <SamplePhotos id={id} title="Your sample photos" />
 
       <h2 className="text-lg font-bold text-cas-slate mb-3">Quotes ({live.length})</h2>
       {live.length === 0 && quotes.length === 0 && <div className="text-center p-10 border-2 border-dashed border-slate-200 rounded-2xl text-cas-muted">No quotes yet. Verified vendors can see your request and quote until it closes.</div>}
@@ -363,6 +387,7 @@ function SupplierRfqDetail({ id }) {
         <SpecTable requirements={rfq.requirements} />
         <p className="text-xs text-cas-muted mt-3">If awarded you must dispatch within {rfq.terms?.dispatchHours} hours of funding and deliver within {rfq.terms?.deliveryWorkingDays} working days, or the escrow is refunded. Gate coordinates are shared after the award.</p>
       </section>
+      <SamplePhotos id={id} />
       {mine && (
         <div className="bg-cas-greenLight/50 border border-green-200 rounded-2xl p-5 mb-8">
           <p className="font-bold text-cas-slate">You quoted {naira(mine.pricePerLitre)} per litre</p>

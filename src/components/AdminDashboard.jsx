@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../api';
 import AdminOrders from './AdminOrders';
+import AdminDepotPrices from './AdminDepotPrices';
 import { usePageTitle } from '../lib/usePageTitle';
 import { 
   BarChart, Users, AlertTriangle, ShieldCheck, ClipboardList, 
@@ -132,6 +133,7 @@ export default function AdminDashboard({ user }) {
           { id: 'overview', label: 'System Overview', short: 'Overview', icon: BarChart },
           { id: 'users', label: 'User Verification', short: 'Users', icon: Users },
           { id: 'orders', label: 'Orders', short: 'Orders', icon: ClipboardList },
+          { id: 'depots', label: 'Depot Prices', short: 'Prices', icon: BarChart },
           { id: 'disputes', label: 'Dispute Resolution', short: 'Disputes', icon: AlertTriangle }
         ].map(tab => (
           <button
@@ -284,6 +286,7 @@ export default function AdminDashboard({ user }) {
 
           {/* ORDERS TAB */}
           {activeTab === 'orders' && <AdminOrders />}
+          {activeTab === 'depots' && <AdminDepotPrices />}
 
           {/* DISPUTES TAB */}
           {activeTab === 'disputes' && (

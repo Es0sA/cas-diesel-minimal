@@ -119,8 +119,22 @@ export const api = {
     accept: (id, quoteId, acceptDeviations) => request(`/rfqs/${id}/accept`, { method: 'POST', body: JSON.stringify({ quoteId, acceptDeviations }) }),
     quote: (id, data) => request(`/rfqs/${id}/quotes`, { method: 'POST', body: JSON.stringify(data) }),
     myQuotes: () => request('/rfqs/quotes/mine/all'),
+    samples: (id) => request(`/rfqs/${id}/samples`),
+    uploadSample: async (id, file) => {
+      const form = new FormData();
+      form.append('file', file);
+      const res = await fetch(`${API_URL}/rfqs/${id}/samples`, { method: 'POST', body: form, credentials: 'include' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      return data;
+    },
     confirmQuote: (quoteId, data = {}) => request(`/rfqs/quotes/${quoteId}/confirm`, { method: 'POST', body: JSON.stringify(data) }),
     withdrawQuote: (quoteId) => request(`/rfqs/quotes/${quoteId}/withdraw`, { method: 'PUT' }),
+  },
+  depots: {
+    prices: () => request('/depots/prices'),
+    setPrice: (data) => request('/depots/prices', { method: 'PUT', body: JSON.stringify(data) }),
+    removePrice: (id) => request(`/depots/prices/${id}`, { method: 'DELETE' }),
   },
   standingRates: {
     list: () => request('/standing-rates'),
