@@ -473,7 +473,10 @@ export default function Waitlist({ onOpenLegalModal }) {
                           required
                           placeholder="e.g. name@email.com"
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          onChange={(e) => setEmail(e.target.value.toLowerCase())}
+                          autoCapitalize="none"
+                          autoCorrect="off"
+                          spellCheck={false}
                           className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate"
                         />
                       </div>
