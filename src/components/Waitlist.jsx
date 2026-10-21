@@ -148,24 +148,46 @@ export default function Waitlist({ onOpenLegalModal }) {
         console.warn('LocalStorage backup failed:', storageErr);
       }
 
-      // 2. Post to Google Apps Script Webhook if configured
-      if (WAITLIST.sheetUrl && WAITLIST.sheetUrl.trim() !== '') {
+      // 2. Post to the Worker proxy, which validates, rate limits and forwards to the sheet
+      if (WAITLIST.apiUrl && WAITLIST.apiUrl.trim() !== '') {
+        let res = null;
+        let netErr = null;
         try {
-          await fetch(WAITLIST.sheetUrl, {
+          res = await fetch(WAITLIST.apiUrl, {
             method: 'POST',
-            mode: 'no-cors',
-            headers: {
-              'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
         } catch (webhookErr) {
-          // no-cors gives an opaque response, so this only catches network-level
-          // failures. Keep a visible record instead of losing it silently.
-          console.error('Waitlist webhook post failed:', webhookErr);
+          netErr = webhookErr;
+        }
+
+        const rejection = res && {
+          409: 'This email is already on the waitlist. We will be in touch soon.',
+          429: 'Too many attempts. Please try again in a little while.',
+          422: 'Some details look invalid. Please check your name, email and WhatsApp number.',
+          403: 'This form cannot be submitted from here. Please use casdiesel.com.'
+        }[res.status];
+
+        if (rejection) {
+          // The server refused this entry, so drop the local backup and tell the user.
+          try {
+            const stored = JSON.parse(localStorage.getItem(WAITLIST.storageKey) || '[]');
+            localStorage.setItem(WAITLIST.storageKey, JSON.stringify(stored.filter((e) => e.refCode !== generatedRef)));
+            if (res.status !== 429) localStorage.removeItem(WAITLIST.lastSubmitKey);
+          } catch (storageErr) {
+            console.warn('LocalStorage cleanup failed:', storageErr);
+          }
+          setErrorMsg(rejection);
+          return;
+        }
+
+        if (netErr || !res.ok) {
+          // Keep a visible record instead of losing it silently.
+          console.error('Waitlist submit failed:', netErr || res.status);
           try {
             const failed = JSON.parse(localStorage.getItem(WAITLIST.failedKey) || '[]');
-            failed.push({ ...payload, failedReason: String(webhookErr) });
+            failed.push({ ...payload, failedReason: String(netErr || res.status) });
             localStorage.setItem(WAITLIST.failedKey, JSON.stringify(failed));
           } catch (storageErr) {
             console.warn('Failed-submission backup failed:', storageErr);

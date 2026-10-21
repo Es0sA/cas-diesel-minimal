@@ -43,7 +43,7 @@ const SECTIONS = {
     ['5. Detention and demurrage', 'CAS Energy does not set or collect demurrage. Any waiting-time charge must be agreed between the buyer and the marketer or driver before dispatch.'],
   ],
   cookies: [
-    ['What we use', 'We use one essential cookie that keeps you signed in. It is marked HttpOnly and Secure, is tied to your login and expires after 24 hours or when you sign out. We also store your cookie notice choice in your browser. We do not use advertising or analytics cookies and we do not allow third-party trackers.'],
+    ['What we use', 'We use one essential cookie that keeps you signed in. It is marked HttpOnly and Secure, is tied to your login and expires after 24 hours or when you sign out. We also store your cookie notice choice in your browser. We do not use advertising cookies and we do not allow third-party trackers. We use Cloudflare Web Analytics to count visits and see which pages and sources are used. It sets no cookies, does not track you across sites and does not collect personal data.'],
     ['Your choices', 'You can clear cookies in your browser at any time. If you block the sign-in cookie, you will not be able to log in.'],
   ],
 };
