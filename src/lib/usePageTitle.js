@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 const SITE_NAME = 'CAS Energy';
-const DEFAULT_DESCRIPTION = "CAS Energy is Nigeria's bulk diesel marketplace connecting corporate buyers, downstream marketers, and calibrated fleet drivers with escrow-protected settlements and geofenced delivery verification.";
+const DEFAULT_DESCRIPTION = "CAS Energy is Nigeria's bulk diesel marketplace connecting corporate buyers, downstream vendors, and calibrated fleet drivers with escrow-protected settlements and geofenced delivery verification.";
 
 // Sets a per-page <title> and <meta name="description"> and restores the
 // previous values on unmount, so each route gets its own tab title and

@@ -52,7 +52,7 @@ export default function ReviewForm({ order, onSubmitted }) {
   return (
     <form onSubmit={submit} className="bg-white p-6 rounded-2xl border border-slate-200 mb-8 shadow-sm">
       <h2 className="text-lg font-bold text-cas-slate mb-1">Rate this delivery</h2>
-      <p className="text-sm text-cas-muted mb-4">Your review is shown to other buyers on the supplier's listing.</p>
+      <p className="text-sm text-cas-muted mb-4">Your review is shown to other buyers on the vendor's listing.</p>
       <div className="flex items-center gap-1 mb-4" role="radiogroup" aria-label="Rating">
         {[1, 2, 3, 4, 5].map((n) => (
           <button key={n} type="button" onClick={() => setRating(n)} aria-label={`${n} stars`} aria-pressed={rating === n}>

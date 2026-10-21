@@ -40,27 +40,27 @@ const ROLE_CONFIGS = {
     featureTitle: 'Escrow Custody Protection',
     signinFeatures: [
       'Funds remain locked in virtual escrow until tanker enters 100-meter gate radius.',
-      'Compare verified marketer prices by depot and order in a few clicks.'
+      'Compare verified vendor prices by depot and order in a few clicks.'
     ],
     registerFeatures: [
       'Escrow-protected payment for zero cash transit risk.',
       'Mandatory discharge gate GPS pin drop to eliminate lost tanker diversions.',
-      'Compare prices from verified marketers.'
+      'Compare prices from verified vendors.'
     ]
   },
   supplier: {
     id: 'supplier',
-    apiRole: 'SUPPLIER',
-    title: 'Licensed Marketer',
-    shortLabel: 'Marketer',
-    tagline: 'Depot Terminals & Marketer Pricing Desk',
-    badge: 'Marketer Portal',
+    apiRole: 'VENDOR',
+    title: 'Vendor',
+    shortLabel: 'Vendor',
+    tagline: 'Depot Terminals & Vendor Pricing Desk',
+    badge: 'Vendor Portal',
     signinSubtitle: 'Sign in to broadcast daily spot prices, review verified buyer orders, and dispatch tanker fleets.',
     registerSubtitle: 'Register your downstream marketing entity with NMDPRA credentials and start receiving verified escrow orders.',
-    emailLabel: 'Marketer Terminal Email',
+    emailLabel: 'Vendor Terminal Email',
     emailPlaceholder: 'example@mail.com',
     accentColor: 'text-cas-amberDark',
-    destination: '/marketer',
+    destination: '/vendor',
     destinationLabel: 'Supplier Pricing Desk & Allocations',
     featureTitle: 'In-Transit Capital Protection',
     signinFeatures: [
@@ -95,7 +95,7 @@ const ROLE_CONFIGS = {
       'Automatic arrival detection when the tanker enters 100m gate perimeter.'
     ],
     registerFeatures: [
-      'Accept dispatch manifests from verified downstream marketers across Nigeria.',
+      'Accept dispatch manifests from verified downstream vendors across Nigeria.',
       'Clear gate GPS coordinates with truck clearance verification prevent site rejection.',
       'Instant electronic proof-of-delivery sign-off upon completion.'
     ]
@@ -114,8 +114,8 @@ export default function LoginPage({
   usePageTitle(
     authMode === 'register' ? `Create ${ROLE_CONFIGS[selectedRole]?.title || 'Account'}` : `Sign In — ${ROLE_CONFIGS[selectedRole]?.title || ''}`,
     authMode === 'register'
-      ? 'Register your corporate facility, marketer desk, or driver profile on CAS Energy, the escrow-protected wholesale diesel marketplace.'
-      : 'Sign in to CAS Energy to manage escrow-protected orders, verified marketer pricing, and gate delivery tracking.'
+      ? 'Register your corporate facility, vendor desk, or driver profile on CAS Energy, the escrow-protected wholesale diesel marketplace.'
+      : 'Sign in to CAS Energy to manage escrow-protected orders, verified vendor pricing, and gate delivery tracking.'
   );
 
   useEffect(() => {
@@ -401,7 +401,7 @@ export default function LoginPage({
                   <span className="truncate">Buyer</span>
                 </button>
 
-                {/* 2. Marketer Role */}
+                {/* 2. Vendor Role */}
                 <button
                   type="button"
                   onClick={() => handleRoleChange('supplier')}
@@ -413,7 +413,7 @@ export default function LoginPage({
                   aria-pressed={selectedRole === 'supplier'}
                 >
                   <UserCheck className={`hidden min-[360px]:block w-4 h-4 ${selectedRole === 'supplier' ? 'text-amber-400' : 'text-slate-500'}`} aria-hidden="true" />
-                  <span>Marketer</span>
+                  <span>Vendor</span>
                 </button>
 
                 {/* 3. Driver Role */}

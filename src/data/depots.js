@@ -1,4 +1,4 @@
-// Loading depots a marketer can operate from.
+// Loading depots a vendor can operate from.
 export const DEPOTS = [
   { id: 'apapa', name: 'Apapa Marine Terminal', hub: 'Lagos Island & Port Area', state: 'Lagos' },
   { id: 'ijegun', name: 'Ijegun Egba Tank Farm Cluster', hub: 'Amuwo Odofin & Satellite Town', state: 'Lagos' },

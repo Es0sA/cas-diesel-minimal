@@ -9,7 +9,7 @@ import { usePageTitle } from '../lib/usePageTitle';
 const ACTIVE_STATUSES = ['FUNDED', 'IN_TRANSIT', 'ARRIVED', 'SETTLING'];
 
 export default function SupplierPortal() {
-  usePageTitle('Marketer Desk', 'Publish your spot price, manage standing rates, and track escrow-protected orders on the CAS Energy marketer desk.');
+  usePageTitle('Vendor Desk', 'Publish your spot price, manage standing rates, and track escrow-protected orders on the CAS Energy vendor desk.');
   const navigate = useNavigate();
   const viewOrder = (id) => navigate(`/orders/${id}`);
 
@@ -108,10 +108,10 @@ export default function SupplierPortal() {
         <div className="max-w-3xl mb-8">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-cas-greenLight text-cas-green text-xs font-bold uppercase tracking-wider mb-3">
             <UserCheck className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>Downstream Marketer Operations Desk</span>
+            <span>Downstream Vendor Operations Desk</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
-            {profile ? `${profile.companyName} Operations Desk` : 'Marketer Operations Desk'}
+            {profile ? `${profile.companyName} Operations Desk` : 'Vendor Operations Desk'}
           </h1>
           <p className="text-base text-cas-muted mt-2">
             Set your daily spot price per litre and review confirmed escrow allocations.

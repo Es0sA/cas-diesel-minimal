@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../api';
 import AdminOrders from './AdminOrders';
+import AdminDepotPrices from './AdminDepotPrices';
 import { usePageTitle } from '../lib/usePageTitle';
 import { 
   BarChart, Users, AlertTriangle, ShieldCheck, ClipboardList, 
@@ -132,6 +133,7 @@ export default function AdminDashboard({ user }) {
           { id: 'overview', label: 'System Overview', short: 'Overview', icon: BarChart },
           { id: 'users', label: 'User Verification', short: 'Users', icon: Users },
           { id: 'orders', label: 'Orders', short: 'Orders', icon: ClipboardList },
+          { id: 'depots', label: 'Depot Prices', short: 'Prices', icon: BarChart },
           { id: 'disputes', label: 'Dispute Resolution', short: 'Disputes', icon: AlertTriangle }
         ].map(tab => (
           <button
@@ -177,18 +179,18 @@ export default function AdminDashboard({ user }) {
           {/* USERS TAB */}
           {activeTab === 'users' && (() => {
             const verifiedOf = (u) => Boolean(u.companies?.[0]?.isVerified || u.driverProfile?.isVerified);
-            const needsReview = (u) => (u.role === 'SUPPLIER' || u.role === 'DRIVER') && !verifiedOf(u);
+            const needsReview = (u) => (u.role === 'VENDOR' || u.role === 'DRIVER') && !verifiedOf(u);
             const roleTabs = [
               { id: 'ALL', label: 'All' },
               { id: 'BUYER', label: 'Buyers' },
-              { id: 'SUPPLIER', label: 'Marketers' },
+              { id: 'VENDOR', label: 'Vendors' },
               { id: 'DRIVER', label: 'Drivers' },
             ];
             const inRole = (u) => userRole === 'ALL' || u.role === userRole;
             const visibleUsers = usersList.filter((u) => {
               if (!inRole(u)) return false;
               if (userStatus === 'PENDING') return needsReview(u);
-              if (userStatus === 'VERIFIED') return (u.role === 'SUPPLIER' || u.role === 'DRIVER') && verifiedOf(u);
+              if (userStatus === 'VERIFIED') return (u.role === 'VENDOR' || u.role === 'DRIVER') && verifiedOf(u);
               return true;
             });
             return (
@@ -284,6 +286,7 @@ export default function AdminDashboard({ user }) {
 
           {/* ORDERS TAB */}
           {activeTab === 'orders' && <AdminOrders />}
+          {activeTab === 'depots' && <AdminDepotPrices />}
 
           {/* DISPUTES TAB */}
           {activeTab === 'disputes' && (
@@ -309,7 +312,7 @@ export default function AdminDashboard({ user }) {
                       </div>
                       <div className="text-sm text-cas-muted space-y-1">
                         <div><strong>Buyer:</strong> {order.buyer?.companyName || `User ${order.buyerId}`}</div>
-                        <div><strong>Supplier:</strong> {order.supplier?.companyName || `User ${order.supplierId}`}</div>
+                        <div><strong>Vendor:</strong> {order.supplier?.companyName || `User ${order.supplierId}`}</div>
                         {order.disputeReason && <div><strong>Reason:</strong> {order.disputeReason}</div>}
                         <div className="text-cas-green font-bold">Escrow: ₦{(order.totalEscrowAmount || 0).toLocaleString()}</div>
                       </div>
@@ -325,7 +328,7 @@ export default function AdminDashboard({ user }) {
                         onClick={() => handleResolve(order.id, 'RELEASE_TO_SUPPLIER')}
                         className="px-4 py-2 bg-emerald-50 text-cas-green hover:bg-emerald-100 font-bold text-sm rounded-lg border border-emerald-200 transition-colors"
                       >
-                        Release to Supplier (Delivered)
+                        Release to Vendor (Delivered)
                       </button>
                       <div className="flex gap-2">
                         <input
@@ -334,8 +337,8 @@ export default function AdminDashboard({ user }) {
                           max={order.totalEscrowAmount || 0}
                           value={splitAmounts[order.id] ?? ''}
                           onChange={(e) => setSplitAmounts((s) => ({ ...s, [order.id]: e.target.value }))}
-                          placeholder="Amount to supplier"
-                          aria-label="Amount to release to supplier"
+                          placeholder="Amount to vendor"
+                          aria-label="Amount to release to vendor"
                           className="w-40 px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm"
                         />
                         <button
@@ -376,7 +379,7 @@ export default function AdminDashboard({ user }) {
           ['Signed up', new Date(u.createdAt).toLocaleDateString()]
         ];
         const items = c
-          ? ['CAC number matches the registered company name on the CAC public search', 'NMDPRA depot or marketer licence confirmed with the issuer', 'Phone number called and the business confirmed', 'Address checked and matches the registration']
+          ? ['CAC number matches the registered company name on the CAC public search', 'NMDPRA depot or vendor licence confirmed with the issuer', 'Phone number called and the business confirmed', 'Address checked and matches the registration']
           : ['Driving licence checked against the FRSC record', 'Truck plate matches the registered vehicle', 'Phone number called and identity confirmed'];
         const docs = u.kycDocuments || [];
         const docLabels = { CAC_CERT: 'CAC certificate', NMDPRA_LICENCE: 'NMDPRA licence', DRIVER_LICENCE: 'Driver licence' };

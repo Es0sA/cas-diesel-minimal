@@ -8,7 +8,7 @@ import { usePageTitle } from '../lib/usePageTitle';
 
 const ROLE_COPY = {
   BUYER: { icon: Building2, title: 'Set up your delivery location', intro: 'Tell us who is buying and pin the discharge gate so tankers never get lost.', home: '/' },
-  SUPPLIER: { icon: UserCheck, title: 'Set up your marketer profile', intro: 'Your business details, then the documents we need to verify you.', home: '/marketer' },
+  VENDOR: { icon: UserCheck, title: 'Set up your vendor profile', intro: 'Your business details, then the documents we need to verify you.', home: '/vendor' },
   DRIVER: { icon: Truck, title: 'Set up your driver profile', intro: 'Your details and truck, then your licence and calibration chart.', home: '/driver' }
 };
 
@@ -71,7 +71,7 @@ export default function Onboarding({ user }) {
         navigate(copy.home);
         return;
       }
-      if (role === 'SUPPLIER') {
+      if (role === 'VENDOR') {
         if (!supplier.name.trim() || !supplier.rc.trim()) throw new Error('Company name and CAC RC number are required.');
         await api.companies.updateProfile({
           companyName: supplier.name.trim(),
@@ -140,7 +140,7 @@ export default function Onboarding({ user }) {
               </div>
             </>
           )}
-          {role === 'SUPPLIER' && (
+          {role === 'VENDOR' && (
             <>
               <Field id="ob-sname" label="Company name"><input id="ob-sname" className={inputCls} value={supplier.name} onChange={(e) => setSupplier({ ...supplier, name: e.target.value })} required /></Field>
               <Field id="ob-rc" label="CAC RC number"><input id="ob-rc" className={inputCls} value={supplier.rc} onChange={(e) => setSupplier({ ...supplier, rc: e.target.value })} required /></Field>
@@ -175,7 +175,7 @@ export default function Onboarding({ user }) {
 
       {step === 'documents' && (
         <div>
-          <KycUpload types={role === 'SUPPLIER' ? ['CAC_CERT', 'NMDPRA_LICENCE'] : ['DRIVER_LICENCE', 'TRUCK_CALIBRATION']} />
+          <KycUpload types={role === 'VENDOR' ? ['CAC_CERT', 'NMDPRA_LICENCE'] : ['DRIVER_LICENCE', 'TRUCK_CALIBRATION']} />
           <button type="button" onClick={() => navigate(copy.home)} className="w-full py-3.5 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-xl flex items-center justify-center gap-2">
             <span>Go to my desk</span><ArrowRight className="w-4 h-4 text-cas-amber" aria-hidden="true" />
           </button>

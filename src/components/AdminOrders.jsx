@@ -61,7 +61,7 @@ export default function AdminOrders() {
           <label htmlFor="ord-search" className="block text-xs font-bold text-slate-700 mb-1">Search</label>
           <div className="relative">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" aria-hidden="true" />
-            <input id="ord-search" type="text" value={q} onChange={updateFilter(setQ)} placeholder="Order ID, buyer or marketer" className={`${inputClass} w-full pl-9`} />
+            <input id="ord-search" type="text" value={q} onChange={updateFilter(setQ)} placeholder="Order ID, buyer or vendor" className={`${inputClass} w-full pl-9`} />
           </div>
         </div>
         <div>
@@ -94,7 +94,7 @@ export default function AdminOrders() {
               <th className="p-4 text-xs font-bold text-cas-muted uppercase">Order</th>
               <th className="p-4 text-xs font-bold text-cas-muted uppercase">Date</th>
               <th className="p-4 text-xs font-bold text-cas-muted uppercase">Buyer</th>
-              <th className="p-4 text-xs font-bold text-cas-muted uppercase">Marketer</th>
+              <th className="p-4 text-xs font-bold text-cas-muted uppercase">Vendor</th>
               <th className="p-4 text-xs font-bold text-cas-muted uppercase text-right">Litres</th>
               <th className="p-4 text-xs font-bold text-cas-muted uppercase text-right">Total</th>
               <th className="p-4 text-xs font-bold text-cas-muted uppercase">Status</th>
