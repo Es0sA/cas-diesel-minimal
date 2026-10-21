@@ -61,7 +61,7 @@ const ROLE_CONFIGS = {
     emailPlaceholder: 'example@mail.com',
     accentColor: 'text-cas-amberDark',
     destination: '/vendor',
-    destinationLabel: 'Supplier Pricing Desk & Allocations',
+    destinationLabel: 'Vendor Desk and Requests',
     featureTitle: 'In-Transit Capital Protection',
     signinFeatures: [
       'Buyer escrow verified and locked before your tanker departs the loading gantry.',
@@ -314,7 +314,7 @@ export default function LoginPage({
   };
 
   return (
-    <div className="min-h-screen bg-slate-100/80 py-6 sm:py-10 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+    <div className="lg:min-h-[calc(100vh-4rem)] bg-slate-100/80 py-6 sm:py-10 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
       <div className="w-full max-w-5xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden grid grid-cols-1 lg:grid-cols-12 transition-all">
         
         {/* Left Column: Unified Auth Terminal (Sign In & Register) */}
@@ -715,7 +715,7 @@ export default function LoginPage({
         </div>
 
         {/* Right Column: Dynamic Visual Industrial Showcase */}
-        <div className="relative p-8 sm:p-10 lg:p-12 lg:col-span-5 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white flex flex-col justify-between overflow-hidden">
+        <div className="relative p-8 sm:p-10 lg:p-12 lg:col-span-5 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white flex flex-col justify-center gap-8 overflow-hidden">
           
           {/* Decorative Glow */}
           <div className="absolute top-0 right-0 -mr-20 -mt-20 w-72 h-72 rounded-full bg-cas-amber/10 blur-3xl pointer-events-none"></div>
@@ -737,7 +737,7 @@ export default function LoginPage({
           </div>
 
           {/* Center: Frosted Glass Dynamic Role Card */}
-          <div className="relative z-10 my-8 p-6 rounded-2xl bg-white/10 border border-white/20 shadow-2xl transition-all">
+          <div className="relative z-10 p-6 rounded-2xl bg-white/10 border border-white/20 shadow-2xl transition-all">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-300">
                 {activeConfig.shortLabel} {authMode === 'signin' ? 'Safeguards' : 'Capabilities'}

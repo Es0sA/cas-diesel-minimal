@@ -5,7 +5,7 @@ import AdminDepotPrices from './AdminDepotPrices';
 import { usePageTitle } from '../lib/usePageTitle';
 import { 
   BarChart, Users, AlertTriangle, ShieldCheck, ClipboardList, 
-  CheckCircle, XCircle, ArrowRight, X 
+  CheckCircle, XCircle, ArrowRight, X, Fuel 
 } from 'lucide-react';
 
 export default function AdminDashboard({ user }) {
@@ -133,7 +133,7 @@ export default function AdminDashboard({ user }) {
           { id: 'overview', label: 'System Overview', short: 'Overview', icon: BarChart },
           { id: 'users', label: 'User Verification', short: 'Users', icon: Users },
           { id: 'orders', label: 'Orders', short: 'Orders', icon: ClipboardList },
-          { id: 'depots', label: 'Depot Prices', short: 'Prices', icon: BarChart },
+          { id: 'depots', label: 'Depot Prices', short: 'Prices', icon: Fuel },
           { id: 'disputes', label: 'Dispute Resolution', short: 'Disputes', icon: AlertTriangle }
         ].map(tab => (
           <button

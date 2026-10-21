@@ -141,7 +141,7 @@ function BuyerRfqs() {
             <Field label="Gate longitude"><input type="number" step="any" value={f.targetLongitude} onChange={set('targetLongitude')} className={inputCls} /></Field>
           </div>
           <Field label="Sample photos" hint="Up to 3 JPG or PNG photos of the product you want. The vendor compares these with the sample at the depot.">
-            <input type="file" accept="image/jpeg,image/png" multiple onChange={(e) => setPhotos(Array.from(e.target.files || []).slice(0, 3))} className={inputCls} />
+            <input type="file" accept="image/jpeg,image/png" multiple onChange={(e) => setPhotos(Array.from(e.target.files || []).slice(0, 3))} className={`${inputCls} file:mr-3 file:px-4 file:py-1.5 file:rounded-md file:border-0 file:bg-cas-slate file:text-white file:text-xs file:font-bold file:cursor-pointer hover:file:bg-black`} />
             {photos.length > 0 && <p className="text-xs text-cas-muted mt-1">{photos.length} photo{photos.length === 1 ? '' : 's'} selected</p>}
           </Field>
           <details className="rounded-xl border border-slate-200 p-4">
