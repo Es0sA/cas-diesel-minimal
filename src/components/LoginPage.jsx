@@ -39,7 +39,7 @@ const ROLE_CONFIGS = {
     accentBg: 'bg-sky-50 text-cas-blue border-sky-200',
     destination: '/',
     destinationLabel: 'Marketplace & Discharge Gate Radar',
-    featureTitle: '100% Escrow Custody Protection',
+    featureTitle: 'Escrow Custody Protection',
     signinFeatures: [
       'Funds remain locked in virtual escrow until tanker enters 100-meter gate radius.',
       'Compare verified marketer prices by depot and order in a few clicks.'
@@ -65,7 +65,7 @@ const ROLE_CONFIGS = {
     accentBg: 'bg-amber-50 text-cas-amberDark border-amber-200',
     destination: '/marketer',
     destinationLabel: 'Supplier Pricing Desk & Allocations',
-    featureTitle: 'In-Transit Capital Guarantee',
+    featureTitle: 'In-Transit Capital Protection',
     signinFeatures: [
       'Buyer escrow verified and locked before your tanker departs the loading gantry.',
       'Non-cancellable once in transit, eliminating counterparty settlement default.',

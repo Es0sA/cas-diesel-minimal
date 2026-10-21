@@ -54,7 +54,7 @@ const REFERRAL_SOURCES = [
   'Other'
 ];
 
-export default function Waitlist() {
+export default function Waitlist({ onOpenLegalModal }) {
   const [role, setRole] = useState('BUYER'); // BUYER or MARKETER
   const [fullName, setFullName] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
@@ -544,6 +544,14 @@ export default function Waitlist() {
                             I agree to receive CAS Diesel access updates, depot price notifications, and onboarding alerts.
                           </span>
                         </label>
+                        <p className="text-[11px] text-cas-muted mt-1.5 ml-6">
+                          By joining, you agree to our{' '}
+                          {onOpenLegalModal ? (
+                            <button type="button" onClick={() => onOpenLegalModal('privacy')} className="underline underline-offset-2 hover:text-cas-slate">
+                              Privacy Policy
+                            </button>
+                          ) : 'Privacy Policy'}.
+                        </p>
                       </div>
 
                       {/* Submit Button */}
@@ -592,7 +600,7 @@ export default function Waitlist() {
               </div>
               <h4 className="font-bold text-cas-slate text-base">Compare & Fund Escrow</h4>
               <p className="text-xs text-cas-muted mt-2 leading-relaxed">
-                Review verified depot prices from licensed marketers. Lock payment in secure escrow so suppliers see funds are guaranteed before trucks load.
+                Review verified depot prices from licensed marketers. Lock payment in secure escrow so suppliers see funds are secured before trucks load.
               </p>
             </div>
 
@@ -636,7 +644,7 @@ export default function Waitlist() {
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" />
-                  <span>100% escrow protection: funds stay locked until delivery is verified</span>
+                  <span>Escrow protection: funds stay locked until delivery is verified</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" />
@@ -654,7 +662,7 @@ export default function Waitlist() {
               <ul className="space-y-2.5 text-xs text-cas-muted">
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" />
-                  <span>Guaranteed payment in escrow before truck leaves the depot</span>
+                  <span>Payment secured in escrow before truck leaves the depot</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" />

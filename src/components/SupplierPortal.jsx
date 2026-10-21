@@ -220,7 +220,7 @@ export default function SupplierPortal() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 mb-6 gap-4">
                 <div>
                   <h3 className="font-extrabold text-lg text-cas-slate">Confirmed Inbound Escrow Orders</h3>
-                  <span className="text-xs text-cas-muted">Funds guaranteed in CAS Escrow prior to dispatch</span>
+                  <span className="text-xs text-cas-muted">Funds secured in CAS Escrow prior to dispatch</span>
                 </div>
                 <span className="text-xs font-bold px-3 py-1 bg-cas-amberLight text-cas-amberDark rounded-full border border-cas-amber/50">
                   {orders.length} Orders

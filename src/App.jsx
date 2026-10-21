@@ -257,8 +257,8 @@ export default function App() {
       {/* Main Body */}
       <main className="flex-1 pb-20 md:pb-0">
         <Routes>
-          <Route path="/" element={WAITLIST.enabled && !user ? <Waitlist /> : <HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
-          <Route path="/waitlist" element={<Waitlist />} />
+          <Route path="/" element={WAITLIST.enabled && !user ? <Waitlist onOpenLegalModal={(modal) => setActiveLegalModal(modal)} /> : <HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
+          <Route path="/waitlist" element={<Waitlist onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />} />
           <Route path="/portal" element={<GateWhileWaitlisted user={user}><HomePage user={user} handleOpenRegistration={handleOpenRegistration} /></GateWhileWaitlisted>} />
           <Route path="/register" element={<LoginPage initialRole={registerInitialRole} initialMode="register" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
