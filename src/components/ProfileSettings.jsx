@@ -3,8 +3,9 @@ import { Settings, Save, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import { usePageTitle } from '../lib/usePageTitle';
+import DeleteAccount from './DeleteAccount';
 
-export default function ProfileSettings({ user }) {
+export default function ProfileSettings({ user, onDeleted }) {
   usePageTitle('Profile Settings', 'Manage your CAS Energy account and company profile.');
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -239,6 +240,7 @@ export default function ProfileSettings({ user }) {
             </div>
           </form>
         </div>
+        <DeleteAccount onDeleted={onDeleted} />
       </div>
     </div>
   );

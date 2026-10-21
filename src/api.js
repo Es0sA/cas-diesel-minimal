@@ -32,6 +32,9 @@ export const api = {
     verifyEmail: (data) => request('/auth/verify-email', { method: 'POST', body: JSON.stringify(data) }),
     resendCode: (data) => request('/auth/resend-code', { method: 'POST', body: JSON.stringify(data) }),
     me: () => request('/auth/me'),
+    deleteCheck: () => request('/auth/me/delete-check'),
+    sendDeleteCode: () => request('/auth/me/delete-code', { method: 'POST' }),
+    deleteAccount: (code) => request('/auth/me', { method: 'DELETE', body: JSON.stringify({ code }) }),
   },
   companies: {
     getProfile: () => request('/companies/profile'),
