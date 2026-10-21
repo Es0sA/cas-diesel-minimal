@@ -129,7 +129,7 @@ export default function AdminDashboard({ user }) {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 sm:gap-4 border-b border-slate-200 mb-8">
+      <div role="tablist" aria-label="Admin sections" className="flex gap-2 overflow-x-auto snap-x pb-3 mb-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {[
           { id: 'overview', label: 'System Overview', short: 'Overview', icon: BarChart },
           { id: 'users', label: 'User Verification', short: 'Users', icon: Users },
@@ -140,14 +140,16 @@ export default function AdminDashboard({ user }) {
         ].map(tab => (
           <button
             key={tab.id}
+            role="tab"
+            aria-selected={activeTab === tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-3 sm:px-4 py-3 font-bold text-sm border-b-2 transition-colors ${
-              activeTab === tab.id 
-                ? 'border-cas-amber text-cas-slate' 
-                : 'border-transparent text-cas-muted hover:text-cas-slate hover:border-slate-300'
+            className={`snap-start shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl border font-bold text-sm whitespace-nowrap transition-colors ${
+              activeTab === tab.id
+                ? 'bg-cas-slate border-cas-slate text-white shadow-sm'
+                : 'bg-white border-slate-200 text-cas-muted hover:text-cas-slate hover:border-slate-400'
             }`}
           >
-            <tab.icon className="w-4 h-4" aria-hidden="true" />
+            <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-cas-amber' : ''}`} aria-hidden="true" />
             <span className="sm:hidden">{tab.short}</span>
             <span className="hidden sm:inline">{tab.label}</span>
           </button>
