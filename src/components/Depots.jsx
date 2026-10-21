@@ -47,6 +47,15 @@ export default function Depots({ user }) {
           ))}
         </div>
 
+        {!loading && !error && prices.length === 0 && (
+          <div className="mt-6 flex items-start gap-3 rounded-2xl border border-cas-amber/40 bg-cas-amberLight p-4 sm:p-5">
+            <Clock className="w-5 h-5 text-cas-amberDark shrink-0 mt-0.5" aria-hidden="true" />
+            <div>
+              <p className="font-extrabold text-cas-slate">Prices are being confirmed with each depot</p>
+              <p className="text-sm text-cas-muted mt-0.5">We post a price only after the depot's sales team confirms it. Check back soon, or create an account to be notified when requests open.</p>
+            </div>
+          </div>
+        )}
         {error && <p role="alert" className="mt-6 text-sm font-bold text-red-600">{error}</p>}
         {loading ? (
           <p className="mt-8 text-sm text-cas-muted font-bold">Loading prices...</p>
@@ -65,7 +74,7 @@ export default function Depots({ user }) {
                       <div className="mt-0.5 flex sm:justify-end items-center gap-1 text-xs text-cas-muted"><Clock className="w-3 h-3" aria-hidden="true" />Updated {ago(d.price.updatedAt)}</div>
                     </>
                   ) : (
-                    <div className="text-sm font-bold text-cas-muted">No price listed yet</div>
+                    <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Awaiting price</div>
                   )}
                 </div>
               </li>
