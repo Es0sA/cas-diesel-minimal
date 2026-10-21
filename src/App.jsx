@@ -14,6 +14,7 @@ import Depots from './components/Depots';
 import DriverCockpit from './components/DriverCockpit';
 import OrderDetail from './components/OrderDetail';
 import ProfileSettings from './components/ProfileSettings';
+import AccountDeleted from './components/AccountDeleted';
 import AdminDashboard from './components/AdminDashboard';
 import OrderCheckoutModal from './components/OrderCheckoutModal';
 import LegalModals from './components/LegalModals';
@@ -283,7 +284,8 @@ export default function App() {
           <Route path="/rfqs" element={<Rfqs user={user} />} />
           <Route path="/rfqs/:id" element={<Rfqs user={user} />} />
           <Route path="/orders/:id" element={<OrderDetail user={user} />} />
-          <Route path="/profile" element={<ProfileSettings user={user} />} />
+          <Route path="/profile" element={<ProfileSettings user={user} onDeleted={() => { setUser(null); navigate('/account-deleted'); }} />} />
+          <Route path="/account-deleted" element={<AccountDeleted />} />
           <Route path="/admin" element={<AdminDashboard user={user} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
