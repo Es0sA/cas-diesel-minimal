@@ -528,7 +528,18 @@ export default function Rfqs({ user }) {
   const { id } = useParams();
   const role = (user?.role || '').toUpperCase();
   if (!role) {
-    return <Shell title="Requests for quotes"><p className="text-cas-muted"><Link to="/login" className="text-cas-blue underline font-semibold">Sign in</Link> as a buyer or a vendor to continue.</p></Shell>;
+    return (
+      <Shell title="Requests for quotes" subtitle="Buyers post what they need once. Verified vendors answer with a price and a batch certificate.">
+        <div className="bg-white border border-cas-border rounded-2xl p-6 sm:p-8 shadow-sm max-w-xl">
+          <h2 className="text-lg font-extrabold text-cas-slate">Sign in to continue</h2>
+          <p className="text-sm text-cas-muted mt-1">Requests are shared with verified vendors, so you need an account as a buyer or a vendor.</p>
+          <div className="mt-5 flex flex-col sm:flex-row gap-3">
+            <Link to="/login" className="px-6 py-2.5 rounded-xl bg-cas-slate text-white text-sm font-bold text-center hover:bg-black">Sign in</Link>
+            <Link to="/register" className="px-6 py-2.5 rounded-xl border border-slate-300 text-cas-slate text-sm font-bold text-center hover:border-slate-500">Create an account</Link>
+          </div>
+        </div>
+      </Shell>
+    );
   }
   if (role === 'BUYER') return id ? <BuyerRfqDetail id={id} /> : <BuyerRfqs />;
   if (role === 'VENDOR') return id ? <SupplierRfqDetail id={id} /> : <SupplierRfqs />;
