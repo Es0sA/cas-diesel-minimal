@@ -77,7 +77,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
   );
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
+    <header className="sticky top-0 z-40 bg-white border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between gap-6">
         <Link to="/" className="flex items-center gap-2.5 group shrink-0">
           <span className="w-9 h-9 bg-cas-slate rounded-lg flex items-center justify-center">

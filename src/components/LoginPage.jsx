@@ -723,7 +723,7 @@ export default function LoginPage({
 
           {/* Top Industrial Header */}
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/15 text-slate-300 text-xs font-semibold mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-slate-300 text-xs font-semibold mb-6">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
               <span>Downstream Bulk Fuel Network</span>
             </div>
@@ -737,7 +737,7 @@ export default function LoginPage({
           </div>
 
           {/* Center: Frosted Glass Dynamic Role Card */}
-          <div className="relative z-10 my-8 p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl transition-all">
+          <div className="relative z-10 my-8 p-6 rounded-2xl bg-white/10 border border-white/20 shadow-2xl transition-all">
             <div className="flex items-center justify-between mb-4">
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-300">
                 {activeConfig.shortLabel} {authMode === 'signin' ? 'Safeguards' : 'Capabilities'}
