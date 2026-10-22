@@ -170,9 +170,51 @@ function HomePage({ user, handleOpenRegistration }) {
         </>
       )}
 
-      <Marketplace 
-        onSelectSupplierForEscrow={(supplier) => setCheckoutSupplier(supplier)}
-      />
+      {/* Competitor isolation: Logged-in vendors are not permitted to browse competing vendor profiles */}
+      {user?.role === 'VENDOR' ? (
+        <section className="bg-white py-14 sm:py-20 border-b border-cas-border">
+          <div className="max-w-4xl mx-auto px-4 sm:px-8 text-center">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-cas-greenLight text-cas-green text-xs font-bold uppercase tracking-wider mb-4">
+              <UserCheck className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Vendor Operations Desk</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-cas-slate tracking-tight mb-3">
+              Your Vendor Workspace
+            </h2>
+            <p className="text-sm text-cas-muted max-w-xl mx-auto mb-8">
+              Review open buyer requests to place private quotes, check official refinery depot prices, or manage your stock and spot pricing from your Vendor Desk.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={() => navigate('/rfqs')}
+                className="w-full sm:w-auto px-6 py-3.5 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-colors"
+              >
+                <span>View Open Requests</span>
+                <ArrowRight className="w-4 h-4 text-cas-amber" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/vendor')}
+                className="w-full sm:w-auto px-6 py-3.5 bg-white border-2 border-slate-200 hover:border-slate-300 text-cas-slate text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-colors"
+              >
+                <span>Go to Vendor Desk</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/depots')}
+                className="w-full sm:w-auto px-6 py-3.5 bg-white border-2 border-slate-200 hover:border-slate-300 text-cas-slate text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition-colors"
+              >
+                <span>Depot Prices</span>
+              </button>
+            </div>
+          </div>
+        </section>
+      ) : (
+        <Marketplace 
+          onSelectSupplierForEscrow={(supplier) => setCheckoutSupplier(supplier)}
+        />
+      )}
 
       {checkoutSupplier && (
         <OrderCheckoutModal

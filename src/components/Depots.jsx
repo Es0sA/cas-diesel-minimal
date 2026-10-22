@@ -84,7 +84,7 @@ export default function Depots({ user }) {
 
         <div className="mt-8">
           <Link to={user ? '/rfqs' : '/register'} className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-cas-amber text-cas-slate font-extrabold text-sm hover:brightness-95 transition">
-            {user ? 'Post a request' : 'Create an account to request'} <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            {user ? (user.role === 'VENDOR' ? 'View open requests' : 'Post a request') : 'Create an account to request'} <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </Link>
         </div>
       </div>

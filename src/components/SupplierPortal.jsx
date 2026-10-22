@@ -99,7 +99,7 @@ export default function SupplierPortal() {
   const escrowInSettlement = orders
     .filter((o) => ACTIVE_STATUSES.includes(o.status))
     .reduce((sum, o) => sum + (o.totalEscrowAmount || 0), 0);
-  const depotName = DEPOTS.find((d) => d.id === profile?.depotId)?.name || profile?.depotId || 'Depot not set';
+  const depotName = DEPOTS.find((d) => d.id === profile?.depotId)?.name || (profile?.depotId === 'other' && profile?.businessAddress ? profile.businessAddress : profile?.depotId) || 'Depot not set';
 
   return (
     <section id="supplier-desk" className="bg-cas-canvas py-12 md:py-20 border-b border-cas-border">

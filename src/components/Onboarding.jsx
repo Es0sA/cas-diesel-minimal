@@ -31,7 +31,17 @@ export default function Onboarding({ user }) {
   const [geolocating, setGeolocating] = useState(false);
 
   const [buyer, setBuyer] = useState({ company: '', officer: '', phone: '', lat: '6.595200', lng: '3.342100', clearance: '33000' });
-  const [supplier, setSupplier] = useState({ name: '', rc: '', depot: DEPOTS[0]?.name || '', phone: '' });
+  const [supplier, setSupplier] = useState({
+    name: '',
+    rc: '',
+    depot: DEPOTS[0]?.name || '',
+    phone: '',
+    customDepotName: '',
+    customDepotState: 'Lagos',
+    customDepotArea: '',
+    customDepotAddress: '',
+    customDepotPhone: ''
+  });
   const [driver, setDriver] = useState({ name: '', phone: '', licence: '', plate: '', capacity: '33000' });
 
   useEffect(() => {
@@ -73,11 +83,27 @@ export default function Onboarding({ user }) {
       }
       if (role === 'VENDOR') {
         if (!supplier.name.trim() || !supplier.rc.trim()) throw new Error('Company name and CAC RC number are required.');
+        let formattedAddress = supplier.depot;
+        let depotIdVal = 'other';
+        if (supplier.depot === 'OTHER') {
+          if (!supplier.customDepotName.trim()) throw new Error('Please enter the custom depot / tank farm name.');
+          if (!supplier.customDepotAddress.trim()) throw new Error('Please provide the depot terminal address or landmark.');
+          const areaPart = supplier.customDepotArea.trim() ? `${supplier.customDepotArea.trim()}, ` : '';
+          formattedAddress = `${supplier.customDepotName.trim()} (${areaPart}${supplier.customDepotState}) - ${supplier.customDepotAddress.trim()}`;
+          if (supplier.customDepotPhone.trim()) {
+            formattedAddress += ` | Desk: ${supplier.customDepotPhone.trim()}`;
+          }
+        } else {
+          const matched = DEPOTS.find((d) => d.name === supplier.depot);
+          if (matched) depotIdVal = matched.id;
+        }
+
         await api.companies.updateProfile({
           companyName: supplier.name.trim(),
           registrationNumber: supplier.rc.trim(),
-          businessAddress: supplier.depot,
-          contactPhone: supplier.phone.trim()
+          businessAddress: formattedAddress,
+          contactPhone: supplier.phone.trim(),
+          depotId: depotIdVal
         });
       } else {
         if (!driver.name.trim() || !driver.phone.trim() || !driver.licence.trim()) throw new Error('Name, WhatsApp number and licence number are required.');
@@ -146,9 +172,87 @@ export default function Onboarding({ user }) {
               <Field id="ob-rc" label="CAC RC number"><input id="ob-rc" className={inputCls} value={supplier.rc} onChange={(e) => setSupplier({ ...supplier, rc: e.target.value })} required /></Field>
               <Field id="ob-depot" label="Primary depot">
                 <select id="ob-depot" className={inputCls} value={supplier.depot} onChange={(e) => setSupplier({ ...supplier, depot: e.target.value })}>
-                  {DEPOTS.map((d) => <option key={d.name} value={d.name}>{d.name}</option>)}
+                  {DEPOTS.map((d) => <option key={d.name} value={d.name}>{d.name} ({d.hub})</option>)}
+                  <option value="OTHER">Other depot (please specify)</option>
                 </select>
               </Field>
+
+              {supplier.depot === 'OTHER' && (
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3.5">
+                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cas-slate">
+                    <MapPin className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
+                    <span>Custom Depot / Loading Terminal Details</span>
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    Provide the loading terminal details so buyers and admins have accurate facility information.
+                  </p>
+
+                  <Field id="ob-cdepot-name" label="Depot / Tank farm name">
+                    <input
+                      id="ob-cdepot-name"
+                      className={inputCls}
+                      placeholder="e.g. Pinnacle Oil & Gas, Matrix Energy, Prudent, NIPCO"
+                      value={supplier.customDepotName}
+                      onChange={(e) => setSupplier({ ...supplier, customDepotName: e.target.value })}
+                      required
+                    />
+                  </Field>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Field id="ob-cdepot-state" label="State / Hub">
+                      <select
+                        id="ob-cdepot-state"
+                        className={inputCls}
+                        value={supplier.customDepotState}
+                        onChange={(e) => setSupplier({ ...supplier, customDepotState: e.target.value })}
+                      >
+                        <option value="Lagos">Lagos</option>
+                        <option value="Delta (Warri / Koko / Oghara)">Delta (Warri / Koko / Oghara)</option>
+                        <option value="Rivers (Port Harcourt / Onne)">Rivers (Port Harcourt / Onne)</option>
+                        <option value="Cross River (Calabar)">Cross River (Calabar)</option>
+                        <option value="Edo">Edo</option>
+                        <option value="Akwa Ibom">Akwa Ibom</option>
+                        <option value="Kaduna">Kaduna</option>
+                        <option value="Kano">Kano</option>
+                        <option value="Other State">Other State</option>
+                      </select>
+                    </Field>
+
+                    <Field id="ob-cdepot-area" label="City / Port area / Zone">
+                      <input
+                        id="ob-cdepot-area"
+                        className={inputCls}
+                        placeholder="e.g. Koko Free Zone, Dockyard Apapa, Onne"
+                        value={supplier.customDepotArea}
+                        onChange={(e) => setSupplier({ ...supplier, customDepotArea: e.target.value })}
+                      />
+                    </Field>
+                  </div>
+
+                  <Field id="ob-cdepot-addr" label="Terminal address / Landmark / Gate">
+                    <input
+                      id="ob-cdepot-addr"
+                      className={inputCls}
+                      placeholder="e.g. Berth 2, Marine Jetty Gate, Commercial Wharf"
+                      value={supplier.customDepotAddress}
+                      onChange={(e) => setSupplier({ ...supplier, customDepotAddress: e.target.value })}
+                      required
+                    />
+                  </Field>
+
+                  <Field id="ob-cdepot-phone" label="Depot sales desk / Loading rep phone (Optional)">
+                    <input
+                      id="ob-cdepot-phone"
+                      type="tel"
+                      className={inputCls}
+                      placeholder="e.g. 08012345678"
+                      value={supplier.customDepotPhone}
+                      onChange={(e) => setSupplier({ ...supplier, customDepotPhone: e.target.value })}
+                    />
+                  </Field>
+                </div>
+              )}
+
               <Field id="ob-sphone" label="Contact phone"><input id="ob-sphone" type="tel" className={inputCls} value={supplier.phone} onChange={(e) => setSupplier({ ...supplier, phone: e.target.value })} /></Field>
             </>
           )}
