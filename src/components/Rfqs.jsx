@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, FileText, CheckCircle2, AlertTriangle, Clock, Plus } from 'lucide-react';
+import { ArrowLeft, FileText, CheckCircle2, AlertTriangle, Clock, Plus, Info } from 'lucide-react';
 import { api } from '../api';
 import { DEPOTS, depotName } from '../data/depots';
 
@@ -408,6 +408,7 @@ function SupplierRfqs() {
   const [rate, setRate] = useState({ depotId: DEPOTS[0].id, pricePerLitre: '', minVolume: '', maxVolume: '', certificateUrl: '', certificateDate: new Date().toISOString().slice(0, 10), autoSubmit: false });
   const [specs, setSpecs] = useState({});
   const [saving, setSaving] = useState(false);
+  const [showAutoInfo, setShowAutoInfo] = useState(false);
 
   const load = useCallback(() => {
     api.rfqs.list().then((r) => setRfqs(r.rfqs)).catch((e) => setError(e.message));
@@ -511,10 +512,50 @@ function SupplierRfqs() {
             ))}
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
-            <Field label="Certificate link (HTTPS)" hint="Quotes are only prepared while the certificate is fresh enough"><input type="url" placeholder="https://" value={rate.certificateUrl} onChange={setR('certificateUrl')} className={inputCls} /></Field>
-            <Field label="Certificate date"><input type="date" value={rate.certificateDate} onChange={setR('certificateDate')} className={inputCls} /></Field>
+            <Field label="Quality Certificate link (HTTPS)" hint="Link to laboratory batch certificate (COA) PDF or photo"><input type="url" placeholder="https://" value={rate.certificateUrl} onChange={setR('certificateUrl')} className={inputCls} /></Field>
+            <Field label="Certificate test date" hint="Date tested at the depot laboratory"><input type="date" value={rate.certificateDate} onChange={setR('certificateDate')} className={inputCls} /></Field>
           </div>
-          <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={rate.autoSubmit} onChange={setR('autoSubmit')} /> Send matching quotes automatically</label>
+          <div className="pt-2 border-t border-slate-100">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <label className="flex items-center gap-2.5 text-sm font-semibold text-cas-slate cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={rate.autoSubmit}
+                  onChange={setR('autoSubmit')}
+                  className="w-4 h-4 rounded text-cas-amber focus:ring-cas-amber border-slate-300"
+                />
+                <span>Send matching quotes automatically</span>
+              </label>
+
+              <button
+                type="button"
+                onClick={() => setShowAutoInfo((s) => !s)}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-cas-amberDark hover:text-black py-1 px-2 rounded-lg hover:bg-slate-100 transition-colors"
+                aria-expanded={showAutoInfo}
+                aria-label="Explain how automatic quoting works"
+              >
+                <Info className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>What does this do?</span>
+              </button>
+            </div>
+
+            {showAutoInfo && (
+              <div className="mt-3 p-3.5 bg-amber-50/70 border border-amber-200 rounded-xl text-xs text-slate-700 space-y-2 animate-fadeIn">
+                <div className="font-bold text-cas-slate flex items-center gap-1.5">
+                  <Info className="w-4 h-4 text-cas-amberDark shrink-0" aria-hidden="true" />
+                  <span>How automatic quoting works</span>
+                </div>
+                <div className="space-y-1.5 pl-5">
+                  <p>
+                    <strong className="text-slate-900">When unchecked (Recommended):</strong> When a buyer posts an RFQ matching this depot and volume range, CAS automatically prepares a private draft quote for you. You receive an alert, review current depot market prices and the buyer's delivery gate, then tap "Confirm and Send" before the buyer can see your bid.
+                  </p>
+                  <p>
+                    <strong className="text-slate-900">When checked (Instant Bid):</strong> The platform submits your quote immediately to matching buyers as a live bid without waiting for your manual approval. Only select this if your diesel supply costs are locked in and you want to be first to quote.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
           <button disabled={saving} className="px-5 py-2.5 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-lg disabled:opacity-50">{saving ? 'Saving' : 'Save standing rate'}</button>
         </form>
       </section>
