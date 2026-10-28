@@ -7,7 +7,7 @@ import KycUpload from './KycUpload';
 import { usePageTitle } from '../lib/usePageTitle';
 
 const ROLE_COPY = {
-  BUYER: { icon: Building2, title: 'Set up your delivery location', intro: 'Tell us who is buying and pin the discharge gate so tankers never get lost.', home: '/' },
+  BUYER: { icon: Building2, title: 'Set up your delivery location', intro: 'Tell us who is buying and pin the discharge gate so tankers never get lost.', home: '/dashboard' },
   VENDOR: { icon: UserCheck, title: 'Set up your vendor profile', intro: 'Your business details, then the documents we need to verify you.', home: '/vendor' },
   DRIVER: { icon: Truck, title: 'Set up your driver profile', intro: 'Your details and truck, then your licence and calibration chart.', home: '/driver' }
 };
@@ -73,7 +73,7 @@ export default function Onboarding({ user }) {
         if (!buyer.company.trim()) throw new Error('Company name is required.');
         await api.companies.updateProfile({
           companyName: buyer.company.trim(),
-          businessAddress: `Gate: (${buyer.lat}, ${buyer.lng}) | Clearance: ${buyer.clearance}L`,
+          businessAddress: `GPS: ${buyer.lat}, ${buyer.lng} (Clearance: ${Number(buyer.clearance).toLocaleString('en-US')}L)`,
           gateLatitude: parseFloat(buyer.lat),
           gateLongitude: parseFloat(buyer.lng),
           contactPhone: buyer.phone.trim()

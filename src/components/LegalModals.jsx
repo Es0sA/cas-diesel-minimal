@@ -1,10 +1,10 @@
 import React from 'react';
 import { X, ShieldCheck, Scale } from 'lucide-react';
 import { CONTACT, LEGAL } from '../config';
+import { PRIVACY_SECTIONS } from '../lib/legalText';
 
 const operator = [LEGAL.entityName, LEGAL.rcNumber && `RC ${LEGAL.rcNumber}`, LEGAL.registeredAddress].filter(Boolean).join(', ');
 const contactLine = [CONTACT.email, CONTACT.phone].filter(Boolean).join(' or ');
-const privacyContact = LEGAL.privacyEmail || CONTACT.email;
 
 const UNIFIED_TERMS = [
   [
@@ -35,14 +35,7 @@ const UNIFIED_TERMS = [
     '7. Demurrage and Detention Terms',
     'CAS Diesel does not assess, collect, or enforce haulage demurrage or site detention charges. Any allowable waiting-time provisions or detention thresholds must be agreed in writing between the buyer and the vendor before truck dispatch.'
   ],
-  [
-    '8. Data Protection and NDPA 2023 Compliance',
-    'In compliance with the Nigeria Data Protection Act 2023 (NDPA), CAS Diesel collects and processes corporate account data, NMDPRA licensing documentation, driver credentials, and transaction logs strictly for counterparty verification, order fulfillment, and legal compliance. Delivery gate GPS coordinates are restricted to active counterparties and purged upon delivery completion. We do not sell data or engage in behavioral advertising. Inquiries may be directed to ' + (privacyContact ? privacyContact : 'support@casdiesel.com') + '.'
-  ],
-  [
-    '9. Session Security and Cookie Policy',
-    'The platform employs a single encrypted, HttpOnly security session cookie strictly necessary to maintain authenticated login state. We do not use third-party marketing trackers or tracking cookies across external websites.'
-  ],
+  ...PRIVACY_SECTIONS.map(([title, text], i) => [`${8 + i}. ${title}`, text]),
   [
     '10. Limitation of Liability and Governing Law',
     'The platform is provided on an institutional as-available basis. To the maximum extent permitted under applicable law, CAS Diesel liability is limited strictly to transaction fees received for the specific transaction in question. These Terms and Conditions are governed exclusively by the laws of the Federal Republic of Nigeria, with jurisdiction vested in Nigerian courts of competent authority.'

@@ -5,7 +5,8 @@ import { scrollBehavior } from '../lib/motion';
 
 const ROLE_LINKS = {
   BUYER: [
-    { label: 'Home', to: '/' },
+    { label: 'Dashboard', to: '/dashboard' },
+    { label: 'My orders', to: '/orders' },
     { label: 'Depots', to: '/depots' },
     { label: 'Request quotes', to: '/rfqs' },
     { label: 'Vendors', hash: 'marketplace' },
@@ -29,6 +30,7 @@ const ROLE_LINKS = {
 
 const PUBLIC_LINKS = [
   { label: 'Home', to: '/' },
+  { label: 'About Us', hash: 'about-us' },
   { label: 'Contact Us', hash: 'contact' },
   { label: 'Depots', to: '/depots' },
 ];

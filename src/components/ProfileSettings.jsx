@@ -78,7 +78,7 @@ export default function ProfileSettings({ user, onDeleted }) {
   const handleBack = () => {
     if (role === 'VENDOR') navigate('/vendor');
     else if (role === 'DRIVER') navigate('/driver');
-    else navigate('/');
+    else navigate('/dashboard');
   };
 
   if (loading) {

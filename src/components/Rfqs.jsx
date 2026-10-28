@@ -101,8 +101,15 @@ function BuyerRfqs() {
   const [open, setOpen] = useState(Boolean(initialDepotId));
   const [busy, setBusy] = useState(false);
   const [photos, setPhotos] = useState([]);
-  const [f, setF] = useState({ volumeLiters: 33000, depotId: initialDepotId, deliveryAddress: '', targetLatitude: '', targetLongitude: '', validHours: 24, flashPointMin: '', densityMin: '', densityMax: '', sulphurMax: '', waterMax: '' });
+  const [f, setF] = useState({ volumeLiters: 33000, depotId: initialDepotId, deliveryAddress: '', targetLatitude: '', targetLongitude: '', receiverName: '', receiverPhone: '', validHours: 24, flashPointMin: '', densityMin: '', densityMax: '', sulphurMax: '', waterMax: '' });
   const set = (k) => (e) => setF((x) => ({ ...x, [k]: e.target.value }));
+  const [profile, setProfile] = useState(null);
+  const [sameContact, setSameContact] = useState(true);
+
+  // The registered company details pre-fill the receiving contact
+  useEffect(() => {
+    api.companies.getProfile().then(setProfile).catch(() => setSameContact(false));
+  }, []);
 
   useEffect(() => {
     const depotId = searchParams.get('depotId');
@@ -124,8 +131,18 @@ function BuyerRfqs() {
       for (const k of ['flashPointMin', 'densityMin', 'densityMax', 'sulphurMax', 'waterMax']) if (f[k] !== '') requirements[k] = f[k];
       const body = { volumeLiters: Number(f.volumeLiters), validHours: Number(f.validHours), requirements };
       if (f.depotId) body.depotId = f.depotId;
-      if (f.deliveryAddress.trim()) body.deliveryAddress = f.deliveryAddress.trim();
-      if (f.targetLatitude !== '' && f.targetLongitude !== '') { body.targetLatitude = Number(f.targetLatitude); body.targetLongitude = Number(f.targetLongitude); }
+      // Who receives the diesel and where. Defaults to the registered company contact.
+      body.receiverSameAsRegistered = sameContact;
+      if (sameContact) {
+        body.receiverName = profile?.companyName || '';
+        body.receiverPhone = profile?.contactPhone || '';
+        if (profile?.businessAddress) body.deliveryAddress = profile.businessAddress.trim().slice(0, 300);
+      } else {
+        body.receiverName = f.receiverName.trim();
+        body.receiverPhone = f.receiverPhone.trim();
+        body.deliveryAddress = f.deliveryAddress.trim();
+        if (f.targetLatitude !== '' && f.targetLongitude !== '') { body.targetLatitude = Number(f.targetLatitude); body.targetLongitude = Number(f.targetLongitude); }
+      }
       const res = await api.rfqs.create(body);
       for (const file of photos) {
         try { await api.rfqs.uploadSample(res.rfq.id, file); } catch (err) { console.error('Sample photo upload failed:', err); }
@@ -154,11 +171,35 @@ function BuyerRfqs() {
             <Field label="Loading depot" hint="Optional. Leave blank to accept any."><select value={f.depotId} onChange={set('depotId')} className={inputCls}><option value="">Any depot</option>{DEPOTS.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}</select></Field>
             <Field label="Quotes stay open for"><select value={f.validHours} onChange={set('validHours')} className={inputCls}>{[[6, '6 hours'], [24, '24 hours'], [48, '2 days'], [72, '3 days'], [168, '7 days']].map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select></Field>
           </div>
-          <Field label="Delivery address"><input type="text" maxLength={300} value={f.deliveryAddress} onChange={set('deliveryAddress')} className={inputCls} placeholder="Plant, street, town" /></Field>
-          <div className="grid sm:grid-cols-2 gap-4">
-            <Field label="Gate latitude" hint="Used to detect arrival. Hidden from vendors until you award."><input type="number" step="any" value={f.targetLatitude} onChange={set('targetLatitude')} className={inputCls} /></Field>
-            <Field label="Gate longitude"><input type="number" step="any" value={f.targetLongitude} onChange={set('targetLongitude')} className={inputCls} /></Field>
-          </div>
+          <fieldset className="rounded-xl border border-slate-200 p-4 space-y-4">
+            <legend className="px-2 text-sm font-bold text-cas-slate">Receiving Contact &amp; Location</legend>
+            <label className="flex items-start gap-2.5 text-sm text-cas-slate cursor-pointer">
+              <input type="checkbox" checked={sameContact} onChange={(e) => setSameContact(e.target.checked)} disabled={!profile} className="mt-1 h-4 w-4 rounded border-slate-300" />
+              <span>
+                <span className="font-semibold">Same as registered contact</span>
+                <span className="block text-xs text-cas-muted">Uncheck if someone else will receive the diesel, or it goes to a different site.</span>
+              </span>
+            </label>
+            {sameContact ? (
+              <dl className="grid sm:grid-cols-3 gap-4 text-sm">
+                <div><dt className="text-xs font-bold text-cas-muted">Name</dt><dd className="mt-0.5 text-cas-slate">{profile?.companyName || 'Not on file'}</dd></div>
+                <div><dt className="text-xs font-bold text-cas-muted">Phone</dt><dd className="mt-0.5 text-cas-slate">{profile?.contactPhone || 'Not on file'}</dd></div>
+                <div><dt className="text-xs font-bold text-cas-muted">Registered address</dt><dd className="mt-0.5 text-cas-slate break-words">{profile?.businessAddress || 'Not on file'}</dd></div>
+              </dl>
+            ) : (
+              <div className="space-y-4">
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <Field label="Receiver full name"><input required type="text" maxLength={120} value={f.receiverName} onChange={set('receiverName')} className={inputCls} autoComplete="off" /></Field>
+                  <Field label="Receiver phone number"><input required type="tel" maxLength={30} value={f.receiverPhone} onChange={set('receiverPhone')} className={inputCls} autoComplete="off" /></Field>
+                </div>
+                <Field label="Exact delivery address"><input required type="text" maxLength={300} value={f.deliveryAddress} onChange={set('deliveryAddress')} className={inputCls} placeholder="Plant, street, town" /></Field>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <Field label="Gate latitude (optional)" hint="GPS coordinates are used to detect arrival and stay hidden from vendors until you award."><input type="number" step="any" value={f.targetLatitude} onChange={set('targetLatitude')} className={inputCls} /></Field>
+                  <Field label="Gate longitude (optional)"><input type="number" step="any" value={f.targetLongitude} onChange={set('targetLongitude')} className={inputCls} /></Field>
+                </div>
+              </div>
+            )}
+          </fieldset>
           <Field label="Sample photos" hint="Up to 3 JPG or PNG photos of the product you want. The vendor compares these with the sample at the depot.">
             <input type="file" accept="image/jpeg,image/png" multiple onChange={(e) => setPhotos(Array.from(e.target.files || []).slice(0, 3))} className={`${inputCls} file:mr-3 file:px-4 file:py-1.5 file:rounded-md file:border-0 file:bg-cas-slate file:text-white file:text-xs file:font-bold file:cursor-pointer hover:file:bg-black`} />
             {photos.length > 0 && <p className="text-xs text-cas-muted mt-1">{photos.length} photo{photos.length === 1 ? '' : 's'} selected</p>}

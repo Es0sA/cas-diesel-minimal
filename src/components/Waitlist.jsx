@@ -15,6 +15,8 @@ import {
 import { WAITLIST } from '../config';
 import { scrollBehavior } from '../lib/motion';
 import { usePageTitle } from '../lib/usePageTitle';
+import AboutUs from './AboutUs';
+import { Link } from 'react-router-dom';
 
 const VOLUME_TIERS = [
   'Under 10,000 Litres',
@@ -585,11 +587,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                         </label>
                         <p className="text-[11px] text-cas-muted mt-1.5 ml-6">
                           By joining, you agree to our{' '}
-                          {onOpenLegalModal ? (
-                            <button type="button" onClick={() => onOpenLegalModal('privacy')} className="underline underline-offset-2 hover:text-cas-slate">
-                              Privacy Policy
-                            </button>
-                          ) : 'Privacy Policy'}.
+                          <Link to="/privacy" className="underline underline-offset-2 hover:text-cas-slate">Privacy Policy</Link>.
                         </p>
                       </div>
 
@@ -716,6 +714,8 @@ export default function Waitlist({ onOpenLegalModal }) {
           </div>
         </div>
       </section>
+
+      <AboutUs />
     </div>
   );
 }

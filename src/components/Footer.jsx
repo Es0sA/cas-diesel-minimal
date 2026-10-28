@@ -1,5 +1,7 @@
 import React from 'react';
 import { Phone, Mail, MapPin } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { scrollBehavior } from '../lib/motion';
 import { CONTACT, LEGAL, hasContact } from '../config';
 
 const LEGAL_LINKS = [
@@ -7,6 +9,16 @@ const LEGAL_LINKS = [
 ];
 
 export default function Footer({ onOpenLegalModal }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // About Us lives on the home page; jump there from anywhere
+  const goToAbout = () => {
+    const scroll = () => document.getElementById('about-us')?.scrollIntoView({ behavior: scrollBehavior() });
+    if (location.pathname === '/') scroll();
+    else { navigate('/'); setTimeout(scroll, 350); }
+  };
+
   return (
     <footer id="contact" className="bg-cas-slate text-slate-300 border-t border-slate-800 text-sm scroll-mt-10">
       <div className="max-w-7xl mx-auto px-3 sm:px-8 py-8 sm:py-12">
@@ -52,8 +64,14 @@ export default function Footer({ onOpenLegalModal }) {
             )}
 
             <div className="space-y-3">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-white">Legal</h2>
+              <h2 className="text-xs font-bold uppercase tracking-wider text-white">Company</h2>
               <ul className="space-y-2 text-xs">
+                <li>
+                  <button type="button" onClick={goToAbout} className="text-slate-400 hover:text-white underline underline-offset-2 transition-colors">About Us</button>
+                </li>
+                <li>
+                  <Link to="/privacy" className="text-slate-400 hover:text-white underline underline-offset-2 transition-colors">Privacy</Link>
+                </li>
                 {LEGAL_LINKS.map((l) => (
                   <li key={l.key}>
                     <button

@@ -23,6 +23,10 @@ import CookieBanner from './components/CookieBanner';
 import Footer from './components/Footer';
 import Rfqs from './components/Rfqs';
 import Onboarding from './components/Onboarding';
+import BuyerDashboard from './components/BuyerDashboard';
+import MyOrders from './components/MyOrders';
+import AboutUs from './components/AboutUs';
+import Privacy from './components/Privacy';
 import NotFound from './components/NotFound';
 import { 
   Building2, 
@@ -171,6 +175,8 @@ function HomePage({ user, handleOpenRegistration }) {
         </>
       )}
 
+      <AboutUs />
+
       {/* Competitor isolation: Logged-in vendors are not permitted to browse competing vendor profiles */}
       {user?.role === 'VENDOR' ? (
         <section className="bg-white py-14 sm:py-20 border-b border-cas-border">
@@ -234,11 +240,40 @@ function HomePage({ user, handleOpenRegistration }) {
 const NotForAdmin = ({ user, children }) =>
   (user?.role || '').toUpperCase() === 'ADMIN' ? <Navigate to="/admin" replace /> : children;
 
-// /portal allows viewing the main marketplace platform directly even while the waitlist mode is on.
-const GateWhileWaitlisted = ({ user, children }) => children;
+const SessionSpinner = () => (
+  <div className="flex justify-center p-24" role="status" aria-label="Loading">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cas-blue" />
+  </div>
+);
+
+// While the pre-launch waitlist is on, signed-out visitors only see the waitlist and the auth screens.
+const GateWhileWaitlisted = ({ user, authLoading, children }) => {
+  if (authLoading) return <SessionSpinner />;
+  if (!user && WAITLIST.enabled) return <Navigate to="/" replace />;
+  return children;
+};
+
+// Pages that always need a signed-in account (optionally limited to some roles).
+const RequireAuth = ({ user, authLoading, roles, children }) => {
+  if (authLoading) return <SessionSpinner />;
+  if (!user) return <Navigate to="/" replace />;
+  if (roles && !roles.includes((user.role || '').toUpperCase())) return <Navigate to="/" replace />;
+  return children;
+};
+
+function OrdersPage() {
+  usePageTitle('My orders', 'Every order you have placed on CAS Diesel, with its escrow status.');
+  return (
+    <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 sm:py-12 min-h-[60vh]">
+      <h1 className="text-2xl sm:text-3xl font-extrabold text-cas-slate tracking-tight mb-6">My orders</h1>
+      <MyOrders />
+    </div>
+  );
+}
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [activeLegalModal, setActiveLegalModal] = useState(null);
   const [registerInitialRole, setRegisterInitialRole] = useState('buyer');
   const loginInitialRole = 'buyer';
@@ -249,7 +284,8 @@ export default function App() {
   useEffect(() => {
     api.auth.me()
       .then((session) => { if (session.role) setUser({ role: session.role }); })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setAuthLoading(false));
   }, []);
 
   useEffect(() => {
@@ -290,6 +326,8 @@ export default function App() {
       navigate('/vendor');
     } else if (normalizedRole === 'DRIVER') {
       navigate('/driver');
+    } else if (normalizedRole === 'BUYER') {
+      navigate('/dashboard');
     } else {
       navigate('/');
     }
@@ -317,7 +355,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={WAITLIST.enabled && !user ? <Waitlist onOpenLegalModal={(modal) => setActiveLegalModal(modal)} /> : <HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
           <Route path="/waitlist" element={<Waitlist onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />} />
-          <Route path="/portal" element={<GateWhileWaitlisted user={user}><HomePage user={user} handleOpenRegistration={handleOpenRegistration} /></GateWhileWaitlisted>} />
+          <Route path="/portal" element={<GateWhileWaitlisted user={user} authLoading={authLoading}><HomePage user={user} handleOpenRegistration={handleOpenRegistration} /></GateWhileWaitlisted>} />
           <Route path="/register" element={<LoginPage initialRole={registerInitialRole} initialMode="register" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/depots" element={<Depots user={user} />} />
@@ -325,10 +363,13 @@ export default function App() {
           <Route path="/vendor" element={<NotForAdmin user={user}><SupplierPortal /></NotForAdmin>} />
           <Route path="/driver" element={<NotForAdmin user={user}><DriverCockpit onNavigateToRegister={() => handleOpenRegistration('driver')} /></NotForAdmin>} />
           <Route path="/onboarding" element={<Onboarding user={user} />} />
-          <Route path="/rfqs" element={<Rfqs user={user} />} />
-          <Route path="/rfqs/:id" element={<Rfqs user={user} />} />
+          <Route path="/dashboard" element={<RequireAuth user={user} authLoading={authLoading} roles={['BUYER']}><BuyerDashboard /></RequireAuth>} />
+          <Route path="/orders" element={<RequireAuth user={user} authLoading={authLoading} roles={['BUYER']}><OrdersPage /></RequireAuth>} />
+          <Route path="/rfqs" element={<RequireAuth user={user} authLoading={authLoading}><Rfqs user={user} /></RequireAuth>} />
+          <Route path="/rfqs/:id" element={<RequireAuth user={user} authLoading={authLoading}><Rfqs user={user} /></RequireAuth>} />
           <Route path="/orders/:id" element={<OrderDetail user={user} />} />
           <Route path="/profile" element={<ProfileSettings user={user} onDeleted={() => { setUser(null); navigate('/account-deleted'); }} />} />
+          <Route path="/privacy" element={<Privacy onOpenTerms={(modal) => setActiveLegalModal(modal)} />} />
           <Route path="/account-deleted" element={<AccountDeleted />} />
           <Route path="/admin" element={<AdminDashboard user={user} />} />
           <Route path="*" element={<NotFound />} />
