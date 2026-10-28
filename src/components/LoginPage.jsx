@@ -9,12 +9,11 @@ import {
   EyeOff, 
   CheckCircle2, 
   AlertCircle, 
-  HelpCircle, 
+  KeyRound, 
   X,
   Loader2,
   ChevronDown
 } from 'lucide-react';
-import { CONTACT } from '../config';
 import { api } from '../api';
 
 const ROLE_CONFIGS = {
@@ -103,7 +102,32 @@ export default function LoginPage({
   }, [errorMessage]);
 
   const [successNotice, setSuccessNotice] = useState('');
-  const [showAssistanceModal, setShowAssistanceModal] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetBusy, setResetBusy] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+  const [resetError, setResetError] = useState('');
+
+  const openResetModal = () => {
+    setResetEmail(email);
+    setResetSent(false);
+    setResetError('');
+    setShowResetModal(true);
+  };
+  const closeResetModal = () => setShowResetModal(false);
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setResetBusy(true);
+    setResetError('');
+    try {
+      await api.auth.forgotPassword({ email: resetEmail.trim() });
+      setResetSent(true);
+    } catch (err) {
+      setResetError(err.message || 'Could not send the reset link. Try again.');
+    } finally {
+      setResetBusy(false);
+    }
+  };
 
   const activeConfig = ROLE_CONFIGS[selectedRole] || ROLE_CONFIGS.buyer;
 
@@ -423,7 +447,7 @@ export default function LoginPage({
                 </label>
                 <button
                   type="button"
-                  onClick={() => setShowAssistanceModal(true)}
+                  onClick={openResetModal}
                   className="text-xs text-slate-500 hover:text-cas-amberDark transition-colors font-medium"
                 >
                   Forgot password?
@@ -644,18 +668,18 @@ export default function LoginPage({
 
       </div>
 
-      {/* Terminal Assistance Modal */}
-      {showAssistanceModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+      {/* Reset Password Modal */}
+      {showResetModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="reset-title">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 animate-fadeIn">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <HelpCircle className="w-5 h-5 text-cas-amberDark" aria-hidden="true" />
-                <h3 className="font-bold text-base text-cas-slate">Terminal Access Assistance</h3>
+                <KeyRound className="w-5 h-5 text-cas-amberDark" aria-hidden="true" />
+                <h3 id="reset-title" className="font-bold text-base text-cas-slate">Reset Password</h3>
               </div>
               <button
                 type="button"
-                onClick={() => setShowAssistanceModal(false)}
+                onClick={closeResetModal}
                 className="p-1 rounded-lg text-slate-500 hover:text-black hover:bg-slate-100"
                 aria-label="Close modal"
               >
@@ -663,25 +687,54 @@ export default function LoginPage({
               </button>
             </div>
 
-            <p className="text-xs text-slate-600 leading-relaxed mb-4">
-              Password reset is not self-service yet. {CONTACT.email ? 'Email us from your registered address and we will help you regain access.' : 'Please contact the CAS Diesel team to regain access.'}
-            </p>
-            {CONTACT.email && (
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-5 text-xs flex justify-between">
-                <span className="text-slate-500">Email:</span>
-                <a href={`mailto:${CONTACT.email}`} className="font-mono font-bold text-slate-800 hover:underline">{CONTACT.email}</a>
+            {resetSent ? (
+              <div>
+                <p role="status" className="text-sm text-slate-700 leading-relaxed mb-5">
+                  If an account exists, a reset link has been sent to your email.
+                </p>
+                <button
+                  type="button"
+                  onClick={closeResetModal}
+                  className="w-full py-2.5 bg-cas-slate hover:bg-black text-white text-xs font-bold rounded-xl transition-colors"
+                >
+                  Close
+                </button>
               </div>
+            ) : (
+              <form onSubmit={handleForgotPassword}>
+                <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                  Enter the email you registered with and we will send you a link to choose a new password.
+                </p>
+                {resetError && <p role="alert" className="mb-3 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">{resetError}</p>}
+                <label htmlFor="reset-email" className="block text-xs font-semibold text-slate-700 mb-1.5">Email</label>
+                <input
+                  id="reset-email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value.toLowerCase())}
+                  placeholder="you@company.com"
+                  className="w-full px-3 py-2.5 mb-5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-cas-amber"
+                />
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={closeResetModal}
+                    className="w-1/3 py-2.5 bg-white hover:bg-slate-50 text-cas-slate border border-slate-300 text-xs font-bold rounded-xl transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={resetBusy}
+                    className="flex-1 py-2.5 bg-cas-slate hover:bg-black text-white text-xs font-bold rounded-xl transition-colors disabled:opacity-60"
+                  >
+                    {resetBusy ? 'Sending' : 'Send Reset Link'}
+                  </button>
+                </div>
+              </form>
             )}
-
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setShowAssistanceModal(false)}
-                className="w-full py-2.5 bg-cas-slate hover:bg-black text-white text-xs font-bold rounded-xl transition-colors"
-              >
-                Close
-              </button>
-            </div>
           </div>
         </div>
       )}

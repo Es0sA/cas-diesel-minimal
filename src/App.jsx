@@ -27,6 +27,7 @@ import BuyerDashboard from './components/BuyerDashboard';
 import MyOrders from './components/MyOrders';
 import AboutUs from './components/AboutUs';
 import Privacy from './components/Privacy';
+import ResetPassword from './components/ResetPassword';
 import NotFound from './components/NotFound';
 import { 
   Building2, 
@@ -369,6 +370,7 @@ export default function App() {
           <Route path="/rfqs/:id" element={<RequireAuth user={user} authLoading={authLoading}><Rfqs user={user} /></RequireAuth>} />
           <Route path="/orders/:id" element={<OrderDetail user={user} />} />
           <Route path="/profile" element={<ProfileSettings user={user} onDeleted={() => { setUser(null); navigate('/account-deleted'); }} />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/privacy" element={<Privacy onOpenTerms={(modal) => setActiveLegalModal(modal)} />} />
           <Route path="/account-deleted" element={<AccountDeleted />} />
           <Route path="/admin" element={<AdminDashboard user={user} />} />
