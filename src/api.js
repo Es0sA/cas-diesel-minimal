@@ -55,7 +55,6 @@ export const api = {
   },
   reviews: {
     create: (data) => request('/reviews', { method: 'POST', body: JSON.stringify(data) }),
-    forSupplier: (companyId) => request(`/reviews/supplier/${companyId}`),
   },
   drivers: {
     list: () => request('/drivers'),
@@ -70,7 +69,6 @@ export const api = {
     },
     get: (id) => request(`/orders/${id}`),
     create: (data) => request('/orders/create', { method: 'POST', body: JSON.stringify(data) }),
-    fundWebhook: (id, data) => request(`/orders/${id}/fund-webhook`, { method: 'POST', body: JSON.stringify(data) }),
     dispatch: (id, data) => request(`/orders/${id}/dispatch`, { method: 'POST', body: JSON.stringify(data) }),
     cancel: (id, data) => request(`/orders/${id}/cancel`, { method: 'POST', body: JSON.stringify(data) }),
     checklist: (id) => request(`/orders/${id}/checklist`),
@@ -121,7 +119,6 @@ export const api = {
     verifyUser: (id, isVerified) => request(`/admin/users/${id}/verify`, { method: 'PUT', body: JSON.stringify({ isVerified }) }),
     resolveDispute: (id, resolution, releaseAmount) => request(`/admin/disputes/${id}/resolve`, { method: 'POST', body: JSON.stringify({ resolution, releaseAmount }) }),
     runSweep: () => request('/admin/sweep', { method: 'POST' }),
-    orderLedger: (id) => request(`/admin/orders/${id}/ledger`),
   },
   rfqs: {
     list: () => request('/rfqs'),
@@ -163,12 +160,10 @@ export const api = {
       URL.revokeObjectURL(url);
     },
     confirmQuote: (quoteId, data = {}) => request(`/rfqs/quotes/${quoteId}/confirm`, { method: 'POST', body: JSON.stringify(data) }),
-    withdrawQuote: (quoteId) => request(`/rfqs/quotes/${quoteId}/withdraw`, { method: 'PUT' }),
   },
   depots: {
     prices: () => request('/depots/prices'),
     setPrice: (data) => request('/depots/prices', { method: 'PUT', body: JSON.stringify(data) }),
-    removePrice: (id) => request(`/depots/prices/${id}`, { method: 'DELETE' }),
   },
   commission: {
     tiers: () => request('/commission/tiers'),
@@ -177,12 +172,10 @@ export const api = {
   standingRates: {
     list: () => request('/standing-rates'),
     create: (data) => request('/standing-rates', { method: 'POST', body: JSON.stringify(data) }),
-    update: (id, data) => request(`/standing-rates/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     remove: (id) => request(`/standing-rates/${id}`, { method: 'DELETE' }),
   },
   chat: {
     getMessages: (orderId, after) => request(`/chat/${orderId}${after ? `?after=${encodeURIComponent(after)}` : ''}`),
-    unread: () => request('/chat/unread/summary'),
     sendMessage: (orderId, data) => request(`/chat/${orderId}/send`, { method: 'POST', body: JSON.stringify(data) }),
   },
   telemetry: {
@@ -203,7 +196,6 @@ export const api = {
     },
   },
   compliance: {
-    upload: (orderId, data) => request(`/compliance/upload/${orderId}`, { method: 'POST', body: JSON.stringify(data) }),
     getDocuments: (orderId) => request(`/compliance/${orderId}`),
     uploadFile: async (orderId, documentType, file) => {
       const form = new FormData();
