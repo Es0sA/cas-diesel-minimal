@@ -204,6 +204,17 @@ export default function OrderDetail() {
         </div>
       </div>
 
+      {viewerRole === 'VENDOR' && !['CANCELLED', 'DELIVERED'].includes(order.status) && order.delivery && (order.delivery.receiverName || order.delivery.receiverPhone || order.delivery.deliveryAddress) && (
+        <section className="bg-white p-5 rounded-2xl border border-slate-200 mb-8 shadow-sm">
+          <h2 className="text-base font-bold text-cas-slate mb-3 flex items-center gap-2"><MapPin className="w-4 h-4 text-cas-amberDark" aria-hidden="true" /> Deliver to</h2>
+          <dl className="grid sm:grid-cols-3 gap-4 text-sm">
+            <div><dt className="text-xs font-bold text-cas-muted">Receiver</dt><dd className="mt-0.5 text-cas-slate">{order.delivery.receiverName || 'Not given'}</dd></div>
+            <div><dt className="text-xs font-bold text-cas-muted">Phone</dt><dd className="mt-0.5 text-cas-slate">{order.delivery.receiverPhone ? <a href={`tel:${order.delivery.receiverPhone.replace(/\s/g, '')}`} className="underline underline-offset-2">{order.delivery.receiverPhone}</a> : 'Not given'}</dd></div>
+            <div><dt className="text-xs font-bold text-cas-muted">Address</dt><dd className="mt-0.5 text-cas-slate break-words">{order.delivery.deliveryAddress || 'Not given'}</dd></div>
+          </dl>
+        </section>
+      )}
+
       {order.lastLatitude != null && ['IN_TRANSIT', 'ARRIVED'].includes(order.status) && (
         <div className="bg-white p-4 rounded-2xl border border-slate-200 mb-8 shadow-sm flex items-center justify-between gap-3 text-sm">
           <div>
