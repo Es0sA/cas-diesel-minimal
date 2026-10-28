@@ -31,7 +31,7 @@ export default function BuyerDashboard() {
   const [rfqs, setRfqs] = useState(null);
 
   useEffect(() => {
-    api.companies.getProfile().then(setCompany).catch(() => {});
+    api.companies.getProfile().then((res) => setCompany(res?.company || res)).catch(() => {});
     api.rfqs.list().then((r) => setRfqs(r.rfqs || [])).catch(() => setRfqs([]));
   }, []);
 

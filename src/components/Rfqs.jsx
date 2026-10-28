@@ -108,7 +108,7 @@ function BuyerRfqs() {
 
   // The registered company details pre-fill the receiving contact
   useEffect(() => {
-    api.companies.getProfile().then(setProfile).catch(() => setSameContact(false));
+    api.companies.getProfile().then((res) => setProfile(res?.company || res)).catch(() => setSameContact(false));
   }, []);
 
   useEffect(() => {
