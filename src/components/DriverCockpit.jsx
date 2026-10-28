@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Truck, Navigation, MapPin, CheckCircle2, AlertCircle, UserPlus, Radio } from 'lucide-react';
+import { Truck, Navigation, MapPin, CheckCircle2, AlertCircle, UserPlus, Radio, Phone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import KycUpload from './KycUpload';
@@ -111,6 +111,16 @@ export default function DriverCockpit({ onNavigateToRegister }) {
       const data = await api.orders.list(filterStatus === 'Completed' ? { status: 'DELIVERED' } : {});
       let rows = data?.orders || [];
       if (filterStatus === 'Active') rows = rows.filter((o) => ['IN_TRANSIT', 'ARRIVED'].includes(o.status));
+      // The list does not carry who to deliver to; fetch it for each job that is still on the road
+      rows = await Promise.all(rows.map(async (o) => {
+        if (o.status === 'DELIVERED') return o;
+        try {
+          const detail = await api.orders.get(o.id);
+          return { ...o, delivery: (detail.order || detail).delivery || null };
+        } catch {
+          return o;
+        }
+      }));
       setOrders(rows);
       setAuthError(false);
     } catch (err) {
@@ -195,6 +205,44 @@ export default function DriverCockpit({ onNavigateToRegister }) {
               const hasGate = order.targetLatitude != null && order.targetLongitude != null;
               return (
                 <div key={order.id} className="p-4 sm:p-8 space-y-5 border-b border-slate-200 last:border-b-0">
+                  {order.status !== 'DELIVERED' && (
+                    <section aria-label="Delivery details" className="p-4 sm:p-5 bg-white border-2 border-cas-slate rounded-xl">
+                      <div className="text-xs font-bold uppercase tracking-wider text-cas-muted mb-3">Delivery Details</div>
+                      <dl className="space-y-3 text-sm">
+                        <div>
+                          <dt className="text-xs font-bold text-cas-muted">Destination address</dt>
+                          <dd className="font-extrabold text-base text-cas-slate break-words">{order.delivery?.deliveryAddress || 'No street address given. Use the GPS route below.'}</dd>
+                        </div>
+                        <div>
+                          <dt className="text-xs font-bold text-cas-muted">Receiver</dt>
+                          <dd className="font-bold text-cas-slate">{order.delivery?.receiverName || order.buyer?.companyName || 'Not given'}</dd>
+                        </div>
+                        <div>
+                          <dt className="text-xs font-bold text-cas-muted">Receiver phone</dt>
+                          <dd>
+                            {order.delivery?.receiverPhone ? (
+                              <a
+                                href={`tel:${order.delivery.receiverPhone.replace(/\s/g, '')}`}
+                                className="mt-1 py-3 px-4 bg-cas-slate hover:bg-black text-white font-bold text-sm rounded-lg transition-colors inline-flex items-center gap-2"
+                              >
+                                <Phone className="w-4 h-4" aria-hidden="true" />
+                                <span>Call {order.delivery.receiverPhone}</span>
+                              </a>
+                            ) : (
+                              <span className="font-bold text-cas-slate">Not given</span>
+                            )}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-xs font-bold text-cas-muted">Gate coordinates</dt>
+                          <dd className="font-mono font-bold text-cas-blue">
+                            {hasGate ? `${order.targetLatitude}, ${order.targetLongitude}` : 'Not set'}
+                          </dd>
+                        </div>
+                      </dl>
+                    </section>
+                  )}
+
                   <div className="p-4 sm:p-5 bg-cas-amberLight border-2 border-cas-amber rounded-xl">
                     <div className="text-xs sm:text-xs font-bold uppercase tracking-wider text-cas-amberDark mb-1">Dispatch Manifest</div>
                     <div className="text-lg sm:text-xl font-extrabold text-cas-slate">
