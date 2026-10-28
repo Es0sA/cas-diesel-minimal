@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, FileText, CheckCircle2, AlertTriangle, Clock, Plus, Info, Upload, FileCheck2, ExternalLink } from 'lucide-react';
 import { api } from '../api';
 import { DEPOTS, depotName } from '../data/depots';
@@ -94,13 +94,23 @@ function SamplePhotos({ id, title = 'Buyer sample photos' }) {
 
 function BuyerRfqs() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const initialDepotId = searchParams.get('depotId') || '';
   const [rfqs, setRfqs] = useState(null);
   const [error, setError] = useState(null);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(Boolean(initialDepotId));
   const [busy, setBusy] = useState(false);
   const [photos, setPhotos] = useState([]);
-  const [f, setF] = useState({ volumeLiters: 33000, depotId: '', deliveryAddress: '', targetLatitude: '', targetLongitude: '', validHours: 24, flashPointMin: '', densityMin: '', densityMax: '', sulphurMax: '', waterMax: '' });
+  const [f, setF] = useState({ volumeLiters: 33000, depotId: initialDepotId, deliveryAddress: '', targetLatitude: '', targetLongitude: '', validHours: 24, flashPointMin: '', densityMin: '', densityMax: '', sulphurMax: '', waterMax: '' });
   const set = (k) => (e) => setF((x) => ({ ...x, [k]: e.target.value }));
+
+  useEffect(() => {
+    const depotId = searchParams.get('depotId');
+    if (depotId) {
+      setF((prev) => ({ ...prev, depotId }));
+      setOpen(true);
+    }
+  }, [searchParams]);
 
   const load = useCallback(() => api.rfqs.list().then((r) => setRfqs(r.rfqs)).catch((e) => setError(e.message)), []);
   useEffect(() => { load(); }, [load]);
