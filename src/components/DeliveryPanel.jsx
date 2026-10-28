@@ -203,7 +203,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
               <span>I accept payment for any quantity above the {litres(order.volumeLiters)} ordered.</span>
             </label>
             <Field label="Notes" hint="Optional"><textarea rows={2} maxLength={1000} value={form.notes} onChange={set('notes')} className={inputCls} /></Field>
-            <button disabled={busy} className="px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-white text-sm font-bold rounded-lg disabled:opacity-50">
+            <button disabled={busy} className="px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-lg disabled:opacity-50">
               {busy ? 'Recording' : 'Record delivery'}
             </button>
           </form>

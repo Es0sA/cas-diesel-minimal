@@ -69,3 +69,8 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Space for the fixed cookie banner (CookieBanner.jsx) */
+body.cookie-banner-open {
+  padding-bottom: 6rem;
+}

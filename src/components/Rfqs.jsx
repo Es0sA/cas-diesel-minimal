@@ -143,7 +143,7 @@ function BuyerRfqs() {
       {error && <p role="alert" className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm">{error}</p>}
 
       {!open ? (
-        <button onClick={() => setOpen(true)} className="mb-8 inline-flex items-center gap-2 px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-white text-sm font-bold rounded-lg">
+        <button onClick={() => setOpen(true)} className="mb-8 inline-flex items-center gap-2 px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-lg">
           <Plus className="w-4 h-4" aria-hidden="true" /> New request
         </button>
       ) : (
@@ -175,7 +175,7 @@ function BuyerRfqs() {
             </div>
           </details>
           <div className="flex gap-3">
-            <button disabled={busy} className="px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-white text-sm font-bold rounded-lg disabled:opacity-50">{busy ? 'Sending' : 'Send to vendors'}</button>
+            <button disabled={busy} className="px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-lg disabled:opacity-50">{busy ? 'Sending' : 'Send to vendors'}</button>
             <button type="button" onClick={() => setOpen(false)} className="px-4 py-2.5 text-sm font-semibold text-cas-muted">Cancel</button>
           </div>
         </form>
@@ -537,7 +537,7 @@ function QuoteForm({ rfq, onDone }) {
           ))}
         </ul>
       )}
-      <button disabled={busy || uploadingCert} className="px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-white text-sm font-bold rounded-lg disabled:opacity-50">{uploadingCert ? 'Uploading certificate...' : busy ? 'Sending' : 'Submit quote'}</button>
+      <button disabled={busy || uploadingCert} className="px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-lg disabled:opacity-50">{uploadingCert ? 'Uploading certificate...' : busy ? 'Sending' : 'Submit quote'}</button>
     </form>
   );
 }

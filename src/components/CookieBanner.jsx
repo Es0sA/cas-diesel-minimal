@@ -19,12 +19,20 @@ export default function CookieBanner({ onOpenPolicy }) {
     setDismissed(true);
   };
 
-  if (dismissed || !visible) return null;
+  const showing = !dismissed && visible;
+
+  // Reserve space under the page while the banner is up so it never hides content or form actions.
+  useEffect(() => {
+    document.body.classList.toggle('cookie-banner-open', showing);
+    return () => document.body.classList.remove('cookie-banner-open');
+  }, [showing]);
+
+  if (!showing) return null;
 
   return (
     <aside
       aria-label="Cookie consent banner"
-      className="fixed bottom-0 left-0 right-0 rounded-t-2xl sm:bottom-6 sm:left-auto sm:right-6 sm:max-w-md sm:rounded-xl z-30 bg-white border-t-2 sm:border-2 border-cas-border shadow-[0_-8px_30px_rgba(15,23,42,0.15)] sm:shadow-2xl p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:p-5"
+      className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-cas-border rounded-t-2xl sm:rounded-none shadow-[0_-8px_30px_rgba(15,23,42,0.15)] p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6 sm:py-4"
     >
       <div className="flex items-start gap-2.5 sm:gap-3 max-w-7xl mx-auto">
         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded bg-cas-amberLight text-cas-amberDark flex items-center justify-center shrink-0 mt-0.5">

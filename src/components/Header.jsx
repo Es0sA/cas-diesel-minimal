@@ -29,7 +29,6 @@ const ROLE_LINKS = {
 
 const PUBLIC_LINKS = [
   { label: 'Home', to: '/' },
-  { label: 'About Us', hash: 'about-us' },
   { label: 'Contact Us', hash: 'contact' },
   { label: 'Depots', to: '/depots' },
 ];
