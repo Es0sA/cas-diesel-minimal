@@ -136,7 +136,7 @@ function BuyerRfqs() {
       if (sameContact) {
         body.receiverName = profile?.companyName || '';
         body.receiverPhone = profile?.contactPhone || '';
-        if (profile?.businessAddress) body.deliveryAddress = profile.businessAddress.trim().slice(0, 300);
+        if (profile?.streetAddress) body.deliveryAddress = profile.streetAddress.trim().slice(0, 300);
       } else {
         body.receiverName = f.receiverName.trim();
         body.receiverPhone = f.receiverPhone.trim();
@@ -184,7 +184,7 @@ function BuyerRfqs() {
               <dl className="grid sm:grid-cols-3 gap-4 text-sm">
                 <div><dt className="text-xs font-bold text-cas-muted">Name</dt><dd className="mt-0.5 text-cas-slate">{profile?.companyName || 'Not on file'}</dd></div>
                 <div><dt className="text-xs font-bold text-cas-muted">Phone</dt><dd className="mt-0.5 text-cas-slate">{profile?.contactPhone || 'Not on file'}</dd></div>
-                <div><dt className="text-xs font-bold text-cas-muted">Registered address</dt><dd className="mt-0.5 text-cas-slate break-words">{profile?.businessAddress || 'Not on file'}</dd></div>
+                <div><dt className="text-xs font-bold text-cas-muted">Registered street address</dt><dd className="mt-0.5 text-cas-slate break-words">{profile?.streetAddress || 'Not on file. Untick the box to enter one.'}</dd></div>
               </dl>
             ) : (
               <div className="space-y-4">

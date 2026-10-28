@@ -30,7 +30,7 @@ export default function Onboarding({ user }) {
   const [error, setError] = useState('');
   const [geolocating, setGeolocating] = useState(false);
 
-  const [buyer, setBuyer] = useState({ company: '', officer: '', phone: '', lat: '6.595200', lng: '3.342100', clearance: '33000' });
+  const [buyer, setBuyer] = useState({ company: '', officer: '', phone: '', lat: '6.595200', lng: '3.342100', clearance: '33000', street: '' });
   const [supplier, setSupplier] = useState({
     name: '',
     rc: '',
@@ -71,9 +71,11 @@ export default function Onboarding({ user }) {
     try {
       if (role === 'BUYER') {
         if (!buyer.company.trim()) throw new Error('Company name is required.');
+        if (!buyer.street.trim()) throw new Error('Street address is required.');
         await api.companies.updateProfile({
           companyName: buyer.company.trim(),
           businessAddress: `GPS: ${buyer.lat}, ${buyer.lng} (Clearance: ${Number(buyer.clearance).toLocaleString('en-US')}L)`,
+          streetAddress: buyer.street.trim(),
           gateLatitude: parseFloat(buyer.lat),
           gateLongitude: parseFloat(buyer.lng),
           contactPhone: buyer.phone.trim()
@@ -155,6 +157,7 @@ export default function Onboarding({ user }) {
                     {geolocating ? <Loader2 className="w-3.5 h-3.5 animate-spin" aria-hidden="true" /> : <Navigation className="w-3.5 h-3.5" aria-hidden="true" />}Use my location
                   </button>
                 </div>
+                <Field id="ob-street" label="Street address"><input id="ob-street" className={inputCls} value={buyer.street} onChange={(e) => setBuyer({ ...buyer, street: e.target.value })} maxLength={300} placeholder="Plant, street, town" autoComplete="street-address" required /></Field>
                 <div className="grid grid-cols-2 gap-3">
                   <Field id="ob-lat" label="Latitude"><input id="ob-lat" className={`${inputCls} font-mono`} value={buyer.lat} onChange={(e) => setBuyer({ ...buyer, lat: e.target.value })} /></Field>
                   <Field id="ob-lng" label="Longitude"><input id="ob-lng" className={`${inputCls} font-mono`} value={buyer.lng} onChange={(e) => setBuyer({ ...buyer, lng: e.target.value })} /></Field>
