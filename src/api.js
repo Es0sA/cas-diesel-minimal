@@ -13,11 +13,19 @@ export const request = async (endpoint, options = {}) => {
     credentials: 'include',
   });
 
-  const data = await response.json();
+  let data;
+  const contentType = response.headers.get('content-type');
+  if (contentType && contentType.includes('application/json')) {
+    data = await response.json();
+  } else {
+    const text = await response.text();
+    data = { error: text || 'An unexpected error occurred.' };
+  }
 
   if (!response.ok) {
     const err = new Error(data.error || 'API request failed');
     err.data = data;
+    err.status = response.status;
     throw err;
   }
 
