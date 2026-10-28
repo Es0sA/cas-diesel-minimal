@@ -15,7 +15,7 @@ const STATE_LABELS = { SETTLING: 'VERIFIED' };
 export default function OrderDetail() {
   const { id: orderId } = useParams();
   const navigate = useNavigate();
-  usePageTitle('Order Details', 'Track delivery status, chat with your counterparty, and manage escrow on your CAS Energy order.');
+  usePageTitle('Order Details', 'Track delivery status, chat with your counterparty, and manage escrow on your CAS Diesel order.');
   
   const [order, setOrder] = useState(null);
   const [viewerRole, setViewerRole] = useState(null);
@@ -31,18 +31,18 @@ export default function OrderDetail() {
       if (silent !== true) setLoading(true);
       setError(null);
       
-      const [ordersRes, docsRes, chatRes] = await Promise.all([
-        api.orders.list(),
+      const [orderRes, docsRes, chatRes] = await Promise.all([
+        api.orders.get(orderId),
         api.compliance.getDocuments(orderId).catch(() => []),
         api.chat.getMessages(orderId).catch(() => ({ messages: [] }))
       ]);
 
-      const foundOrder = (ordersRes.orders || []).find(o => o.id === orderId || o._id === orderId);
+      const foundOrder = orderRes?.order || orderRes;
       if (!foundOrder) {
         throw new Error('Order not found');
       }
 
-      setViewerRole(ordersRes.role || null);
+      setViewerRole(orderRes.role || null);
       setOrder(foundOrder);
       setDocuments(Array.isArray(docsRes) ? docsRes : (docsRes.documents || []));
       setMessages(chatRes.messages || []);

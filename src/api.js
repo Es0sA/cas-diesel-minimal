@@ -60,6 +60,7 @@ export const api = {
       const query = new URLSearchParams(params).toString();
       return request(`/orders${query ? `?${query}` : ''}`);
     },
+    get: (id) => request(`/orders/${id}`),
     create: (data) => request('/orders/create', { method: 'POST', body: JSON.stringify(data) }),
     fundWebhook: (id, data) => request(`/orders/${id}/fund-webhook`, { method: 'POST', body: JSON.stringify(data) }),
     dispatch: (id, data) => request(`/orders/${id}/dispatch`, { method: 'POST', body: JSON.stringify(data) }),
