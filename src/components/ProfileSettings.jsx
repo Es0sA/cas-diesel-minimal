@@ -6,7 +6,7 @@ import { usePageTitle } from '../lib/usePageTitle';
 import DeleteAccount from './DeleteAccount';
 
 export default function ProfileSettings({ user, onDeleted }) {
-  usePageTitle('Profile Settings', 'Manage your CAS Energy account and company profile.');
+  usePageTitle('Profile Settings', 'Manage your CAS Diesel account and company profile.');
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     companyName: '',
@@ -31,9 +31,14 @@ export default function ProfileSettings({ user, onDeleted }) {
     if (role === 'ADMIN') { navigate('/admin', { replace: true }); return undefined; }
     const fetchProfile = async () => {
       try {
-        if (!isDriver) {
+        if (isDriver) {
+          const res = await api.drivers.getProfile();
+          const profile = res?.profile || res;
+          if (profile) setFormData(prev => ({ ...prev, ...profile }));
+        } else if (role === 'VENDOR' || role === 'BUYER') {
           const res = await api.companies.getProfile();
-          setFormData(prev => ({ ...prev, ...res }));
+          const company = res?.company || res;
+          if (company) setFormData(prev => ({ ...prev, ...company }));
         }
       } catch (err) {
         console.error(err);
