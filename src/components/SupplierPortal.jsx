@@ -9,7 +9,7 @@ import { usePageTitle } from '../lib/usePageTitle';
 const ACTIVE_STATUSES = ['FUNDED', 'IN_TRANSIT', 'ARRIVED', 'SETTLING'];
 
 export default function SupplierPortal() {
-  usePageTitle('Vendor Desk', 'Publish your spot price, manage standing rates, and track escrow-protected orders on the CAS Energy vendor desk.');
+  usePageTitle('Vendor Desk', 'Publish your spot price, manage standing rates, and track escrow-protected orders on the CAS Diesel vendor desk.');
   const navigate = useNavigate();
   const viewOrder = (id) => navigate(`/orders/${id}`);
 
@@ -135,7 +135,7 @@ export default function SupplierPortal() {
         {saveAlert && (
           <div className="p-4 mb-6 bg-emerald-50 border-2 border-emerald-400 rounded-xl text-emerald-900 text-sm font-bold flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-cas-green shrink-0" aria-hidden="true" />
-            <span>Market rates successfully broadcast to CAS Energy Marketplace.</span>
+            <span>Market rates successfully broadcast to CAS Diesel Marketplace.</span>
           </div>
         )}
 

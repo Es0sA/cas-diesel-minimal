@@ -3,15 +3,12 @@ import { Phone, Mail, MapPin } from 'lucide-react';
 import { CONTACT, LEGAL, hasContact } from '../config';
 
 const LEGAL_LINKS = [
-  { key: 'terms', label: 'Terms of Service' },
-  { key: 'privacy', label: 'Privacy Policy' },
-  { key: 'refund', label: 'Refunds and Disputes' },
-  { key: 'cookies', label: 'Cookie Policy' }
+  { key: 'terms', label: 'Terms & Conditions' }
 ];
 
 export default function Footer({ onOpenLegalModal }) {
   return (
-    <footer className="bg-cas-slate text-slate-300 border-t border-slate-800 text-sm">
+    <footer id="contact" className="bg-cas-slate text-slate-300 border-t border-slate-800 text-sm scroll-mt-10">
       <div className="max-w-7xl mx-auto px-3 sm:px-8 py-8 sm:py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-4">
@@ -19,7 +16,7 @@ export default function Footer({ onOpenLegalModal }) {
               <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center border-2 border-cas-amber">
                 <span className="font-extrabold text-lg text-cas-amber">CAS</span>
               </div>
-              <span className="font-extrabold text-xl text-white tracking-tight">CAS Energy</span>
+              <span className="font-extrabold text-xl text-white tracking-tight">CAS Diesel</span>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed max-w-md">
               A wholesale diesel marketplace. Payment is held in escrow and released when delivery is confirmed at your gate.
@@ -77,7 +74,7 @@ export default function Footer({ onOpenLegalModal }) {
           Estimated arrival times depend on depot queues and road conditions. Escrow secures your funds and verifies delivery. It does not guarantee transit speed.
         </p>
 
-        <div className="mt-6 text-xs text-slate-400">&copy; {new Date().getFullYear()} {LEGAL.entityName || 'CAS Energy'}. All rights reserved.</div>
+        <div className="mt-6 text-xs text-slate-400">&copy; {new Date().getFullYear()} {LEGAL.entityName || 'CAS Diesel'}. All rights reserved.</div>
       </div>
     </footer>
   );

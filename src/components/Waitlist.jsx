@@ -57,7 +57,7 @@ const REFERRAL_SOURCES = [
 ];
 
 export default function Waitlist({ onOpenLegalModal }) {
-  usePageTitle('Join The Priority Waitlist', 'Join the CAS Energy priority waitlist for escrow-protected wholesale diesel. Corporate buyers and vendors get early access before public launch.');
+  usePageTitle('Join The Priority Waitlist', 'Join the CAS Diesel priority waitlist for escrow-protected wholesale diesel. Corporate buyers and vendors get early access before public launch.');
   const [role, setRole] = useState('BUYER'); // BUYER or VENDOR
   const [fullName, setFullName] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
@@ -236,7 +236,7 @@ export default function Waitlist({ onOpenLegalModal }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between text-xs sm:text-sm">
           <div className="flex items-center gap-2">
             <span className="inline-block w-2 h-2 rounded-full bg-cas-amber animate-pulse" />
-            <span className="font-semibold text-slate-200">CAS Energy Pre-Launch</span>
+            <span className="font-semibold text-slate-200">CAS Diesel Pre-Launch</span>
             <span className="text-slate-500 hidden sm:inline">|</span>
             <span className="text-slate-300 hidden sm:inline">Wholesale Automotive Gas Oil (AGO)</span>
           </div>

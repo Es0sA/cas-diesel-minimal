@@ -11,7 +11,7 @@ export const hasContact = Object.values(CONTACT).some(Boolean);
 // Legal identity shown in the Terms and Privacy Policy. Fill these in once the
 // operating company is registered. Empty values are left out of the text.
 export const LEGAL = {
-  entityName: 'CAS Energy Logistics Ltd',
+  entityName: 'CAS Diesel Logistics Ltd',
   rcNumber: '',
   registeredAddress: 'Lagos, Nigeria',
   privacyEmail: 'privacy@casdiesel.com',

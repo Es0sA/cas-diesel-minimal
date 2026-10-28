@@ -97,7 +97,7 @@ function LocationSharing({ order, onStatusChange }) {
 }
 
 export default function DriverCockpit({ onNavigateToRegister }) {
-  usePageTitle('Driver Cockpit', 'Track dispatch manifests and get turn-by-turn navigation to the discharge gate on the CAS Energy driver cockpit.');
+  usePageTitle('Driver Cockpit', 'Track dispatch manifests and get turn-by-turn navigation to the discharge gate on the CAS Diesel driver cockpit.');
   const navigate = useNavigate();
   const viewOrder = (id) => navigate(`/orders/${id}`);
 

@@ -33,7 +33,7 @@ export default function CookieBanner({ onOpenPolicy }) {
         <div className="flex-1">
           <h4 className="font-extrabold text-xs sm:text-sm text-cas-slate">Essential Security Cookies</h4>
           <p className="text-xs sm:text-xs text-cas-muted mt-0.5 leading-relaxed">
-            CAS Energy uses one essential cookie to keep you signed in. No advertising or third-party trackers.
+            CAS Diesel uses one essential cookie to keep you signed in. No advertising or third-party trackers.
           </p>
 
           <div className="flex items-center gap-2 sm:gap-3 mt-2 sm:mt-3">
@@ -46,10 +46,10 @@ export default function CookieBanner({ onOpenPolicy }) {
             </button>
             <button
               type="button"
-              onClick={() => onOpenPolicy('cookies')}
+              onClick={() => onOpenPolicy('terms')}
               className="text-xs sm:text-xs font-semibold text-cas-muted hover:text-cas-slate underline underline-offset-2"
             >
-              Policy
+              Terms & Conditions
             </button>
           </div>
         </div>

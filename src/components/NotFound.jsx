@@ -4,7 +4,7 @@ import { Fuel } from 'lucide-react';
 import { usePageTitle } from '../lib/usePageTitle';
 
 export default function NotFound() {
-  usePageTitle('Page Not Found', 'This page does not exist on CAS Energy.');
+  usePageTitle('Page Not Found', 'This page does not exist on CAS Diesel.');
 
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 py-20">

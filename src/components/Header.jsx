@@ -1,23 +1,38 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, LogOut, Settings, ChevronDown, ArrowRight } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { WAITLIST } from '../config';
 import { scrollBehavior } from '../lib/motion';
 
-// One workspace link per role. Public visitors get anchors on the home page.
 const ROLE_LINKS = {
-  BUYER: [{ label: 'Request quotes', to: '/rfqs' }, { label: 'Depot prices', to: '/depots' }, { label: 'Vendors', hash: 'marketplace' }],
-  VENDOR: [{ label: 'Open requests', to: '/rfqs' }, { label: 'Depot prices', to: '/depots' }, { label: 'Vendor Desk', to: '/vendor' }],
-  DRIVER: [{ label: 'Driver Cockpit', to: '/driver' }],
-  ADMIN: [{ label: 'Admin', to: '/admin' }],
-
+  BUYER: [
+    { label: 'Home', to: '/' },
+    { label: 'Depots', to: '/depots' },
+    { label: 'Request quotes', to: '/rfqs' },
+    { label: 'Vendors', hash: 'marketplace' },
+  ],
+  VENDOR: [
+    { label: 'Home', to: '/' },
+    { label: 'Depots', to: '/depots' },
+    { label: 'Open requests', to: '/rfqs' },
+    { label: 'Vendor Desk', to: '/vendor' },
+  ],
+  DRIVER: [
+    { label: 'Home', to: '/' },
+    { label: 'Driver Cockpit', to: '/driver' },
+  ],
+  ADMIN: [
+    { label: 'Home', to: '/' },
+    { label: 'Depots', to: '/depots' },
+    { label: 'Admin', to: '/admin' },
+  ],
 };
+
 const PUBLIC_LINKS = [
-  { label: 'How it works', hash: 'how-it-works' },
-  { label: 'Depot prices', to: '/depots' },
-  { label: 'Vendors', hash: 'marketplace' },
+  { label: 'Home', to: '/' },
+  { label: 'About Us', hash: 'about-us' },
+  { label: 'Contact Us', hash: 'contact' },
+  { label: 'Depots', to: '/depots' },
 ];
-const WAITLIST_LINKS = [];
 
 export default function Header({ user, onLogout, onOpenLegalModal }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -28,8 +43,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
 
   const role = user?.role ? user.role.toUpperCase() : null;
   const onAuthPage = location.pathname === '/login' || location.pathname === '/register';
-  const publicLinks = WAITLIST.enabled ? WAITLIST_LINKS : PUBLIC_LINKS;
-  const links = user ? ROLE_LINKS[role] || [] : onAuthPage ? [] : publicLinks;
+  const links = user ? ROLE_LINKS[role] || PUBLIC_LINKS : PUBLIC_LINKS;
   const roleLabel = role ? role.charAt(0) + role.slice(1).toLowerCase() : '';
 
   useEffect(() => {
@@ -39,8 +53,12 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
 
   useEffect(() => {
     if (!menuOpen) return undefined;
-    const onDown = (e) => { if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false); };
-    const onKey = (e) => { if (e.key === 'Escape') setMenuOpen(false); };
+    const onDown = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
+    };
+    const onKey = (e) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
     document.addEventListener('mousedown', onDown);
     document.addEventListener('keydown', onKey);
     return () => {
@@ -58,17 +76,21 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
     setMobileOpen(false);
     if (!link.hash) return;
     e.preventDefault();
-    if (location.pathname === '/') scrollTo(link.hash);
-    else {
-      navigate('/');
+    const targetPath = location.pathname.startsWith('/portal') ? '/portal' : '/';
+    if (location.pathname === targetPath || location.pathname === '/') {
+      scrollTo(link.hash);
+    } else {
+      navigate(targetPath);
       setTimeout(() => scrollTo(link.hash), 350);
     }
   };
 
   const isActive = (link) => link.to && location.pathname === link.to;
   const linkCls = (link) =>
-    `px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
-      isActive(link) ? 'bg-slate-100 text-cas-slate' : 'text-slate-600 hover:text-black hover:bg-slate-50'
+    `px-3 py-2 rounded-lg text-sm font-bold transition-colors ${
+      isActive(link)
+        ? 'bg-slate-100 text-cas-slate'
+        : 'text-slate-600 hover:text-black hover:bg-slate-50'
     }`;
 
   const NavLink = ({ link, className }) => (
@@ -85,7 +107,7 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
             <span className="font-extrabold text-sm tracking-wider text-cas-amber">CAS</span>
           </span>
           <span className="font-extrabold text-xl tracking-tight text-cas-slate group-hover:text-cas-amberDark transition-colors">
-            CAS Energy
+            CAS Diesel
           </span>
         </Link>
 
@@ -95,22 +117,20 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-2">
-          {!user && onAuthPage ? null : !user && WAITLIST.enabled ? (
-            <button
-              type="button"
-              onClick={() => scrollTo('waitlist-form')}
-              className="px-4 py-2 rounded-lg text-sm font-bold bg-cas-slate hover:bg-black text-white transition-colors"
-            >
-              Join Waitlist
-            </button>
-          ) : !user ? (
+        <div className="hidden md:flex items-center gap-3">
+          {!user && onAuthPage ? null : !user ? (
             <>
-              <Link to="/login" className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 hover:text-black hover:bg-slate-50">
-                Sign in
+              <Link
+                to="/login"
+                className="px-3.5 py-2 rounded-lg text-sm font-bold text-slate-700 hover:text-black hover:bg-slate-50 transition-colors"
+              >
+                Sign In
               </Link>
-              <Link to="/register" className="px-4 py-2 rounded-lg text-sm font-bold bg-cas-slate hover:bg-black text-white transition-colors">
-                Get started
+              <Link
+                to="/register"
+                className="px-4 py-2 rounded-lg text-sm font-bold bg-cas-slate hover:bg-black text-white transition-colors"
+              >
+                Register
               </Link>
             </>
           ) : (
@@ -129,18 +149,28 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
                 <ChevronDown className="w-4 h-4 text-slate-500" aria-hidden="true" />
               </button>
               {menuOpen && (
-                <div role="menu" className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg py-1.5 animate-fadeIn">
+                <div
+                  role="menu"
+                  className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg py-1.5 animate-fadeIn"
+                >
                   {role !== 'ADMIN' && (
-                  <Link to="/profile" role="menuitem" className="flex items-center gap-2 px-3.5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">
-                    <Settings className="w-4 h-4" aria-hidden="true" />
-                    Profile
-                  </Link>
+                    <Link
+                      to="/profile"
+                      role="menuitem"
+                      className="flex items-center gap-2 px-3.5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                    >
+                      <Settings className="w-4 h-4" aria-hidden="true" />
+                      Profile
+                    </Link>
                   )}
                   <button
                     type="button"
                     role="menuitem"
-                    onClick={() => { setMenuOpen(false); if (onLogout) onLogout(); }}
-                    className="w-full flex items-center gap-2 px-3.5 py-2.5 text-sm font-semibold text-red-700 hover:bg-red-50"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      if (onLogout) onLogout();
+                    }}
+                    className="w-full flex items-center gap-2 px-3.5 py-2.5 text-sm font-semibold text-red-700 hover:bg-red-50 text-left"
                   >
                     <LogOut className="w-4 h-4" aria-hidden="true" />
                     Sign out
@@ -169,39 +199,44 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
               <NavLink
                 key={l.label}
                 link={l}
-                className="flex items-center justify-between p-3.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                className="flex items-center justify-between p-3.5 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50"
               />
             ))}
-            {!user && onAuthPage ? null : !user && WAITLIST.enabled ? (
-              <div className="mt-2">
-                <button
-                  type="button"
-                  onClick={() => { setMobileOpen(false); scrollTo('waitlist-form'); }}
-                  className="w-full text-center p-3 rounded-xl text-sm font-bold bg-cas-slate text-white"
+            {!user && onAuthPage ? null : !user ? (
+              <div className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-slate-100">
+                <Link
+                  to="/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="text-center p-3 rounded-xl text-sm font-bold border border-slate-300 text-slate-800 hover:bg-slate-50 transition-colors"
                 >
-                  Join Waitlist
-                </button>
-              </div>
-            ) : !user ? (
-              <div className="grid grid-cols-2 gap-2 mt-2">
-                <Link to="/login" onClick={() => setMobileOpen(false)} className="text-center p-3 rounded-xl text-sm font-semibold border border-slate-300 text-slate-800">
-                  Sign in
+                  Sign In
                 </Link>
-                <Link to="/register" onClick={() => setMobileOpen(false)} className="text-center p-3 rounded-xl text-sm font-bold bg-cas-slate text-white">
-                  Get started
+                <Link
+                  to="/register"
+                  onClick={() => setMobileOpen(false)}
+                  className="text-center p-3 rounded-xl text-sm font-bold bg-cas-slate hover:bg-black text-white transition-colors"
+                >
+                  Register
                 </Link>
               </div>
             ) : (
               <>
                 {role !== 'ADMIN' && (
-                <Link to="/profile" onClick={() => setMobileOpen(false)} className="flex items-center justify-between p-3.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50">
-                  <span>Profile ({roleLabel})</span>
-                  <ArrowRight className="w-4 h-4 text-slate-500" aria-hidden="true" />
-                </Link>
+                  <Link
+                    to="/profile"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-between p-3.5 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50"
+                  >
+                    <span>Profile ({roleLabel})</span>
+                    <ArrowRight className="w-4 h-4 text-slate-500" aria-hidden="true" />
+                  </Link>
                 )}
                 <button
                   type="button"
-                  onClick={() => { setMobileOpen(false); if (onLogout) onLogout(); }}
+                  onClick={() => {
+                    setMobileOpen(false);
+                    if (onLogout) onLogout();
+                  }}
                   className="flex items-center justify-center gap-2 p-3 mt-2 rounded-xl text-sm font-bold bg-red-50 text-red-700"
                 >
                   <LogOut className="w-4 h-4" aria-hidden="true" />
@@ -210,13 +245,21 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
               </>
             )}
           </div>
-          <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-500">
-            {[['terms', 'Terms of Service'], ['privacy', 'Privacy Policy'], ['refund', 'Refunds and Disputes'], ['cookies', 'Cookie Policy']].map(([k, t]) => (
-              <button key={k} type="button" onClick={() => { setMobileOpen(false); onOpenLegalModal(k); }} className="underline underline-offset-2 hover:text-black">
-                {t}
+          {onOpenLegalModal && (
+            <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  onOpenLegalModal('terms');
+                }}
+                className="underline underline-offset-2 hover:text-black font-semibold"
+              >
+                Terms & Conditions
               </button>
-            ))}
-          </div>
+              <span>&copy; {new Date().getFullYear()} CAS Diesel</span>
+            </div>
+          )}
         </div>
       )}
     </header>

@@ -6,54 +6,55 @@ const operator = [LEGAL.entityName, LEGAL.rcNumber && `RC ${LEGAL.rcNumber}`, LE
 const contactLine = [CONTACT.email, CONTACT.phone].filter(Boolean).join(' or ');
 const privacyContact = LEGAL.privacyEmail || CONTACT.email;
 
-const SECTIONS = {
-  terms: [
-    ['1. What CAS Energy is', 'CAS Energy is an online marketplace that connects buyers of automotive gas oil (diesel) with vendors and independent tanker drivers in Nigeria. We provide the platform. We are not the seller of the fuel, the owner of the product, or the carrier. The sale contract is between the buyer and the vendor. Delivery is carried out by the vendor or its driver.'],
-    ['2. Who can use the platform', 'You must be at least 18 and act for a business that is registered with the Corporate Affairs Commission, or be an independent driver with a valid driving licence. Vendors must hold and keep valid NMDPRA licences for the products and depots they offer. You must give true and current information and upload genuine documents. We may verify your details and may refuse or remove any account that fails verification.'],
-    ['3. Accounts', 'You are responsible for your password and for everything done through your account. Tell us at once if you think someone else has used it. One person or business may not hold several accounts to avoid a suspension or a review.'],
-    ['4. Prices and orders', 'Vendors set their own prices and are responsible for the accuracy of their listings. A price is fixed for an order when the buyer places and funds it. Placing an order is an offer to buy at that price. The order is binding on the vendor once it is funded and accepted on the platform.'],
-    ['5. Payment and release of funds', (LEGAL.paymentProvider ? 'Payments are processed by ' + LEGAL.paymentProvider + '. ' : 'Payments are processed by the third-party payment arrangement shown at checkout. ') + 'The platform records each order as funded, in transit, delivered, disputed or cancelled. Payment is released to the vendor when the buyer confirms delivery, or as decided in a dispute. Confirmation of delivery is final once given, so confirm only after you have checked the quantity and quality received. Fees, if any, are shown before you pay.'],
-    ['6. Delivery and gate confirmation', 'The platform uses the delivery location the buyer registers and the driver\'s location updates to show when a tanker is close to the gate. This is a tracking aid only. Location data can be wrong or delayed, and it does not prove that fuel was delivered or that it was good. Estimated arrival times are estimates and are not guaranteed.'],
-    ['7. Cancellation', 'An order can be cancelled before delivery only when both the buyer and the vendor agree on the platform. If both agree, the funds are returned to the buyer. If only one side asks to cancel, the order stays in place. A buyer who refuses delivery without a good reason may be held responsible for the vendor\'s reasonable costs.'],
-    ['8. Product quality and disputes', 'Fuel must meet the NMDPRA standards that apply at the time of sale. A buyer who finds short delivery or off-specification fuel must open a dispute on the platform before discharge or within the period shown on the order, and should keep samples, test results, photos and the waybill. We review the evidence from both sides and decide how the funds are paid out. We may ask for independent test results. Our decision on how funds are paid out does not remove either party\'s right to take the matter to a court or to arbitration.'],
-    ['9. Detention and other charges', 'CAS Energy does not set demurrage, detention or haulage rates. Any such charge must be agreed between the parties before dispatch.'],
-    ['10. Prohibited use', 'You may not use the platform for fraud, to avoid the platform\'s fees by taking a listed deal off the platform, to upload false or stolen documents, to interfere with the service, or to break any law. We may suspend or close an account and hold disputed funds while we investigate.'],
-    ['11. Our responsibility', 'We provide the platform as it is and work to keep it running, but we cannot promise it will always be available or free of errors. We are not responsible for the quality, quantity or delivery of fuel, for the acts of vendors or drivers, or for losses caused by events outside our control. To the extent the law allows, our total liability to you for any claim about the platform is limited to the fees you paid us for the order the claim relates to. Nothing in these terms limits liability that cannot lawfully be limited.'],
-    ['12. Changes and ending', 'We may update these terms. When we make a material change we will tell users on the platform, and continued use after that means you accept the change. You may close your account at any time from your profile, after your open orders are settled.'],
-    ['13. Governing law', 'These terms are governed by the laws of the Federal Republic of Nigeria. Nigerian courts have jurisdiction, unless the parties agree to arbitration.'],
-    ['14. Contact', contactLine ? 'Questions about these terms: ' + contactLine + '.' : 'Questions about these terms can be sent through the support contact shown on this site.'],
+const UNIFIED_TERMS = [
+  [
+    '1. Platform Scope and Marketplace Operation',
+    'CAS Diesel is an institutional marketplace platform connecting corporate buyers of Automotive Gas Oil (AGO, diesel) with accredited downstream vendors and calibrated fleet drivers across Nigerian loading terminals. We operate the technological and escrow coordination infrastructure. We are not the seller of the fuel, the physical owner of the cargo, or the carrier. The contract of sale is formed directly between the buyer and the accredited vendor, with dispatch carried out by the vendor or its assigned calibrated fleet driver.'
   ],
-  privacy: [
-    ['1. Who we are', 'This policy explains how CAS Energy collects and uses personal data under the Nigeria Data Protection Act 2023 (NDPA). ' + (operator ? 'The data controller is ' + operator + '.' : 'CAS Energy is the data controller.')],
-    ['2. Data we collect', 'Account data: name, email address, phone number and a hashed password. Business data: company name, CAC registration number, NMDPRA licence number, depot and product details. Driver data: driving licence details and truck plate number. Verification documents that you upload, such as your CAC certificate, NMDPRA licence and driving licence. Order data: quantities, prices, status history, waybills, messages between parties and reviews. Location data: the buyer\'s delivery gate coordinates and the driver\'s location while a delivery is in progress. Technical data: IP address and basic device and request logs used for security and rate limiting.'],
-    ['3. Why we use it and our lawful basis', 'To create and run your account and fulfil orders (performance of a contract). To verify businesses and drivers, prevent fraud and meet legal duties such as tax and fuel-sector regulation (legal obligation and legitimate interests). To keep the service secure (legitimate interests). We do not use your data for advertising and we do not sell it.'],
-    ['4. Who sees your data', 'The other party to an order sees the details needed to complete it. A buyer\'s exact gate coordinates and contact person are shared only with the vendor and driver on an active funded order. We do not publish them. Our admins see verification documents and order records to review accounts and settle disputes. We share data with regulators or courts when the law requires it.'],
-    ['5. Service providers and transfers abroad', 'We use cloud providers to host the platform, store uploaded documents and deliver the website, including providers whose servers are outside Nigeria such as in the United States. Where data leaves Nigeria we rely on the safeguards the NDPA allows. These providers process data only to run our service. If you join our pre-launch waitlist, the details you submit (name, phone number, email, company) are stored in a Google Sheet via Google Apps Script, so that waitlist data is also processed by Google.'],
-    ['6. Keeping your data', 'Delivery gate coordinates are deleted when an order is delivered or cancelled. We keep order, payment and audit records for as long as needed for accounting, disputes and legal duties, and then delete or anonymise them. Verification documents are kept while your account is active. Uploaded files are erased 30 days after you delete your account, and if you sign up again with the same email within those 30 days you get them back. When you delete your account we anonymise your personal details, but we may keep order records in anonymised form.'],
-    ['7. Your rights', 'You may ask to see your data, correct it, delete it, restrict or object to its use, receive a copy, or withdraw consent where we rely on it. You can delete your account from your profile. ' + (privacyContact ? 'For any request write to ' + privacyContact + '. ' : '') + 'You may also complain to the Nigeria Data Protection Commission.'],
-    ['8. Security', 'We protect data with encrypted connections, hashed passwords, access controls and private storage for documents. No system is completely secure. If a breach puts your rights at risk we will notify you and the Commission as the law requires.'],
-    ['9. Children', 'The platform is for businesses and adults. We do not knowingly collect data from anyone under 18.'],
-    ['10. Changes', 'We will post changes to this policy here and show the new date at the top.'],
+  [
+    '2. Counterparty Requirements and NMDPRA Accreditation',
+    'Platform participation is restricted to incorporated corporate buyers, licensed petroleum marketers and vendors holding valid NMDPRA (Nigerian Midstream and Downstream Petroleum Regulatory Authority) operating credentials, and fleet drivers possessing verified driver licences and calibrated tanker charts. All participants must provide genuine, verifiable documentation. CAS Diesel verifies credentials prior to depot accreditation and reserves the right to suspend or remove any entity that fails ongoing compliance checks.'
   ],
-  refund: [
-    ['1. When a refund applies', 'Funds for an order are returned to the buyer when the buyer and vendor both agree to cancel before delivery, or when a dispute is decided in the buyer\'s favour. Funds are not returned after the buyer has confirmed delivery.'],
-    ['2. Opening a dispute', 'Only the buyer can open a dispute, from the order page, for short delivery, fuel that does not meet the applicable NMDPRA standard, or fuel that was not delivered. Open it before you discharge or within the period shown on the order. Explain the problem and keep samples, test results, photos and the waybill.'],
-    ['3. How a dispute is decided', 'We review the evidence from the buyer, the vendor and the driver, and may ask for independent laboratory results. We then decide whether the funds go to the vendor, back to the buyer, or are split. We will tell both sides the outcome. This does not stop either side from going to court or arbitration.'],
-    ['4. Timing', 'We aim to review disputes promptly but cannot promise a fixed time, because it depends on the evidence and on the payment provider. Refunds are returned to the original payment method.'],
-    ['5. Detention and demurrage', 'CAS Energy does not set or collect demurrage. Any waiting-time charge must be agreed between the buyer and the vendor or driver before dispatch.'],
+  [
+    '3. Ex-Depot Pricing and Escrow Settlement Protocol',
+    'Accredited vendors publish indicative ex-depot spot rates per liter. When a corporate buyer places an order, the agreed price is fixed upon escrow funding. Buyer funds are held securely in institutional escrow custody and are never disbursed prior to confirmed delivery. Payment is released to the vendor only when the buyer completes gate inspection and delivery sign-off, or pursuant to a formal dispute determination. Platform transaction fees, where applicable, are transparently itemized prior to payment.'
   ],
-  cookies: [
-    ['What we use', 'We use one essential cookie that keeps you signed in. It is marked HttpOnly and Secure, is tied to your login and expires after 24 hours or when you sign out. We also store your cookie notice choice in your browser. We do not use advertising cookies and we do not allow third-party trackers. We use Cloudflare Web Analytics to count visits and see which pages and sources are used. It sets no cookies, does not track you across sites and does not collect personal data.'],
-    ['Your choices', 'You can clear cookies in your browser at any time. If you block the sign-in cookie, you will not be able to log in.'],
+  [
+    '4. Gantry Dispatch and Discharge Gate Delivery Verification',
+    'Following loading and terminal seal application at the designated depot, the vendor dispatches a calibrated tanker. The platform provides waypoint tracking and arrival perimeter detection as an operational aid. The driver must arrive with intact depot seals and a certified waybill. Delivery is officially completed only when the buyer confirms physical receipt at the discharge gate.'
   ],
-};
-
-const KEY = { terms: 'terms', privacy: 'privacy', refund: 'refund', refunds: 'refund', cookies: 'cookies' };
+  [
+    '5. Product Quality Standards, Inspection and Dispute Resolution',
+    'All Automotive Gas Oil supplied through the platform must strictly conform to official NMDPRA product specifications. If a buyer identifies short delivery or off-spec product, a dispute must be formally opened through the order console prior to discharge. Parties must preserve official loading samples, retain lab analysis reports, and maintain waybill records. CAS Diesel coordinates evidence review, which may include joint independent re-testing, to direct the final release or refund of escrowed funds.'
+  ],
+  [
+    '6. Cancellation and Refund Policy',
+    'An order may be cancelled prior to gantry dispatch upon mutual agreement of both buyer and vendor through the platform, prompting an immediate full refund of escrow funds to the buyer. Once a tanker is loaded and sealed in transit, cancellation cannot be unilaterally executed. A buyer who unlawfully refuses an on-specification delivery remains liable for reasonable logistics and terminal handling expenses incurred by the vendor.'
+  ],
+  [
+    '7. Demurrage and Detention Terms',
+    'CAS Diesel does not assess, collect, or enforce haulage demurrage or site detention charges. Any allowable waiting-time provisions or detention thresholds must be agreed in writing between the buyer and the vendor before truck dispatch.'
+  ],
+  [
+    '8. Data Protection and NDPA 2023 Compliance',
+    'In compliance with the Nigeria Data Protection Act 2023 (NDPA), CAS Diesel collects and processes corporate account data, NMDPRA licensing documentation, driver credentials, and transaction logs strictly for counterparty verification, order fulfillment, and legal compliance. Delivery gate GPS coordinates are restricted to active counterparties and purged upon delivery completion. We do not sell data or engage in behavioral advertising. Inquiries may be directed to ' + (privacyContact ? privacyContact : 'support@casdiesel.com') + '.'
+  ],
+  [
+    '9. Session Security and Cookie Policy',
+    'The platform employs a single encrypted, HttpOnly security session cookie strictly necessary to maintain authenticated login state. We do not use third-party marketing trackers or tracking cookies across external websites.'
+  ],
+  [
+    '10. Limitation of Liability and Governing Law',
+    'The platform is provided on an institutional as-available basis. To the maximum extent permitted under applicable law, CAS Diesel liability is limited strictly to transaction fees received for the specific transaction in question. These Terms and Conditions are governed exclusively by the laws of the Federal Republic of Nigeria, with jurisdiction vested in Nigerian courts of competent authority.'
+  ],
+  [
+    '11. Official Contact',
+    contactLine ? 'Official inquiries regarding these Terms and Conditions may be addressed to: ' + contactLine + '.' : 'Official inquiries may be directed to info@casdiesel.com.'
+  ]
+];
 
 export default function LegalModals({ activeModal, onClose }) {
   if (!activeModal) return null;
-  const key = KEY[activeModal];
-  if (!key) return null;
 
   return (
     <div 
@@ -69,10 +70,7 @@ export default function LegalModals({ activeModal, onClose }) {
           <div className="flex items-center gap-2">
             <Scale className="w-5 h-5 text-cas-amber" aria-hidden="true" />
             <h3 id="modal-title" className="font-extrabold text-lg sm:text-xl text-white">
-              {activeModal === 'terms' && 'Terms of Service'}
-              {activeModal === 'privacy' && 'Privacy Policy'}
-              {(activeModal === 'refund' || activeModal === 'refunds') && 'Refunds and Disputes'}
-              {activeModal === 'cookies' && 'Cookie Policy'}
+              Terms & Conditions
             </h3>
           </div>
 
@@ -80,7 +78,7 @@ export default function LegalModals({ activeModal, onClose }) {
             type="button"
             onClick={onClose}
             className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700 transition-colors"
-            aria-label="Close modal dialog"
+            aria-label="Close terms dialog"
           >
             <X className="w-5 h-5" aria-hidden="true" />
           </button>
@@ -88,14 +86,15 @@ export default function LegalModals({ activeModal, onClose }) {
 
         {/* Modal Scrollable Body */}
         <div className="p-6 sm:p-8 overflow-y-auto space-y-6 text-sm text-cas-slate leading-relaxed">
-          <p className="text-xs text-cas-muted">
-            Last updated {LEGAL.lastUpdated}.
-            {operator && <> Operated by {operator}.</>}
-          </p>
-          {SECTIONS[key].map(([title, text]) => (
-            <div key={title}>
-              <h4 className="font-bold text-base text-cas-slate mb-2">{title}</h4>
-              <p className="text-cas-muted">{text}</p>
+          <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-cas-muted">
+            <span className="font-bold text-cas-slate">Effective Date:</span> {LEGAL.lastUpdated}.
+            {operator && <span> Operated by {operator}.</span>}
+          </div>
+
+          {UNIFIED_TERMS.map(([title, text]) => (
+            <div key={title} className="space-y-1.5">
+              <h4 className="font-bold text-sm sm:text-base text-cas-slate">{title}</h4>
+              <p className="text-xs sm:text-sm text-cas-muted leading-relaxed">{text}</p>
             </div>
           ))}
         </div>
@@ -104,7 +103,7 @@ export default function LegalModals({ activeModal, onClose }) {
         <div className="p-4 sm:p-5 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
           <div className="text-xs text-cas-muted flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4 text-cas-green" aria-hidden="true" />
-            <span>Please read these terms carefully</span>
+            <span>Official CAS Diesel Institutional Terms</span>
           </div>
 
           <button

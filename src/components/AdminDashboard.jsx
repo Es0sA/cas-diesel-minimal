@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 
 export default function AdminDashboard({ user }) {
-  usePageTitle('Admin Console', 'CAS Energy admin operations console.');
+  usePageTitle('Admin Console', 'CAS Diesel admin operations console.');
   const [activeTab, setActiveTab] = useState('overview');
   const [stats, setStats] = useState(null);
   const [usersList, setUsersList] = useState([]);

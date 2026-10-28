@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { usePageTitle } from '../lib/usePageTitle';
 
 export default function AccountDeleted() {
-  usePageTitle('Account deleted', 'Your CAS Energy account was deleted.');
+  usePageTitle('Account deleted', 'Your CAS Diesel account was deleted.');
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 py-20">
       <h1 className="text-2xl sm:text-3xl font-extrabold text-cas-slate">Your account was deleted</h1>
