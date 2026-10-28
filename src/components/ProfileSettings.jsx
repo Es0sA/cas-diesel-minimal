@@ -149,6 +149,19 @@ export default function ProfileSettings({ user, onDeleted }) {
                   />
                 </div>
                 <div>
+                  <label htmlFor="fld-street-address" className="block text-sm font-bold text-slate-700 mb-1.5">Street Address</label>
+                  <input id="fld-street-address"
+                    type="text"
+                    name="streetAddress"
+                    maxLength={300}
+                    placeholder="Plant, street, town"
+                    value={formData.streetAddress || ''}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-cas-slate focus:ring-1 focus:ring-cas-slate outline-none transition-all"
+                  />
+                  <p className="text-xs text-slate-500 mt-1">Where deliveries arrive. Used as the default delivery address on new requests.</p>
+                </div>
+                <div>
                   <label htmlFor="fld-contact-phone-3" className="block text-sm font-bold text-slate-700 mb-1.5">Contact Phone</label>
                   <input id="fld-contact-phone-3"
                     type="text"

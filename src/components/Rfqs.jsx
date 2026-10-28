@@ -601,6 +601,16 @@ function SupplierRfqDetail({ id }) {
         <SpecTable requirements={rfq.requirements} />
         <p className="text-xs text-cas-muted mt-3">If awarded you must dispatch within {rfq.terms?.dispatchHours} hours of funding and deliver within {rfq.terms?.deliveryWorkingDays} working days, or the escrow is refunded. Gate coordinates are shared after the award.</p>
       </section>
+      {(rfq.receiverName || rfq.receiverPhone) && (
+        <section className="bg-white border border-cas-border rounded-2xl p-6 mb-8 shadow-sm">
+          <h2 className="text-lg font-bold text-cas-slate mb-3">Deliver to</h2>
+          <dl className="grid sm:grid-cols-3 gap-4 text-sm">
+            <div><dt className="text-xs font-bold text-cas-muted">Receiver</dt><dd className="mt-0.5 text-cas-slate">{rfq.receiverName || 'Not given'}</dd></div>
+            <div><dt className="text-xs font-bold text-cas-muted">Phone</dt><dd className="mt-0.5 text-cas-slate">{rfq.receiverPhone ? <a href={`tel:${rfq.receiverPhone.replace(/\s/g, '')}`} className="underline underline-offset-2">{rfq.receiverPhone}</a> : 'Not given'}</dd></div>
+            <div><dt className="text-xs font-bold text-cas-muted">Address</dt><dd className="mt-0.5 text-cas-slate break-words">{rfq.deliveryAddress || 'Not given'}</dd></div>
+          </dl>
+        </section>
+      )}
       <SamplePhotos id={id} />
       {mine && (
         <div className="bg-cas-greenLight/50 border border-green-200 rounded-2xl p-5 mb-8">
