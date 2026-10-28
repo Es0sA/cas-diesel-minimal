@@ -81,6 +81,12 @@ export default function AdminDashboard({ user }) {
   };
 
   const handleVerify = async (userId, currentState) => {
+    if (currentState) {
+      const userInput = window.prompt('WARNING: You are about to revoke verification. Type REVOKE to confirm.');
+      if (!userInput || userInput.trim().toUpperCase() !== 'REVOKE') {
+        return;
+      }
+    }
     try {
       setSaving(true);
       await api.admin.verifyUser(userId, !currentState);
@@ -98,6 +104,17 @@ export default function AdminDashboard({ user }) {
   const [sweepMsg, setSweepMsg] = useState('');
 
   const handleResolve = async (orderId, resolution, releaseAmount) => {
+    if (resolution === 'REFUND_BUYER') {
+      const userInput = window.prompt('WARNING: You are about to refund escrow. Type REFUND to confirm.');
+      if (!userInput || userInput.trim().toUpperCase() !== 'REFUND') {
+        return;
+      }
+    } else if (resolution === 'RELEASE_TO_SUPPLIER') {
+      const userInput = window.prompt('WARNING: You are about to release funds. Type RELEASE to confirm.');
+      if (!userInput || userInput.trim().toUpperCase() !== 'RELEASE') {
+        return;
+      }
+    }
     try {
       await api.admin.resolveDispute(orderId, resolution, releaseAmount);
       const res = await api.admin.getDisputes();
@@ -108,6 +125,10 @@ export default function AdminDashboard({ user }) {
   };
 
   const handleSweep = async () => {
+    const userInput = window.prompt('WARNING: You are about to run deadline sweep. Type SWEEP to confirm.');
+    if (!userInput || userInput.trim().toUpperCase() !== 'SWEEP') {
+      return;
+    }
     try {
       setSweepMsg('Running...');
       const res = await api.admin.runSweep();
