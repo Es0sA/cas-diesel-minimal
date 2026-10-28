@@ -93,6 +93,7 @@ export default function Onboarding({ user }) {
           if (supplier.customDepotPhone.trim()) {
             formattedAddress += ` | Desk: ${supplier.customDepotPhone.trim()}`;
           }
+          formattedAddress = formattedAddress.slice(0, 295);
         } else {
           const matched = DEPOTS.find((d) => d.name === supplier.depot);
           if (matched) depotIdVal = matched.id;
