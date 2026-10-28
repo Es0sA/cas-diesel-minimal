@@ -1,12 +1,21 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, FileText, CheckCircle2, AlertTriangle, Clock, Plus, Info } from 'lucide-react';
+import { ArrowLeft, FileText, CheckCircle2, AlertTriangle, Clock, Plus, Info, Upload, FileCheck2, ExternalLink } from 'lucide-react';
 import { api } from '../api';
 import { DEPOTS, depotName } from '../data/depots';
 
 const naira = (n) => `₦${Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
 const when = (d) => new Date(d).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
 const inputCls = 'w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cas-blue focus:border-transparent';
+
+const isSafeUrl = (u) => {
+  try {
+    const p = new URL(u).protocol;
+    return p === 'https:' || p === 'http:';
+  } catch {
+    return typeof u === 'string' && u.startsWith('/api/');
+  }
+};
 
 const STATUS_STYLE = {
   OPEN: 'bg-cas-blueLight text-cas-blue',
@@ -265,7 +274,33 @@ function BuyerRfqDetail({ id }) {
                 </div>
               </div>
               <dl className="grid sm:grid-cols-3 gap-3 mt-4 text-sm">
-                <div><dt className="text-xs text-cas-muted">Certificate</dt><dd className="font-semibold">{q.certificateUrl ? <a href={q.certificateUrl} target="_blank" rel="noopener noreferrer" className="text-cas-blue underline">View, dated {new Date(q.certificateDate).toLocaleDateString()}</a> : 'None'}</dd></div>
+                <div>
+                  <dt className="text-xs text-cas-muted">Certificate</dt>
+                  <dd className="font-semibold">
+                    {q.certificateUrl ? (
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          try {
+                            const certId = q.certificateUrl.match(/certificates\/([a-f0-9\-]+)/i)?.[1];
+                            if (certId) {
+                              await api.rfqs.downloadCertificate(rfq.id, certId, `certificate-${q.batchNumber || q.id.slice(0, 8)}.pdf`);
+                            } else if (isSafeUrl(q.certificateUrl)) {
+                              window.open(q.certificateUrl, '_blank', 'noopener,noreferrer');
+                            } else {
+                              alert('Invalid certificate URL');
+                            }
+                          } catch (err) {
+                            alert(err.message || 'Could not download certificate');
+                          }
+                        }}
+                        className="text-cas-blue underline hover:text-blue-700 cursor-pointer text-left"
+                      >
+                        View, dated {new Date(q.certificateDate).toLocaleDateString()}
+                      </button>
+                    ) : 'None'}
+                  </dd>
+                </div>
                 <div><dt className="text-xs text-cas-muted">Payment terms</dt><dd className="font-semibold">{q.paymentTerms || 'Escrow'}</dd></div>
                 <div><dt className="text-xs text-cas-muted">Earliest delivery</dt><dd className="font-semibold">{q.earliestDelivery ? when(q.earliestDelivery) : 'Per RFQ terms'}</dd></div>
               </dl>
@@ -301,11 +336,126 @@ const SPEC_FIELDS = [
   ['finalBoilingPoint', 'Final boiling point (C)', '370'],
 ];
 
+function CertificateUploadField({
+  certificateUrl,
+  certificateName,
+  onUploaded,
+  onUploadingChange,
+  hint,
+  label = 'Quality Certificate (COA)',
+  required = false
+}) {
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+  const [manualMode, setManualMode] = useState(false);
+  const [fileName, setFileName] = useState(certificateName || '');
+
+  const onPick = async (file) => {
+    if (!file) return;
+    setUploadError('');
+    setUploading(true);
+    if (onUploadingChange) onUploadingChange(true);
+    try {
+      const data = await api.rfqs.uploadCertificate(file);
+      setFileName(data.fileName || file.name);
+      onUploaded(data.certificateUrl, data.fileName || file.name);
+    } catch (err) {
+      setUploadError(err.message || 'Failed to upload certificate.');
+    } finally {
+      setUploading(false);
+      if (onUploadingChange) onUploadingChange(false);
+    }
+  };
+
+  return (
+    <div className="block">
+      <div className="flex items-center justify-between gap-2 mb-1">
+        <label className="text-xs font-bold text-cas-slate">{label}{required && <span className="text-rose-500 ml-0.5">*</span>}</label>
+        <button
+          type="button"
+          onClick={() => setManualMode((m) => !m)}
+          className="text-[11px] text-cas-blue hover:underline"
+        >
+          {manualMode ? 'Upload file instead' : 'Or paste URL'}
+        </button>
+      </div>
+
+      {manualMode ? (
+        <input
+          type="url"
+          placeholder="https://"
+          value={certificateUrl || ''}
+          onChange={(e) => onUploaded(e.target.value, '')}
+          required={required}
+          className={inputCls}
+        />
+      ) : (
+        <div className="border border-slate-200 bg-slate-50/70 rounded-xl p-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div className="min-w-0 flex-1">
+              {certificateUrl ? (
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-800">
+                  <FileCheck2 className="w-4 h-4 text-cas-green shrink-0" aria-hidden="true" />
+                  <span className="truncate max-w-[200px] sm:max-w-xs">{fileName || 'Certificate attached'}</span>
+                  <a
+                    href={isSafeUrl(certificateUrl) ? certificateUrl : '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-0.5 text-cas-blue hover:underline text-[11px] ml-1 shrink-0"
+                  >
+                    View
+                    <ExternalLink className="w-2.5 h-2.5" aria-hidden="true" />
+                  </a>
+                </div>
+              ) : (
+                <div className="text-xs text-cas-muted">
+                  No certificate uploaded yet
+                </div>
+              )}
+            </div>
+
+            <label className="shrink-0 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-300 bg-white text-cas-slate cursor-pointer hover:border-cas-amber hover:text-cas-amberDark shadow-sm transition-colors w-full sm:w-auto">
+              <Upload className="w-3.5 h-3.5" aria-hidden="true" />
+              {uploading ? 'Uploading...' : certificateUrl ? 'Replace' : 'Upload Certificate'}
+              <input
+                type="file"
+                accept="application/pdf,image/jpeg,image/png"
+                className="sr-only"
+                disabled={uploading}
+                onChange={(e) => {
+                  if (e.target.files?.[0]) onPick(e.target.files[0]);
+                  e.target.value = '';
+                }}
+              />
+            </label>
+          </div>
+
+          {required && (
+            <input
+              tabIndex={-1}
+              required={required}
+              value={certificateUrl || ''}
+              onChange={() => {}}
+              className="sr-only"
+              onInvalid={(e) => e.target.setCustomValidity('Please upload your laboratory batch certificate.')}
+              onInput={(e) => e.target.setCustomValidity('')}
+            />
+          )}
+        </div>
+      )}
+
+      {hint && <span className="block text-[11px] text-cas-muted mt-1">{hint}</span>}
+      {uploadError && <p className="text-xs font-bold text-rose-600 mt-1">{uploadError}</p>}
+    </div>
+  );
+}
+
 function QuoteForm({ rfq, onDone }) {
   const today = new Date().toISOString().slice(0, 10);
-  const [f, setF] = useState({ pricePerLitre: '', sourceDepot: '', paymentTerms: 'Escrow', batchNumber: '', certificateUrl: '', certificateDate: today, deviations: '', taxes: '', earliestDelivery: '' });
+  const [f, setF] = useState({ pricePerLitre: '', sourceDepot: '', paymentTerms: 'Escrow', batchNumber: '', certificateUrl: '', certificateName: '', certificateDate: today, deviations: '', taxes: '', earliestDelivery: '' });
   const [specs, setSpecs] = useState({});
   const [busy, setBusy] = useState(false);
+  const [uploadingCert, setUploadingCert] = useState(false);
   const [error, setError] = useState(null);
   const [specCheck, setSpecCheck] = useState(null);
   const set = (k) => (e) => setF((x) => ({ ...x, [k]: e.target.value }));
@@ -318,7 +468,8 @@ function QuoteForm({ rfq, onDone }) {
     setSpecCheck(null);
     try {
       const body = { ...f, declaredSpecs: Object.fromEntries(Object.entries(specs).filter(([, v]) => v !== '')) };
-      for (const k of ['deviations', 'taxes', 'earliestDelivery', 'batchNumber']) if (!body[k]) delete body[k];
+      for (const k of ['deviations', 'taxes', 'earliestDelivery', 'batchNumber', 'certificateName']) if (!body[k]) delete body[k];
+      delete body.certificateName;
       await api.rfqs.quote(rfq.id, body);
       onDone();
     } catch (err) {
@@ -350,9 +501,21 @@ function QuoteForm({ rfq, onDone }) {
       </fieldset>
 
       <div className="grid sm:grid-cols-3 gap-4">
-        <Field label="Certificate link (HTTPS)" hint={`Newer than ${rfq.requirements?.certMaxAgeWorkingDays} working days`}><input required type="url" placeholder="https://" value={f.certificateUrl} onChange={set('certificateUrl')} className={inputCls} /></Field>
-        <Field label="Certificate date"><input required type="date" max={today} value={f.certificateDate} onChange={set('certificateDate')} className={inputCls} /></Field>
-        <Field label="Batch number" hint="Optional"><input type="text" maxLength={80} value={f.batchNumber} onChange={set('batchNumber')} className={inputCls} /></Field>
+        <div className="sm:col-span-2">
+          <CertificateUploadField
+            label="Laboratory Batch Certificate (COA)"
+            hint={`PDF, JPG or PNG up to 5 MB. Newer than ${rfq.requirements?.certMaxAgeWorkingDays} working days.`}
+            certificateUrl={f.certificateUrl}
+            certificateName={f.certificateName}
+            onUploaded={(url, name) => setF((x) => ({ ...x, certificateUrl: url, certificateName: name }))}
+            onUploadingChange={setUploadingCert}
+            required
+          />
+        </div>
+        <div className="space-y-4">
+          <Field label="Certificate test date" hint="Date issued by laboratory"><input required type="date" max={today} value={f.certificateDate} onChange={set('certificateDate')} className={inputCls} /></Field>
+          <Field label="Batch number" hint="Optional"><input type="text" maxLength={80} placeholder="e.g. BATCH-2026-04" value={f.batchNumber} onChange={set('batchNumber')} className={inputCls} /></Field>
+        </div>
       </div>
       <Field label="Deviation from the request" hint="Only if your product misses a line. State it plainly. The buyer must accept it."><textarea rows={2} maxLength={1000} value={f.deviations} onChange={set('deviations')} className={inputCls} /></Field>
       {specCheck && (
@@ -364,7 +527,7 @@ function QuoteForm({ rfq, onDone }) {
           ))}
         </ul>
       )}
-      <button disabled={busy} className="px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-white text-sm font-bold rounded-lg disabled:opacity-50">{busy ? 'Sending' : 'Submit quote'}</button>
+      <button disabled={busy || uploadingCert} className="px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-white text-sm font-bold rounded-lg disabled:opacity-50">{uploadingCert ? 'Uploading certificate...' : busy ? 'Sending' : 'Submit quote'}</button>
     </form>
   );
 }
@@ -405,9 +568,10 @@ function SupplierRfqs() {
   const [myQuotes, setMyQuotes] = useState([]);
   const [rates, setRates] = useState([]);
   const [error, setError] = useState(null);
-  const [rate, setRate] = useState({ depotId: DEPOTS[0].id, pricePerLitre: '', minVolume: '', maxVolume: '', certificateUrl: '', certificateDate: new Date().toISOString().slice(0, 10), autoSubmit: false });
+  const [rate, setRate] = useState({ depotId: DEPOTS[0].id, pricePerLitre: '', minVolume: '', maxVolume: '', certificateUrl: '', certificateName: '', certificateDate: new Date().toISOString().slice(0, 10), autoSubmit: false });
   const [specs, setSpecs] = useState({});
   const [saving, setSaving] = useState(false);
+  const [uploadingCert, setUploadingCert] = useState(false);
   const [showAutoInfo, setShowAutoInfo] = useState(false);
 
   const load = useCallback(() => {
@@ -429,8 +593,9 @@ function SupplierRfqs() {
       body.minVolume = body.minVolume === '' ? 0 : Number(body.minVolume);
       if (body.maxVolume === '') delete body.maxVolume; else body.maxVolume = Number(body.maxVolume);
       if (!body.certificateUrl) delete body.certificateUrl;
+      delete body.certificateName;
       await api.standingRates.create(body);
-      setRate((r) => ({ ...r, pricePerLitre: '', minVolume: '', maxVolume: '' }));
+      setRate((r) => ({ ...r, pricePerLitre: '', minVolume: '', maxVolume: '', certificateUrl: '', certificateName: '' }));
       load();
     } catch (err) {
       setError(err.message);
@@ -512,7 +677,14 @@ function SupplierRfqs() {
             ))}
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
-            <Field label="Quality Certificate link (HTTPS)" hint="Link to laboratory batch certificate (COA) PDF or photo"><input type="url" placeholder="https://" value={rate.certificateUrl} onChange={setR('certificateUrl')} className={inputCls} /></Field>
+            <CertificateUploadField
+              label="Quality Certificate (COA)"
+              hint="Laboratory batch certificate PDF or photo (up to 5 MB)"
+              certificateUrl={rate.certificateUrl}
+              certificateName={rate.certificateName}
+              onUploaded={(url, name) => setRate((r) => ({ ...r, certificateUrl: url, certificateName: name }))}
+              onUploadingChange={setUploadingCert}
+            />
             <Field label="Certificate test date" hint="Date tested at the depot laboratory"><input type="date" value={rate.certificateDate} onChange={setR('certificateDate')} className={inputCls} /></Field>
           </div>
           <div className="pt-2 border-t border-slate-100">
@@ -556,7 +728,7 @@ function SupplierRfqs() {
               </div>
             )}
           </div>
-          <button disabled={saving} className="px-5 py-2.5 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-lg disabled:opacity-50">{saving ? 'Saving' : 'Save standing rate'}</button>
+          <button disabled={saving || uploadingCert} className="px-5 py-2.5 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-lg disabled:opacity-50">{uploadingCert ? 'Uploading certificate...' : saving ? 'Saving' : 'Save standing rate'}</button>
         </form>
       </section>
     </Shell>

@@ -131,6 +131,28 @@ export const api = {
       if (!res.ok) throw new Error(data.error || 'Upload failed');
       return data;
     },
+    uploadCertificate: async (file) => {
+      const form = new FormData();
+      form.append('file', file);
+      const res = await fetch(`${API_URL}/rfqs/upload-certificate`, { method: 'POST', body: form, credentials: 'include' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      return data;
+    },
+    downloadCertificate: async (rfqId, certId, fileName) => {
+      const response = await fetch(`${API_URL}/rfqs/${rfqId}/certificates/${certId}`, { credentials: 'include' });
+      if (!response.ok) {
+        let message = 'Could not download the certificate.';
+        try { message = (await response.json()).error || message; } catch { /* non-JSON error body */ }
+        throw new Error(message);
+      }
+      const url = URL.createObjectURL(await response.blob());
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName || `certificate-${certId.slice(0, 8)}.pdf`;
+      link.click();
+      URL.revokeObjectURL(url);
+    },
     confirmQuote: (quoteId, data = {}) => request(`/rfqs/quotes/${quoteId}/confirm`, { method: 'POST', body: JSON.stringify(data) }),
     withdrawQuote: (quoteId) => request(`/rfqs/quotes/${quoteId}/withdraw`, { method: 'PUT' }),
   },
