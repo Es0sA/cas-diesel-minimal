@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, FileText, CheckCircle2, AlertTriangle, Clock, Plus, Info, Upload, FileCheck2, ExternalLink } from 'lucide-react';
 import { api } from '../api';
+import { NIGERIAN_STATES } from '../lib/nigeria';
 import { DEPOTS, depotName } from '../data/depots';
 
 const naira = (n) => `₦${Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
@@ -101,14 +102,19 @@ function BuyerRfqs() {
   const [open, setOpen] = useState(Boolean(initialDepotId));
   const [busy, setBusy] = useState(false);
   const [photos, setPhotos] = useState([]);
-  const [f, setF] = useState({ volumeLiters: 33000, depotId: initialDepotId, deliveryAddress: '', targetLatitude: '', targetLongitude: '', receiverName: '', receiverPhone: '', validHours: 24, flashPointMin: '', densityMin: '', densityMax: '', sulphurMax: '', waterMax: '' });
+  const [f, setF] = useState({ volumeLiters: 33000, depotId: initialDepotId, deliveryAddress: '', targetLatitude: '', targetLongitude: '', receiverName: '', receiverPhone: '', city: '', state: '', validHours: 24, flashPointMin: '', densityMin: '', densityMax: '', sulphurMax: '', waterMax: '' });
   const set = (k) => (e) => setF((x) => ({ ...x, [k]: e.target.value }));
   const [profile, setProfile] = useState(null);
   const [sameContact, setSameContact] = useState(true);
 
   // The registered company details pre-fill the receiving contact
   useEffect(() => {
-    api.companies.getProfile().then((res) => setProfile(res?.company || res)).catch(() => setSameContact(false));
+    api.companies.getProfile().then((res) => {
+      const company = res?.company || res;
+      setProfile(company);
+      // City and state default to the registered ones but stay editable
+      setF((x) => ({ ...x, city: x.city || company?.city || '', state: x.state || company?.state || '' }));
+    }).catch(() => setSameContact(false));
   }, []);
 
   useEffect(() => {
@@ -132,6 +138,8 @@ function BuyerRfqs() {
       const body = { volumeLiters: Number(f.volumeLiters), validHours: Number(f.validHours), requirements };
       if (f.depotId) body.depotId = f.depotId;
       // Who receives the diesel and where. Defaults to the registered company contact.
+      body.city = f.city.trim();
+      body.state = f.state;
       body.receiverSameAsRegistered = sameContact;
       if (sameContact) {
         body.receiverName = profile?.companyName || '';
@@ -170,6 +178,10 @@ function BuyerRfqs() {
             <Field label="Volume (litres)"><input required type="number" min="1" step="1" value={f.volumeLiters} onChange={set('volumeLiters')} className={inputCls} /></Field>
             <Field label="Loading depot" hint="Optional. Leave blank to accept any."><select value={f.depotId} onChange={set('depotId')} className={inputCls}><option value="">Any depot</option>{DEPOTS.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}</select></Field>
             <Field label="Quotes stay open for"><select value={f.validHours} onChange={set('validHours')} className={inputCls}>{[[6, '6 hours'], [24, '24 hours'], [48, '2 days'], [72, '3 days'], [168, '7 days']].map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select></Field>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Field label="Delivery state" hint="Vendors see the city and state to price transport."><select required value={f.state} onChange={set('state')} className={inputCls}><option value="">Select state</option>{NIGERIAN_STATES.map((st) => <option key={st} value={st}>{st}</option>)}</select></Field>
+            <Field label="Delivery city"><input required type="text" maxLength={100} value={f.city} onChange={set('city')} className={inputCls} autoComplete="off" /></Field>
           </div>
           <fieldset className="rounded-xl border border-slate-200 p-4 space-y-4">
             <legend className="px-2 text-sm font-bold text-cas-slate">Receiving Contact &amp; Location</legend>
@@ -594,7 +606,7 @@ function SupplierRfqDetail({ id }) {
   const mine = quotes.find((q) => q.status === 'SUBMITTED' || q.status === 'DRAFT');
 
   return (
-    <Shell title={`${Number(rfq.volumeLiters).toLocaleString()} L of AGO`} back="/rfqs" subtitle={`${rfq.buyerName || 'Buyer'}${rfq.deliveryAddress ? ` · ${rfq.deliveryAddress}` : ''}`}>
+    <Shell title={`${Number(rfq.volumeLiters).toLocaleString()} L of AGO`} back="/rfqs" subtitle={[rfq.buyerName || 'Buyer', [rfq.city, rfq.state].filter(Boolean).join(', ')].filter(Boolean).join(' · ')}>
       <div className="flex items-center gap-3 mb-6"><Pill status={rfq.status} /><span className="text-sm text-cas-muted">Closes {when(rfq.expiresAt)}</span></div>
       <section className="bg-white border border-cas-border rounded-2xl p-6 mb-8 shadow-sm">
         <h2 className="text-lg font-bold text-cas-slate mb-3">What the buyer needs</h2>
@@ -702,7 +714,7 @@ function SupplierRfqs() {
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <p className="font-bold text-cas-slate">{Number(r.volumeLiters).toLocaleString()} L of AGO</p>
-                    <p className="text-xs text-cas-muted mt-0.5">{r.buyerName} · {r.deliveryAddress || 'Address after award'} · closes {when(r.expiresAt)}</p>
+                    <p className="text-xs text-cas-muted mt-0.5">{r.buyerName} · {[r.city, r.state].filter(Boolean).join(', ') || 'Location not given'} · closes {when(r.expiresAt)}</p>
                   </div>
                   {r.myQuote ? <span className="text-sm font-semibold text-cas-green">Quoted {naira(r.myQuote.pricePerLitre)}</span> : <span className="text-sm font-semibold text-cas-amberDark">Quote now</span>}
                 </div>

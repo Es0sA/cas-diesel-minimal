@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Building2, UserCheck, Truck, MapPin, Navigation, Loader2, ArrowRight } from 'lucide-react';
 import { api } from '../api';
 import { DEPOTS } from '../data/depots';
+import { NIGERIAN_STATES } from '../lib/nigeria';
 import KycUpload from './KycUpload';
 import { usePageTitle } from '../lib/usePageTitle';
 
@@ -30,7 +31,7 @@ export default function Onboarding({ user }) {
   const [error, setError] = useState('');
   const [geolocating, setGeolocating] = useState(false);
 
-  const [buyer, setBuyer] = useState({ company: '', officer: '', phone: '', lat: '6.595200', lng: '3.342100', clearance: '33000', street: '' });
+  const [buyer, setBuyer] = useState({ company: '', officer: '', phone: '', lat: '6.595200', lng: '3.342100', clearance: '33000', street: '', city: '', state: '' });
   const [supplier, setSupplier] = useState({
     name: '',
     rc: '',
@@ -72,10 +73,13 @@ export default function Onboarding({ user }) {
       if (role === 'BUYER') {
         if (!buyer.company.trim()) throw new Error('Company name is required.');
         if (!buyer.street.trim()) throw new Error('Street address is required.');
+        if (!buyer.city.trim() || !buyer.state) throw new Error('City and state are required.');
         await api.companies.updateProfile({
           companyName: buyer.company.trim(),
           businessAddress: `GPS: ${buyer.lat}, ${buyer.lng} (Clearance: ${Number(buyer.clearance).toLocaleString('en-US')}L)`,
           streetAddress: buyer.street.trim(),
+          city: buyer.city.trim(),
+          state: buyer.state,
           gateLatitude: parseFloat(buyer.lat),
           gateLongitude: parseFloat(buyer.lng),
           contactPhone: buyer.phone.trim()
@@ -158,6 +162,15 @@ export default function Onboarding({ user }) {
                   </button>
                 </div>
                 <Field id="ob-street" label="Street address"><input id="ob-street" className={inputCls} value={buyer.street} onChange={(e) => setBuyer({ ...buyer, street: e.target.value })} maxLength={300} placeholder="Plant, street, town" autoComplete="street-address" required /></Field>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <Field id="ob-state" label="State">
+                    <select id="ob-state" className={inputCls} value={buyer.state} onChange={(e) => setBuyer({ ...buyer, state: e.target.value })} required>
+                      <option value="">Select state</option>
+                      {NIGERIAN_STATES.map((st) => <option key={st} value={st}>{st}</option>)}
+                    </select>
+                  </Field>
+                  <Field id="ob-city" label="City"><input id="ob-city" className={inputCls} value={buyer.city} onChange={(e) => setBuyer({ ...buyer, city: e.target.value })} maxLength={100} autoComplete="address-level2" required /></Field>
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   <Field id="ob-lat" label="Latitude"><input id="ob-lat" className={`${inputCls} font-mono`} value={buyer.lat} onChange={(e) => setBuyer({ ...buyer, lat: e.target.value })} /></Field>
                   <Field id="ob-lng" label="Longitude"><input id="ob-lng" className={`${inputCls} font-mono`} value={buyer.lng} onChange={(e) => setBuyer({ ...buyer, lng: e.target.value })} /></Field>

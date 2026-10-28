@@ -282,9 +282,6 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                           <span className="text-xs font-bold uppercase tracking-wider text-cas-muted block">Delivery Destination</span>
                           <h2 className="font-extrabold text-base text-cas-slate mt-0.5">{order.buyer?.companyName}</h2>
                           {order.buyer?.businessAddress && <div className="text-xs text-cas-muted">{order.buyer.businessAddress}</div>}
-                          <div className="text-xs font-mono text-cas-blue font-bold mt-1">
-                            {hasGate ? `GPS: ${order.targetLatitude}, ${order.targetLongitude}` : 'Gate coordinates not set'}
-                          </div>
                         </div>
                       </div>
                       {hasGate && (

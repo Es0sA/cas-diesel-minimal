@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Settings, Save, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
+import { NIGERIAN_STATES } from '../lib/nigeria';
 import { usePageTitle } from '../lib/usePageTitle';
 import DeleteAccount from './DeleteAccount';
 
@@ -161,6 +162,33 @@ export default function ProfileSettings({ user, onDeleted }) {
                   />
                   <p className="text-xs text-slate-500 mt-1">Where deliveries arrive. Used as the default delivery address on new requests.</p>
                 </div>
+                {role === 'BUYER' && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="fld-state" className="block text-sm font-bold text-slate-700 mb-1.5">State</label>
+                      <select id="fld-state"
+                        name="state"
+                        value={formData.state || ''}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-cas-slate focus:ring-1 focus:ring-cas-slate outline-none transition-all text-sm bg-white"
+                      >
+                        <option value="">Select state</option>
+                        {NIGERIAN_STATES.map((st) => <option key={st} value={st}>{st}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label htmlFor="fld-city" className="block text-sm font-bold text-slate-700 mb-1.5">City</label>
+                      <input id="fld-city"
+                        type="text"
+                        name="city"
+                        maxLength={100}
+                        value={formData.city || ''}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-cas-slate focus:ring-1 focus:ring-cas-slate outline-none transition-all text-sm"
+                      />
+                    </div>
+                  </div>
+                )}
                 <div>
                   <label htmlFor="fld-contact-phone-3" className="block text-sm font-bold text-slate-700 mb-1.5">Contact Phone</label>
                   <input id="fld-contact-phone-3"
