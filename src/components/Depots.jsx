@@ -1,92 +1,221 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Clock, ArrowRight } from 'lucide-react';
+import { MapPin, Building2, ChevronRight, Layers, Navigation } from 'lucide-react';
 import { api } from '../api';
 import { DEPOTS } from '../data/depots';
 import { usePageTitle } from '../lib/usePageTitle';
-
-const AREAS = ['All', ...Array.from(new Set(DEPOTS.map((d) => d.area)))];
-const naira = (n) => `₦${Number(n).toLocaleString('en-NG', { maximumFractionDigits: 2 })}`;
-const ago = (iso) => new Date(iso).toLocaleString('en-NG', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+import AgoPriceBlock from './AgoPriceBlock';
 
 export default function Depots({ user }) {
-  usePageTitle('Depot prices', 'Current loading prices at depots across Nigeria, updated by CAS from depot sales teams.');
+  usePageTitle('Depot Directory', 'Accredited loading terminals, operating companies, and indicative AGO diesel prices across Nigeria.');
   const [prices, setPrices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [area, setArea] = useState('All');
+
+  // 3-Level Sequential Filter State
+  const [selectedRegion, setSelectedRegion] = useState('All');
+  const [selectedAxis, setSelectedAxis] = useState('All');
 
   useEffect(() => {
-    api.depots.prices().then(setPrices).catch(() => setError('Could not load depot prices. Please try again.')).finally(() => setLoading(false));
+    api.depots.prices()
+      .then(setPrices)
+      .catch(() => setError('Could not load current depot benchmark prices.'))
+      .finally(() => setLoading(false));
   }, []);
 
-  const byDepot = useMemo(() => {
-    const m = {};
-    prices.forEach((p) => { (m[p.depotId] ||= {})[p.product] = p; });
-    return m;
+  // Map prices by depotId
+  const priceMap = useMemo(() => {
+    const map = {};
+    prices.forEach((p) => {
+      if (p.product === 'AGO') map[p.depotId] = p;
+    });
+    return map;
   }, [prices]);
 
-  const rows = DEPOTS.filter((d) => area === 'All' || d.area === area)
-    .map((d) => ({ ...d, price: byDepot[d.id]?.AGO }))
-    .sort((a, b) => (a.price ? a.price.price : Infinity) - (b.price ? b.price.price : Infinity));
+  // Derived filter options
+  const regions = useMemo(() => ['All', ...Array.from(new Set(DEPOTS.map((d) => d.region)))], []);
+
+  const axes = useMemo(() => {
+    const filteredDepots = selectedRegion === 'All' ? DEPOTS : DEPOTS.filter((d) => d.region === selectedRegion);
+    return ['All', ...Array.from(new Set(filteredDepots.map((d) => d.loadingAxis)))];
+  }, [selectedRegion]);
+
+  // Auto-reset dependent axis filter when region changes
+  const handleRegionChange = (region) => {
+    setSelectedRegion(region);
+    setSelectedAxis('All');
+  };
+
+  // Filtered rows
+  const filteredDepots = useMemo(() => {
+    return DEPOTS.filter((d) => {
+      const matchRegion = selectedRegion === 'All' || d.region === selectedRegion;
+      const matchAxis = selectedAxis === 'All' || d.loadingAxis === selectedAxis;
+      return matchRegion && matchAxis;
+    });
+  }, [selectedRegion, selectedAxis]);
 
   return (
-    <section className="bg-cas-canvas py-12 md:py-16">
-      <div className="max-w-5xl mx-auto px-4 sm:px-8">
-        <div className="text-xs font-bold uppercase tracking-wider text-cas-amberDark mb-2">Depot prices</div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">Compare depot prices before you request</h1>
-        <p className="mt-3 text-cas-muted max-w-2xl">Pick the depot you want your product loaded from, then post a request. Vendors quote the supply and delivery on top of the depot price.</p>
-
-        <p className="mt-6 inline-flex items-center px-3 py-1.5 rounded-full bg-cas-slate text-white text-xs font-bold">Diesel (AGO), price per litre</p>
-        <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Area">
-          {AREAS.map((s) => (
-            <button key={s} onClick={() => setArea(s)} aria-pressed={area === s}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${area === s ? 'bg-cas-amber/20 text-cas-slate border-cas-amber' : 'bg-white text-cas-muted border-cas-border hover:border-slate-400'}`}>
-              {s}
-            </button>
-          ))}
+    <section className="bg-cas-canvas py-10 md:py-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-8 space-y-8">
+        
+        {/* Header Block */}
+        <div className="max-w-3xl space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-100 text-cas-slate text-xs font-mono font-bold uppercase tracking-wider">
+            <Layers className="w-3.5 h-3.5 text-cas-amberDark" aria-hidden="true" />
+            <span>Terminal Intelligence & Directory</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
+            Depot Directory & Loading Corridors
+          </h1>
+          <p className="text-sm sm:text-base text-cas-muted leading-relaxed">
+            Select your corridor and loading terminal below to inspect official indicative AGO spot prices and browse accredited vendors currently allocated to each gantry.
+          </p>
         </div>
 
-        {!loading && !error && prices.length === 0 && (
-          <div className="mt-6 flex items-start gap-3 rounded-2xl border border-cas-amber/40 bg-cas-amberLight p-4 sm:p-5">
-            <Clock className="w-5 h-5 text-cas-amberDark shrink-0 mt-0.5" aria-hidden="true" />
-            <div>
-              <p className="font-extrabold text-cas-slate">Prices are being confirmed with each depot</p>
-              <p className="text-sm text-cas-muted mt-0.5">We post a price only after the depot's sales team confirms it. Check back soon, or create an account to be notified when requests open.</p>
+        {/* 3-Level Filter Hierarchy Bar */}
+        <div className="bg-white p-5 sm:p-6 rounded-2xl border-2 border-cas-border shadow-sm space-y-5">
+          
+          {/* Step 1: Region */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
+              <span className="flex items-center gap-1.5">
+                <span className="w-5 h-5 rounded-full bg-cas-slate text-white text-[11px] flex items-center justify-center font-bold">1</span>
+                <span>Select Region</span>
+              </span>
+              <span className="text-[11px] text-cas-muted">
+                {selectedRegion === 'All' ? 'All Nigerian Corridors' : selectedRegion}
+              </span>
+            </div>
+
+            <div className="flex flex-wrap gap-2" role="group" aria-label="Region filter">
+              {regions.map((region) => (
+                <button
+                  key={region}
+                  type="button"
+                  onClick={() => handleRegionChange(region)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border ${
+                    selectedRegion === region
+                      ? 'bg-cas-slate text-white border-cas-slate shadow-sm'
+                      : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                  }`}
+                  aria-pressed={selectedRegion === region}
+                >
+                  {region}
+                </button>
+              ))}
             </div>
           </div>
-        )}
-        {error && <p role="alert" className="mt-6 text-sm font-bold text-red-600">{error}</p>}
-        {loading ? (
-          <p className="mt-8 text-sm text-cas-muted font-bold">Loading prices...</p>
-        ) : (
-          <ul className="mt-6 space-y-3">
-            {rows.map((d) => (
-              <li key={d.id} className="bg-white rounded-2xl border border-cas-border shadow-sm p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="font-extrabold text-cas-slate">{d.name}</div>
-                  <div className="mt-1 flex items-center gap-1.5 text-xs text-cas-muted"><MapPin className="w-3.5 h-3.5" aria-hidden="true" />{d.hub}, {d.state}</div>
-                </div>
-                <div className="sm:text-right">
-                  {d.price ? (
-                    <>
-                      <div className="text-2xl font-extrabold text-cas-slate">{naira(d.price.price)}<span className="text-xs font-bold text-cas-muted ml-1">per litre</span></div>
-                      <div className="mt-0.5 flex sm:justify-end items-center gap-1 text-xs text-cas-muted"><Clock className="w-3 h-3" aria-hidden="true" />Updated {ago(d.price.updatedAt)}</div>
-                    </>
-                  ) : (
-                    <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Awaiting price</div>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
+
+          <div className="border-t border-slate-100" />
+
+          {/* Step 2: Loading Axis */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
+              <span className="flex items-center gap-1.5">
+                <span className="w-5 h-5 rounded-full bg-cas-slate text-white text-[11px] flex items-center justify-center font-bold">2</span>
+                <span>Select Loading Axis</span>
+              </span>
+              <span className="text-[11px] text-cas-muted">
+                {selectedAxis === 'All' ? 'All Loading Axes' : selectedAxis}
+              </span>
+            </div>
+
+            <div className="flex flex-wrap gap-2" role="group" aria-label="Loading axis filter">
+              {axes.map((axis) => (
+                <button
+                  key={axis}
+                  type="button"
+                  onClick={() => setSelectedAxis(axis)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border ${
+                    selectedAxis === axis
+                      ? 'bg-cas-amber text-cas-slate border-cas-amber shadow-sm'
+                      : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                  }`}
+                  aria-pressed={selectedAxis === axis}
+                >
+                  {axis}
+                </button>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+        {/* Product Spec Banner */}
+        <div className="flex items-center justify-between text-xs text-cas-muted px-1">
+          <span className="inline-flex items-center gap-2 font-mono font-bold uppercase tracking-wider text-cas-slate">
+            <span className="w-2 h-2 rounded-full bg-cas-green" aria-hidden="true" />
+            <span>Product: AGO (Diesel) | Unit: Per Liter</span>
+          </span>
+          <span className="font-bold">
+            Showing {filteredDepots.length} loading {filteredDepots.length === 1 ? 'terminal' : 'terminals'}
+          </span>
+        </div>
+
+        {error && (
+          <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-xs font-bold text-red-700">
+            {error}
+          </div>
         )}
 
-        <div className="mt-8">
-          <Link to={user ? '/rfqs' : '/register'} className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-cas-amber text-cas-slate font-extrabold text-sm hover:brightness-95 transition">
-            {user ? (user.role === 'VENDOR' ? 'View open requests' : 'Post a request') : 'Create an account to request'} <ArrowRight className="w-4 h-4" aria-hidden="true" />
-          </Link>
+        {/* Step 3: Depot Cards Grid */}
+        <div className="space-y-4">
+          {filteredDepots.map((depot) => {
+            const price = priceMap[depot.id];
+
+            return (
+              <div
+                key={depot.id}
+                className="bg-white rounded-2xl border-2 border-cas-border p-5 sm:p-6 hover:border-cas-amber transition-all shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 group"
+              >
+                {/* Depot Info */}
+                <div className="space-y-2 max-w-xl">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Link
+                      to={`/depots/${depot.id}`}
+                      className="text-lg sm:text-xl font-extrabold text-cas-slate group-hover:text-cas-amberDark transition-colors"
+                    >
+                      {depot.name}
+                    </Link>
+                    <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                      {depot.loadingAxis}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-xs text-cas-muted">
+                    <div className="flex items-center gap-1.5">
+                      <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" aria-hidden="true" />
+                      <span>Operator: <strong className="text-cas-slate">{depot.operator}</strong></span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" aria-hidden="true" />
+                      <span>{depot.hub}, {depot.state}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Price & Action Flank */}
+                <div className="flex items-center md:flex-col md:items-end justify-between border-t md:border-t-0 pt-4 md:pt-0 border-slate-100 gap-3 shrink-0">
+                  <AgoPriceBlock
+                    compact
+                    price={price?.price}
+                    className="md:text-right"
+                  />
+
+                  <Link
+                    to={`/depots/${depot.id}`}
+                    className="px-4 py-2.5 bg-cas-slate hover:bg-black text-white text-xs font-bold rounded-xl transition-colors inline-flex items-center gap-1.5 shadow"
+                  >
+                    <span>View Terminal & Vendors</span>
+                    <ChevronRight className="w-3.5 h-3.5 text-cas-amber" aria-hidden="true" />
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
         </div>
+
       </div>
     </section>
   );

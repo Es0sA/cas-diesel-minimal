@@ -11,6 +11,7 @@ import Marketplace from './components/Marketplace';
 import LoginPage from './components/LoginPage';
 import SupplierPortal from './components/SupplierPortal';
 import Depots from './components/Depots';
+import DepotDetail from './components/DepotDetail';
 import DriverCockpit from './components/DriverCockpit';
 import OrderDetail from './components/OrderDetail';
 import ProfileSettings from './components/ProfileSettings';
@@ -34,7 +35,7 @@ import {
 } from 'lucide-react';
 
 function HomePage({ user, handleOpenRegistration }) {
-  usePageTitle(null, "Browse verified diesel vendors by depot and price, and order with escrow-protected payment on CAS Energy.");
+  usePageTitle(null, "Browse accredited diesel vendors by depot and price, and order with escrow-protected payment on CAS Diesel.");
   const [checkoutSupplier, setCheckoutSupplier] = useState(null);
   const navigate = useNavigate();
 
@@ -61,7 +62,7 @@ function HomePage({ user, handleOpenRegistration }) {
           <div className="text-center max-w-3xl mx-auto mb-14">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-100 text-cas-slate text-xs font-bold uppercase tracking-wider mb-3">
               <ShieldCheck className="w-3.5 h-3.5 text-cas-amberDark" aria-hidden="true" />
-              <span>How CAS Energy Operates</span>
+              <span>How CAS Diesel Operates</span>
             </div>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
               Vendors Meet The Companies That Need Diesel
@@ -233,10 +234,8 @@ function HomePage({ user, handleOpenRegistration }) {
 const NotForAdmin = ({ user, children }) =>
   (user?.role || '').toUpperCase() === 'ADMIN' ? <Navigate to="/admin" replace /> : children;
 
-// While the waitlist gate is on, /portal is not a public page: logged-out visitors
-// get redirected to the waitlist instead of seeing the live marketplace early.
-const GateWhileWaitlisted = ({ user, children }) =>
-  WAITLIST.enabled && !user ? <Navigate to="/" replace /> : children;
+// /portal allows viewing the main marketplace platform directly even while the waitlist mode is on.
+const GateWhileWaitlisted = ({ user, children }) => children;
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -306,13 +305,15 @@ export default function App() {
     navigate('/');
   };
 
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+
   return (
     <div className="min-h-screen flex flex-col bg-cas-canvas text-cas-slate">
       {/* Top Header */}
       <Header user={user} onLogout={handleLogout} onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />
 
       {/* Main Body */}
-      <main className="flex-1 pb-20 md:pb-0">
+      <main className={`flex-1 ${isAuthPage ? '' : 'pb-20 md:pb-0'}`}>
         <Routes>
           <Route path="/" element={WAITLIST.enabled && !user ? <Waitlist onOpenLegalModal={(modal) => setActiveLegalModal(modal)} /> : <HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
           <Route path="/waitlist" element={<Waitlist onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />} />
@@ -320,6 +321,7 @@ export default function App() {
           <Route path="/register" element={<LoginPage initialRole={registerInitialRole} initialMode="register" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/depots" element={<Depots user={user} />} />
+          <Route path="/depots/:id" element={<DepotDetail user={user} />} />
           <Route path="/vendor" element={<NotForAdmin user={user}><SupplierPortal /></NotForAdmin>} />
           <Route path="/driver" element={<NotForAdmin user={user}><DriverCockpit onNavigateToRegister={() => handleOpenRegistration('driver')} /></NotForAdmin>} />
           <Route path="/onboarding" element={<Onboarding user={user} />} />
@@ -342,8 +344,8 @@ export default function App() {
       {/* Cookie Banner */}
       <CookieBanner onOpenPolicy={(modal) => setActiveLegalModal(modal)} />
 
-      {/* Footer */}
-      <Footer onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />
+      {/* Footer (hidden on register and sign-in pages) */}
+      {!isAuthPage && <Footer onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />}
     </div>
   );
 }
