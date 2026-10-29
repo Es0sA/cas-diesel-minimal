@@ -154,7 +154,7 @@ export default function OrderDetail() {
   const currentStatusIndex = TIMELINE_STATES.indexOf(order.status);
 
   return (
-    <div className="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 bg-cas-canvas min-h-screen">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-cas-canvas min-h-screen">
       <button 
         onClick={() => navigate(-1)}
         className="flex items-center gap-2 text-cas-muted hover:text-cas-slate mb-6 transition-colors"

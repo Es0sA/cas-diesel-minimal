@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Trash2, AlertTriangle } from 'lucide-react';
 import { api } from '../api';
 
-const inputCls = 'w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors';
+const inputCls = 'input';
 
 // Delete account: blockers first, then type DELETE, then an emailed 6-digit code.
 export default function DeleteAccount({ onDeleted }) {

@@ -52,7 +52,7 @@ export default function AdminOrders() {
   };
 
   const pages = Math.max(1, Math.ceil(data.total / PAGE_SIZE));
-  const inputClass = 'px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm';
+  const inputClass = 'input';
 
   return (
     <div className="space-y-4">
@@ -61,7 +61,7 @@ export default function AdminOrders() {
           <label htmlFor="ord-search" className="block text-xs font-bold text-slate-700 mb-1">Search</label>
           <div className="relative">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" aria-hidden="true" />
-            <input id="ord-search" type="text" value={q} onChange={updateFilter(setQ)} placeholder="Order ID, buyer or vendor" className={`${inputClass} w-full pl-9`} />
+            <input id="ord-search" type="text" value={q} onChange={updateFilter(setQ)} placeholder="Order ID, buyer or vendor" className={`${inputClass} pl-9`} />
           </div>
         </div>
         <div>
@@ -79,7 +79,7 @@ export default function AdminOrders() {
           <label htmlFor="ord-to" className="block text-xs font-bold text-slate-700 mb-1">To</label>
           <input id="ord-to" type="date" value={to} onChange={updateFilter(setTo)} className={inputClass} />
         </div>
-        <button type="button" onClick={exportCsv} className="px-4 py-2 rounded-lg bg-cas-slate text-white text-sm font-bold flex items-center gap-2 hover:bg-black">
+        <button type="button" onClick={exportCsv} className="btn-secondary">
           <Download className="w-4 h-4" aria-hidden="true" />
           <span>Export CSV</span>
         </button>

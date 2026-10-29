@@ -268,7 +268,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                 Wholesale diesel. Protected by escrow.
               </h1>
 
-              <p className="text-base sm:text-lg text-cas-muted leading-relaxed">
+              <p className="text-base text-cas-muted leading-relaxed">
                 Connect directly with licensed depot vendors across Lagos, Warri, Port Harcourt, and Calabar. Your payment stays securely locked in escrow until the truck arrives and diesel is confirmed at your gate.
               </p>
 
@@ -340,7 +340,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                       Priority Pass: {refCode}
                     </span>
 
-                    <h2 className="text-2xl font-extrabold text-cas-slate leading-tight">
+                    <h2 className="text-xl font-bold text-cas-slate leading-tight">
                       Your Access Spot Is Reserved
                     </h2>
 
@@ -378,7 +378,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                   /* Input Form */
                   <div className="p-6 sm:p-8">
                     <div className="mb-6">
-                      <h2 className="text-xl sm:text-2xl font-extrabold text-cas-slate leading-tight">
+                      <h2 className="text-xl font-bold text-cas-slate leading-tight">
                         Join the priority waitlist
                       </h2>
                       <p className="text-xs sm:text-sm text-cas-muted mt-1 leading-relaxed">
@@ -444,7 +444,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                             placeholder="e.g. Aliko Mohammed"
                             value={fullName}
                             onChange={(e) => setFullName(e.target.value)}
-                            className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
+                            className="input"
                           />
                         </div>
 
@@ -459,7 +459,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                             placeholder="e.g. 0803 123 4567"
                             value={whatsapp}
                             onChange={(e) => setWhatsapp(e.target.value)}
-                            className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
+                            className="input"
                           />
                         </div>
                       </div>
@@ -479,7 +479,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                           autoCapitalize="none"
                           autoCorrect="off"
                           spellCheck={false}
-                          className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
+                          className="input"
                         />
                       </div>
 
@@ -504,7 +504,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                               placeholder={role === 'BUYER' ? 'e.g. Pinnacle Mills Ltd' : 'e.g. Sahara Downstream Ltd'}
                               value={company}
                               onChange={(e) => setCompany(e.target.value)}
-                              className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
+                              className="input"
                             />
                           </div>
 
@@ -517,7 +517,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                                 id="wl-location"
                                 value={location}
                                 onChange={(e) => setLocation(e.target.value)}
-                                className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
+                                className="input"
                               >
                                 <option value="">Select location...</option>
                                 {(role === 'BUYER' ? STATES : DEPOTS).map((item) => (
@@ -534,7 +534,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                                 id="wl-volume"
                                 value={volume}
                                 onChange={(e) => setVolume(e.target.value)}
-                                className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
+                                className="input"
                               >
                                 <option value="">Select monthly volume...</option>
                                 {VOLUME_TIERS.map((tier) => (
@@ -552,7 +552,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                               id="wl-referral"
                               value={referral}
                               onChange={(e) => setReferral(e.target.value)}
-                              className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
+                              className="input"
                             >
                               <option value="">Select source...</option>
                               {REFERRAL_SOURCES.map((src) => (
@@ -595,7 +595,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                       <button
                         type="submit"
                         disabled={submitting}
-                        className="w-full min-h-[48px] py-3.5 px-6 rounded-xl bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white font-bold text-sm tracking-wide transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+                        className="btn-primary w-full mt-2"
                       >
                         {submitting ? (
                           <span>Registering your priority spot...</span>

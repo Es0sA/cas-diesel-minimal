@@ -8,7 +8,7 @@ import { closesIn, URGENCY_STYLE } from '../lib/rfqUrgency';
 
 const naira = (n) => `₦${Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
 const when = (d) => new Date(d).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
-const inputCls = 'w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors';
+const inputCls = 'input';
 
 const isSafeUrl = (u) => {
   try {
@@ -44,7 +44,7 @@ function Field({ label, hint, children }) {
 
 function Shell({ title, subtitle, back, children }) {
   return (
-    <div className="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 min-h-screen">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
       {back && (
         <Link to={back} className="inline-flex items-center gap-2 text-cas-muted hover:text-cas-slate mb-6 text-sm font-medium">
           <ArrowLeft className="w-4 h-4" aria-hidden="true" /> Back
@@ -169,11 +169,11 @@ function BuyerRfqs() {
       {error && <p role="alert" className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm leading-relaxed">{error}</p>}
 
       {!open ? (
-        <button onClick={() => setOpen(true)} className="mb-8 inline-flex items-center gap-2 px-5 min-h-[44px] bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-lg">
+        <button onClick={() => setOpen(true)} className="btn-primary mb-8">
           <Plus className="w-4 h-4" aria-hidden="true" /> New request
         </button>
       ) : (
-        <form onSubmit={create} className="bg-white border border-cas-border rounded-2xl p-6 mb-8 shadow-sm space-y-5">
+        <form onSubmit={create} className="max-w-4xl bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 mb-8 shadow-sm space-y-5">
           <h2 className="text-xl font-bold text-cas-slate leading-tight">New request for quotes</h2>
           <div className="grid sm:grid-cols-3 gap-4">
             <Field label="Volume (litres)"><input required type="number" min="1" step="1" value={f.volumeLiters} onChange={set('volumeLiters')} className={inputCls} /></Field>
@@ -229,7 +229,7 @@ function BuyerRfqs() {
             </div>
           </details>
           <div className="flex gap-3">
-            <button disabled={busy} className="px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-lg disabled:opacity-50">{busy ? 'Sending' : 'Send to vendors'}</button>
+            <button disabled={busy} className="btn-primary">{busy ? 'Sending' : 'Send to vendors'}</button>
             <button type="button" onClick={() => setOpen(false)} className="px-4 py-2.5 text-sm font-semibold text-cas-muted">Cancel</button>
           </div>
         </form>
@@ -378,7 +378,7 @@ function BuyerRfqDetail({ id }) {
                   {deviates && (
                     <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!okDev[q.id]} onChange={(e) => setOkDev((o) => ({ ...o, [q.id]: e.target.checked }))} /> I accept these deviations</label>
                   )}
-                  <button disabled={busy} onClick={() => accept(q)} className="px-5 py-2.5 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-lg disabled:opacity-50">Award to this vendor</button>
+                  <button disabled={busy} onClick={() => accept(q)} className="btn-secondary">Award to this vendor</button>
                 </div>
               )}
             </li>
@@ -591,7 +591,7 @@ function QuoteForm({ rfq, onDone }) {
           ))}
         </ul>
       )}
-      <button disabled={busy || uploadingCert} className="px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-lg disabled:opacity-50">{uploadingCert ? 'Uploading certificate...' : busy ? 'Sending' : 'Submit quote'}</button>
+      <button disabled={busy || uploadingCert} className="btn-primary">{uploadingCert ? 'Uploading certificate...' : busy ? 'Sending' : 'Submit quote'}</button>
     </form>
   );
 }
@@ -819,7 +819,7 @@ function SupplierRfqs() {
               </div>
             )}
           </div>
-          <button disabled={saving || uploadingCert} className="px-5 py-2.5 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-lg disabled:opacity-50">{uploadingCert ? 'Uploading certificate...' : saving ? 'Saving' : 'Save standing rate'}</button>
+          <button disabled={saving || uploadingCert} className="btn-secondary">{uploadingCert ? 'Uploading certificate...' : saving ? 'Saving' : 'Save standing rate'}</button>
         </form>
       </section>
     </Shell>

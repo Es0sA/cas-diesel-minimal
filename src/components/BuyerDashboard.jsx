@@ -14,12 +14,12 @@ const ACTIVE_DELIVERY = ['FUNDED', 'IN_TRANSIT', 'ARRIVED', 'SETTLING'];
 function Metric({ icon: Icon, label, value, hint }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
-      <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cas-muted">
+      <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.08em] text-slate-600">
         <Icon className="w-4 h-4 text-slate-500" aria-hidden="true" />
         <span>{label}</span>
       </div>
-      <p className="mt-3 font-display text-3xl font-bold tracking-tight text-cas-slate tabular-nums leading-relaxed">{value}</p>
-      <p className="mt-1 text-xs text-cas-muted leading-relaxed">{hint}</p>
+      <p className="mt-3 text-3xl font-display tabular-nums font-bold tracking-tight text-cas-slate leading-relaxed">{value}</p>
+      <p className="mt-1 text-xs text-slate-600 leading-relaxed">{hint}</p>
     </div>
   );
 }
@@ -52,7 +52,7 @@ export default function BuyerDashboard() {
           </h1>
           <p className="text-sm text-cas-muted mt-1 leading-relaxed">Your escrow, deliveries and requests in one place.</p>
         </div>
-        <Link to="/rfqs" className="inline-flex items-center justify-center gap-2 px-5 min-h-[44px] bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-lg">
+        <Link to="/rfqs" className="btn-primary">
           <Plus className="w-4 h-4" aria-hidden="true" /> New request
         </Link>
       </div>
@@ -65,7 +65,7 @@ export default function BuyerDashboard() {
 
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-cas-slate leading-tight">My orders</h2>
-        <Link to="/rfqs" className="inline-flex items-center min-h-[44px] text-sm font-bold text-slate-900 hover:underline">View requests</Link>
+        <Link to="/rfqs" className="inline-flex items-center min-h-[44px] text-sm font-semibold text-slate-900 underline underline-offset-4 decoration-slate-300 hover:decoration-slate-900">View requests</Link>
       </div>
       <MyOrders onLoaded={onOrders} />
     </div>

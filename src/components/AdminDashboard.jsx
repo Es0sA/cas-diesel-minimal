@@ -5,7 +5,7 @@ import AdminDepotPrices from './AdminDepotPrices';
 import AdminCommission from './AdminCommission';
 import { usePageTitle } from '../lib/usePageTitle';
 import { 
-  BarChart, Users, AlertTriangle, ShieldCheck, ClipboardList, 
+  BarChart, Users, AlertTriangle, ClipboardList, 
   CheckCircle, XCircle, ArrowRight, X, Fuel, Coins 
 } from 'lucide-react';
 
@@ -172,9 +172,9 @@ export default function AdminDashboard({ user }) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex items-center gap-3 mb-8">
-        <ShieldCheck className="w-8 h-8 text-slate-700" />
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-cas-slate leading-tight">CAS Admin Operations Console</h1>
+      <div className="mb-8">
+        <p className="text-xs font-medium uppercase tracking-[0.08em] text-slate-600">Admin</p>
+        <h1 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-cas-slate leading-tight">Operations console</h1>
       </div>
 
       {/* Tabs */}
@@ -194,11 +194,11 @@ export default function AdminDashboard({ user }) {
             onClick={() => setActiveTab(tab.id)}
             className={`snap-start shrink-0 flex items-center gap-2 px-4 min-h-[44px] rounded-xl border font-bold text-sm whitespace-nowrap transition-colors ${
               activeTab === tab.id
-                ? 'bg-cas-slate border-cas-slate text-white shadow-sm'
+                ? 'bg-white border-slate-300 text-slate-900 shadow-sm'
                 : 'bg-white border-slate-200 text-cas-muted hover:text-cas-slate hover:border-slate-400'
             }`}
           >
-            <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-slate-300' : ''}`} aria-hidden="true" />
+            <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-slate-900' : ''}`} aria-hidden="true" />
             <span className="sm:hidden">{tab.short}</span>
             <span className="hidden sm:inline">{tab.label}</span>
           </button>
@@ -215,15 +215,15 @@ export default function AdminDashboard({ user }) {
               <div className="grid grid-cols-1 md:grid-cols-[repeat(3,minmax(0,1fr))] gap-6">
                 <div className="bg-white p-5 sm:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
                   <div className="text-cas-muted text-sm font-bold uppercase tracking-wider mb-2">Total Users</div>
-                  <div className="font-display tabular-nums text-3xl lg:text-4xl break-words font-bold tracking-tight text-cas-slate">{stats.totalUsers}</div>
+                  <div className="text-3xl font-display tabular-nums font-bold tracking-tight break-words text-cas-slate">{stats.totalUsers}</div>
                 </div>
                 <div className="bg-white p-5 sm:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
                   <div className="text-cas-muted text-sm font-bold uppercase tracking-wider mb-2">Total Orders</div>
-                  <div className="font-display tabular-nums text-3xl lg:text-4xl break-words font-bold tracking-tight text-cas-slate">{stats.totalOrders}</div>
+                  <div className="text-3xl font-display tabular-nums font-bold tracking-tight break-words text-cas-slate">{stats.totalOrders}</div>
                 </div>
                 <div className="bg-white p-5 sm:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
                   <div className="text-cas-muted text-sm font-bold uppercase tracking-wider mb-2">Total Escrow Volume</div>
-                  <div className="font-display tabular-nums text-3xl lg:text-4xl break-words font-bold tracking-tight text-slate-900">
+                  <div className="text-3xl font-display tabular-nums font-bold tracking-tight break-words text-slate-900">
                     ₦{(stats.totalEscrowVolume).toLocaleString()}
                   </div>
                 </div>
@@ -233,7 +233,7 @@ export default function AdminDashboard({ user }) {
                 <section className="bg-white p-5 sm:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
                   <div className="flex items-center justify-between gap-3 mb-4">
                     <h2 className="font-extrabold text-base text-cas-slate leading-tight">Recent orders</h2>
-                    <button type="button" onClick={() => setActiveTab('orders')} className="inline-flex items-center min-h-[44px] text-sm font-bold text-slate-900 hover:underline">View all</button>
+                    <button type="button" onClick={() => setActiveTab('orders')} className="inline-flex items-center min-h-[44px] text-sm font-semibold text-slate-900 underline underline-offset-4 decoration-slate-300 hover:decoration-slate-900">View all</button>
                   </div>
                   {recentOrders.length === 0 ? (
                     <p className="text-sm text-cas-muted leading-relaxed">No orders yet.</p>
@@ -267,7 +267,7 @@ export default function AdminDashboard({ user }) {
                             <p className="text-sm font-bold text-cas-slate truncate leading-relaxed">{u.companies?.[0]?.companyName || u.email}</p>
                             <p className="text-xs text-cas-muted leading-relaxed">{u.role === 'VENDOR' ? 'Vendor' : 'Driver'}</p>
                           </div>
-                          <button type="button" onClick={() => { setUserStatus('PENDING'); setUserRole('ALL'); setUserPage(1); setActiveTab('users'); }} className="shrink-0 inline-flex items-center min-h-[44px] px-3 text-sm font-bold text-slate-900 hover:underline">Review</button>
+                          <button type="button" onClick={() => { setUserStatus('PENDING'); setUserRole('ALL'); setUserPage(1); setActiveTab('users'); }} className="shrink-0 inline-flex items-center min-h-[44px] px-3 text-sm font-semibold text-slate-900 underline underline-offset-4 decoration-slate-300 hover:decoration-slate-900">Review</button>
                         </li>
                       ))}
                     </ul>
@@ -289,7 +289,7 @@ export default function AdminDashboard({ user }) {
                             <p className="text-sm font-bold text-cas-slate truncate leading-relaxed">{o.buyer?.companyName || 'Buyer'} and {o.supplier?.companyName || 'Vendor'}</p>
                             <p className="text-xs text-cas-muted leading-relaxed">{o.volumeLiters?.toLocaleString()} L · ₦{Number(o.totalEscrowAmount || 0).toLocaleString()}</p>
                           </div>
-                          <button type="button" onClick={() => setActiveTab('disputes')} className="shrink-0 inline-flex items-center min-h-[44px] px-3 text-sm font-bold text-rose-700 hover:underline">Resolve</button>
+                          <button type="button" onClick={() => setActiveTab('disputes')} className="shrink-0 inline-flex items-center min-h-[44px] px-3 text-sm font-semibold text-rose-700 underline underline-offset-4 decoration-rose-200 hover:decoration-rose-700">Resolve</button>
                         </li>
                       ))}
                     </ul>
@@ -430,7 +430,7 @@ export default function AdminDashboard({ user }) {
           {activeTab === 'disputes' && (
             <div className="space-y-4">
               <div className="bg-white p-4 rounded-2xl border border-slate-200 flex flex-wrap items-center gap-3">
-                <button type="button" onClick={handleSweep} className="px-4 min-h-[44px] rounded-lg bg-cas-slate text-white text-sm font-bold hover:bg-black">Run deadline sweep now</button>
+                <button type="button" onClick={handleSweep} className="btn-primary">Run deadline sweep now</button>
                 {sweepMsg && <span className="text-xs text-slate-600 break-all">{sweepMsg}</span>}
               </div>
               {disputesList.length === 0 ? (
@@ -477,7 +477,7 @@ export default function AdminDashboard({ user }) {
                           onChange={(e) => setSplitAmounts((s) => ({ ...s, [order.id]: e.target.value }))}
                           placeholder="Amount to vendor"
                           aria-label="Amount to release to vendor"
-                          className="w-40 px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm"
+                          className="input w-40"
                         />
                         <button
                           type="button"
@@ -584,7 +584,7 @@ export default function AdminDashboard({ user }) {
                     {d.status === 'REJECTED' && <div className="text-xs text-rose-600 mt-1">Reason sent to user: {d.rejectReason}</div>}
                     {rejecting === d.id ? (
                       <div className="mt-2 space-y-2">
-                        <input value={reason} onChange={(e) => setReason(e.target.value)} maxLength={300} placeholder="Why is it rejected? (expired, unreadable, wrong document...)" className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm" />
+                        <input value={reason} onChange={(e) => setReason(e.target.value)} maxLength={300} placeholder="Why is it rejected? (expired, unreadable, wrong document...)" className="input" />
                         <div className="flex gap-2">
                           <button disabled={!reason.trim()} onClick={() => reviewDoc(d.id, 'REJECTED', reason)} className="px-3 py-1.5 rounded-full text-xs font-bold bg-rose-600 text-white disabled:opacity-40">Reject and request re-upload</button>
                           <button onClick={() => { setRejecting(null); setReason(''); }} className="px-3 py-1.5 rounded-full text-xs font-bold border border-slate-200 text-slate-700">Cancel</button>

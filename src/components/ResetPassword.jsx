@@ -4,7 +4,7 @@ import { KeyRound, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 import { api } from '../api';
 import { usePageTitle } from '../lib/usePageTitle';
 
-const inputCls = 'w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors';
+const inputCls = 'input';
 
 export default function ResetPassword() {
   usePageTitle('Reset password', 'Choose a new password for your CAS Diesel account.');

@@ -45,7 +45,7 @@ function Field({ label, hint, children }) {
   );
 }
 
-const inputCls = 'w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors';
+const inputCls = 'input';
 
 export default function DeliveryPanel({ order, viewerRole, onChanged }) {
   const [checklist, setChecklist] = useState(null);
@@ -203,7 +203,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
               <span>I accept payment for any quantity above the {litres(order.volumeLiters)} ordered.</span>
             </label>
             <Field label="Notes" hint="Optional"><textarea rows={2} maxLength={1000} value={form.notes} onChange={set('notes')} className={inputCls} /></Field>
-            <button disabled={busy} className="px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-lg disabled:opacity-50">
+            <button disabled={busy} className="btn-primary">
               {busy ? 'Recording' : 'Record delivery'}
             </button>
           </form>

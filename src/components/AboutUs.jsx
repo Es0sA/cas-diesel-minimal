@@ -25,7 +25,7 @@ export default function AboutUs() {
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="max-w-3xl">
           <div className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 mb-2">About CAS Diesel</div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-cas-slate tracking-tight leading-tight">
+          <h2 className="text-3xl font-bold text-cas-slate tracking-tight leading-tight">
             Nigeria&apos;s enterprise diesel marketplace.
           </h2>
           <p className="text-base text-cas-muted mt-4 leading-relaxed">

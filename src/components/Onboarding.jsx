@@ -13,7 +13,7 @@ const ROLE_COPY = {
   DRIVER: { icon: Truck, title: 'Set up your driver profile', intro: 'Your details and truck, then your licence and calibration chart.', home: '/driver' }
 };
 
-const inputCls = 'w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors';
+const inputCls = 'input';
 const Field = ({ id, label, children }) => (
   <div>
     <label htmlFor={id} className="block text-xs font-bold text-slate-700 mb-1">{label}</label>

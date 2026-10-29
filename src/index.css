@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  /* One recipe for every text field, select and date input */
+  .input {
+    @apply w-full h-11 px-3 rounded-xl border border-slate-300 bg-white text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-cas-amber focus:border-transparent disabled:bg-slate-50 disabled:text-slate-500;
+  }
+  textarea.input { @apply h-auto py-2.5; }
+
+  /* One recipe for the single primary action on a screen */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl bg-cas-amber text-slate-900 text-sm font-bold shadow-sm hover:bg-amber-600 transition-colors disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl border border-slate-300 bg-white text-slate-900 text-sm font-semibold hover:bg-slate-50 transition-colors disabled:opacity-50;
+  }
+}
+
 @layer base {
   h1, h2, h3, h4, h5, h6 {
     @apply font-display tracking-tight;

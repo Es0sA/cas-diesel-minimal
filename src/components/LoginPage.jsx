@@ -353,7 +353,7 @@ export default function LoginPage({
             <button
               type="submit"
               disabled={loading}
-              className="w-full min-h-[48px] py-3 px-4 bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-70 cursor-pointer"
+              className="btn-primary w-full"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin text-slate-900" aria-hidden="true" /> : <span>Verify and continue</span>}
             </button>
@@ -433,7 +433,7 @@ export default function LoginPage({
                 autoCorrect="off"
                 spellCheck={false}
                 placeholder="you@company.com"
-                className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
+                className="input"
               />
             </div>
 
@@ -459,7 +459,7 @@ export default function LoginPage({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-cas-amber transition-all pr-10"
+                  className="input pr-10"
                 />
                 <button
                   type="button"
@@ -480,7 +480,7 @@ export default function LoginPage({
             <button
               type="submit"
               disabled={loading}
-              className="w-full min-h-[48px] py-3 px-4 bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer pt-3"
+              className="btn-primary w-full"
             >
               {loading ? (
                 <>
@@ -576,7 +576,7 @@ export default function LoginPage({
                 autoCorrect="off"
                 spellCheck={false}
                 placeholder="you@company.com"
-                className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
+                className="input"
               />
             </div>
 
@@ -593,7 +593,7 @@ export default function LoginPage({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-cas-amber transition-all pr-10"
+                  className="input pr-10"
                 />
                 <button
                   type="button"
@@ -622,7 +622,7 @@ export default function LoginPage({
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
+                className="input"
               />
             </div>
 
@@ -630,7 +630,7 @@ export default function LoginPage({
             <button
               type="submit"
               disabled={loading}
-              className="w-full min-h-[48px] py-3 px-4 bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer pt-3"
+              className="btn-primary w-full"
             >
               {loading ? (
                 <>
@@ -713,7 +713,7 @@ export default function LoginPage({
                   value={resetEmail}
                   onChange={(e) => setResetEmail(e.target.value.toLowerCase())}
                   placeholder="you@company.com"
-                  className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors mb-5"
+                  className="input mb-5"
                 />
                 <div className="flex items-center gap-3">
                   <button

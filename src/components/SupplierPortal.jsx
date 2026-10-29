@@ -25,7 +25,7 @@ function Kpi({ label, value, hint, tone = 'text-cas-slate' }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
       <p className="text-xs font-bold uppercase tracking-wider text-cas-muted leading-relaxed">{label}</p>
-      <p className={`mt-2 font-display tabular-nums text-2xl sm:text-3xl font-bold tracking-tight ${tone}`}>{value}</p>
+      <p className={`mt-2 text-3xl font-display tabular-nums font-bold tracking-tight ${tone}`}>{value}</p>
       {hint && <p className="mt-1 text-xs text-slate-600 leading-relaxed">{hint}</p>}
     </div>
   );
@@ -216,7 +216,7 @@ export default function SupplierPortal() {
         </p>
       )}
       <div className="flex justify-end border-t border-slate-200 pt-3">
-        <button onClick={() => viewOrder(ord.id)} className="inline-flex items-center min-h-[44px] text-sm font-bold text-cas-slate hover:text-cas-blue transition-colors">View Full Details &rarr;</button>
+        <button onClick={() => viewOrder(ord.id)} className="inline-flex items-center min-h-[44px] text-sm font-semibold text-slate-900 underline underline-offset-4 decoration-slate-300 hover:decoration-slate-900 transition-colors">View Full Details &rarr;</button>
       </div>
     </div>
   );
@@ -295,7 +295,7 @@ export default function SupplierPortal() {
                 <h2 className="font-extrabold text-xl text-cas-slate leading-tight">Open RFQs</h2>
                 <span className="text-xs text-slate-600">Buyers waiting for a price</span>
               </div>
-              <Link to="/rfqs" className="inline-flex items-center gap-1 min-h-[44px] text-sm font-bold text-slate-900 hover:underline">
+              <Link to="/rfqs" className="inline-flex items-center gap-1 min-h-[44px] text-sm font-semibold text-slate-900 underline underline-offset-4 decoration-slate-300 hover:decoration-slate-900">
                 See all <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </Link>
             </div>
@@ -395,7 +395,7 @@ export default function SupplierPortal() {
                 <button
                   type="submit"
                   disabled={!profile}
-                  className="w-full py-3.5 px-4 bg-cas-slate hover:bg-black text-white font-extrabold text-sm rounded-lg transition-all shadow border border-transparent hover:border-cas-amber disabled:opacity-50"
+                  className="btn-primary w-full"
                 >
                   Publish Updated Rates to Marketplace
                 </button>

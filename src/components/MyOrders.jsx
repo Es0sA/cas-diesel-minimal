@@ -66,7 +66,7 @@ export default function MyOrders({ onLoaded }) {
     <div>
       <div className="hidden md:block bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-left text-xs font-bold uppercase tracking-wider text-cas-muted">
+          <thead className="bg-slate-50 text-left text-xs font-medium uppercase tracking-[0.08em] text-slate-600">
             <tr>
               <th scope="col" className="px-5 py-3">Status</th>
               <th scope="col" className="px-5 py-3">Vendor</th>
@@ -80,10 +80,10 @@ export default function MyOrders({ onLoaded }) {
               <tr key={o.id} className="hover:bg-slate-50">
                 <td className="px-5 py-4"><StatusChip status={o.status} /></td>
                 <td className="px-5 py-4 font-semibold text-cas-slate">{o.supplier?.companyName || 'Vendor'}</td>
-                <td className="px-5 py-4 text-right tabular-nums">{Number(o.volumeLiters).toLocaleString()} L</td>
-                <td className="px-5 py-4 text-cas-muted">{day(o.createdAt)}</td>
+                <td className="px-5 py-4 text-right font-medium text-slate-600 tabular-nums">{Number(o.volumeLiters).toLocaleString()} L</td>
+                <td className="px-5 py-4 font-medium text-slate-600">{day(o.createdAt)}</td>
                 <td className="px-5 py-4 text-right">
-                  <Link to={`/orders/${o.id}`} className="font-bold text-slate-900 hover:underline">View</Link>
+                  <Link to={`/orders/${o.id}`} className="font-semibold text-slate-900 underline underline-offset-4 decoration-slate-300 hover:decoration-slate-900">View</Link>
                 </td>
               </tr>
             ))}

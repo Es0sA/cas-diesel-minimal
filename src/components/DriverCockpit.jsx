@@ -253,7 +253,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                       {order.supplier?.companyName} to {order.buyer?.companyName}
                     </div>
                     <div className="mt-1">
-                      <button onClick={() => viewOrder(order.id)} className="inline-flex items-center min-h-[44px] text-sm font-bold text-cas-blue hover:underline">View Full Details &rarr;</button>
+                      <button onClick={() => viewOrder(order.id)} className="inline-flex items-center min-h-[44px] text-sm font-semibold text-slate-900 underline underline-offset-4 decoration-slate-300 hover:decoration-slate-900">View Full Details &rarr;</button>
                     </div>
                   </div>
 
