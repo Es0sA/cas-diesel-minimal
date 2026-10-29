@@ -11,6 +11,16 @@ const ACTIVE_STATUSES = ['FUNDED', 'IN_TRANSIT', 'ARRIVED', 'SETTLING'];
 const COMMAND_STATUSES = ['FUNDED', 'IN_TRANSIT'];
 const naira = (n) => `₦${Number(n || 0).toLocaleString()}`;
 
+// Where the load goes: receiver and city/state from the RFQ, else the gate coordinates, else nothing.
+function destinationOf(ord) {
+  const d = ord.delivery || {};
+  const place = [d.city, d.state].filter(Boolean).join(', ');
+  const parts = [d.receiverName, place].filter(Boolean);
+  if (parts.length) return parts.join(' · ');
+  if (ord.targetLatitude != null) return `${ord.targetLatitude}, ${ord.targetLongitude}`;
+  return 'Not set';
+}
+
 function Kpi({ label, value, hint, tone = 'text-cas-slate' }) {
   return (
     <div className="bg-white p-5 sm:p-6 rounded-2xl border-2 border-cas-border shadow-sm">
@@ -38,6 +48,7 @@ export default function SupplierPortal() {
   const [filterStatus, setFilterStatus] = useState('All');
   const [loading, setLoading] = useState(true);
   const [dispatchingId, setDispatchingId] = useState(null);
+  const [dispatchMsg, setDispatchMsg] = useState({});
   const [activeOrders, setActiveOrders] = useState(null);
   const [openRfqs, setOpenRfqs] = useState(null);
   const [myQuotes, setMyQuotes] = useState([]);
@@ -107,18 +118,17 @@ export default function SupplierPortal() {
 
   const handleDispatch = async (orderId) => {
     const driverId = driverChoice[orderId];
-    if (!driverId) {
-      alert('Select a driver first.');
-      return;
-    }
+    if (!driverId) return;
+    const say = (tone, text) => setDispatchMsg((prev) => ({ ...prev, [orderId]: text ? { tone, text } : undefined }));
     try {
       setDispatchingId(orderId);
+      say();
       const res = await api.orders.dispatch(orderId, { driverId });
       await Promise.all([loadOrders(), loadActive()]);
       const gaps = res.standingDocs?.missing || [];
-      if (gaps.length) alert(`Dispatched, but the driver has no approved, unexpired ${gaps.map((g) => g.type === 'DRIVER_ID' ? 'driver licence' : 'truck calibration chart').join(' or ')} on file. Ask the driver to upload it in their profile, or add the document on the order page, or the buyer cannot clear offloading.`);
+      if (gaps.length) say('warn', `Dispatched, but the driver has no approved, unexpired ${gaps.map((g) => g.type === 'DRIVER_ID' ? 'driver licence' : 'truck calibration chart').join(' or ')} on file. Ask the driver to upload it in their profile, or add the document on the order page, or the buyer cannot clear offloading.`);
     } catch (err) {
-      alert(err.message);
+      say('error', err.message || 'Dispatch failed. Please try again.');
     } finally {
       setDispatchingId(null);
     }
@@ -136,7 +146,7 @@ export default function SupplierPortal() {
           <span className="font-mono font-bold text-xs text-cas-amberDark">#{ord.id.slice(0, 8).toUpperCase()}</span>
           <h4 className="font-extrabold text-base text-cas-slate">{ord.buyer?.companyName || 'Unknown Buyer'}</h4>
           <span className="text-xs text-cas-muted">
-            Destination: {ord.targetLatitude != null ? `${ord.targetLatitude}, ${ord.targetLongitude}` : 'Not set'}
+            Destination: {destinationOf(ord)}
           </span>
         </div>
         <div className="sm:text-right">
@@ -161,7 +171,8 @@ export default function SupplierPortal() {
           <div className="flex flex-wrap items-center gap-2 w-full">
             <select
               value={driverChoice[ord.id] || ''}
-              onChange={(e) => setDriverChoice((prev) => ({ ...prev, [ord.id]: e.target.value }))}
+              onChange={(e) => { setDriverChoice((prev) => ({ ...prev, [ord.id]: e.target.value })); setDispatchMsg((prev) => ({ ...prev, [ord.id]: undefined })); }}
+              disabled={drivers.length === 0}
               className="flex-1 min-w-0 h-9 px-2 bg-white border border-slate-300 rounded font-semibold text-xs text-cas-slate"
               aria-label="Select verified driver"
             >
@@ -175,11 +186,14 @@ export default function SupplierPortal() {
             <button
               type="button"
               onClick={() => handleDispatch(ord.id)}
-              disabled={dispatchingId === ord.id}
-              className="h-9 px-4 bg-cas-slate hover:bg-black text-white font-bold rounded text-xs transition-colors shrink-0 disabled:opacity-50"
+              disabled={dispatchingId === ord.id || !driverChoice[ord.id]}
+              className="h-9 px-4 bg-cas-slate hover:bg-black text-white font-bold rounded text-xs transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-cas-slate"
             >
               {dispatchingId === ord.id ? 'Dispatching...' : 'Assign & Dispatch'}
             </button>
+            {drivers.length === 0 && (
+              <p className="w-full text-cas-muted">No verified drivers are available yet. A driver must register and be verified by CAS before you can dispatch.</p>
+            )}
           </div>
         ) : ord.driver ? (
           <div className="text-left sm:text-right">
@@ -197,6 +211,11 @@ export default function SupplierPortal() {
           <div className="text-cas-muted">{ord.status === 'DRAFT' ? 'Awaiting funding' : 'Awaiting driver assignment'}</div>
         )}
       </div>
+      {dispatchMsg[ord.id] && (
+        <p role={dispatchMsg[ord.id].tone === 'error' ? 'alert' : 'status'} className={`p-3 rounded-lg border text-xs font-semibold ${dispatchMsg[ord.id].tone === 'error' ? 'bg-rose-50 border-rose-200 text-rose-800' : 'bg-amber-50 border-amber-200 text-amber-900'}`}>
+          {dispatchMsg[ord.id].text}
+        </p>
+      )}
       <div className="flex justify-end border-t border-slate-200 pt-3">
         <button onClick={() => viewOrder(ord.id)} className="text-xs font-bold text-cas-slate hover:text-cas-blue transition-colors">View Full Details &rarr;</button>
       </div>
