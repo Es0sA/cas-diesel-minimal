@@ -94,6 +94,8 @@ export const api = {
     get: (id) => request(`/orders/${id}`),
     create: (data) => request('/orders/create', { method: 'POST', body: JSON.stringify(data) }),
     dispatch: (id, data) => request(`/orders/${id}/dispatch`, { method: 'POST', body: JSON.stringify(data) }),
+    vendorAccept: (id) => request(`/orders/${id}/vendor-accept`, { method: 'POST' }),
+    buyerCancel: (id) => request(`/orders/${id}/buyer-cancel`, { method: 'POST' }),
     cancel: (id, data) => request(`/orders/${id}/cancel`, { method: 'POST', body: JSON.stringify(data) }),
     checklist: (id) => request(`/orders/${id}/checklist`),
     ledger: (id) => request(`/orders/${id}/ledger`),
@@ -183,6 +185,8 @@ export const api = {
       link.click();
       URL.revokeObjectURL(url);
     },
+    vendorAccept: (rfqId) => request(`/rfqs/${rfqId}/vendor-accept`, { method: 'POST' }),
+    buyerCancel: (rfqId) => request(`/rfqs/${rfqId}/buyer-cancel`, { method: 'POST' }),
     confirmQuote: (quoteId, data = {}) => request(`/rfqs/quotes/${quoteId}/confirm`, { method: 'POST', body: JSON.stringify(data) }),
   },
   depots: {

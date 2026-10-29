@@ -6,6 +6,7 @@ import KycUpload from './KycUpload';
 import { DEPOTS } from '../data/depots';
 import { usePageTitle } from '../lib/usePageTitle';
 import { closesIn, URGENCY_STYLE } from '../lib/rfqUrgency';
+import PendingAcceptance from './PendingAcceptance';
 
 const ACTIVE_STATUSES = ['FUNDED', 'IN_TRANSIT', 'ARRIVED', 'SETTLING'];
 const HISTORY_STATUSES = ['DELIVERED', 'CANCELLED', 'COMPLETED'];
@@ -50,6 +51,7 @@ export default function SupplierPortal() {
   const [dispatchingId, setDispatchingId] = useState(null);
   const [dispatchMsg, setDispatchMsg] = useState({});
   const [activeOrders, setActiveOrders] = useState(null);
+  const [pendingOrders, setPendingOrders] = useState([]);
   const [openRfqs, setOpenRfqs] = useState(null);
   const [myQuotes, setMyQuotes] = useState([]);
 
@@ -72,8 +74,12 @@ export default function SupplierPortal() {
 
   const loadActive = useCallback(() => (
     api.orders.list()
-      .then((data) => setActiveOrders((data?.orders || []).filter((o) => ACTIVE_STATUSES.includes(o.status))))
-      .catch((err) => { console.error('Failed to fetch active orders', err); setActiveOrders([]); })
+      .then((data) => {
+        const rows = data?.orders || [];
+        setActiveOrders(rows.filter((o) => ACTIVE_STATUSES.includes(o.status)));
+        setPendingOrders(rows.filter((o) => o.status === 'PENDING_VENDOR_ACCEPTANCE'));
+      })
+      .catch((err) => { console.error('Failed to fetch active orders', err); setActiveOrders([]); setPendingOrders([]); })
   ), []);
 
   useEffect(() => {
@@ -271,6 +277,17 @@ export default function SupplierPortal() {
           <Kpi label="Active Supply Orders" value={activeOrders === null ? '...' : activeOrders.length} hint="Funded, in transit or at the gate" tone="text-slate-900" />
           <Kpi label="Open Procurement Requests" value={openRfqs === null ? '...' : pendingRfqs.length} hint="Open and not yet quoted by you" tone="text-slate-900" />
         </div>
+
+        {pendingOrders.length > 0 && (
+          <section aria-label="Orders waiting for your confirmation" className="mb-8 space-y-3">
+            {pendingOrders.map((ord) => (
+              <div key={ord.id}>
+                <p className="text-xs font-bold text-cas-muted mb-1.5">Order #{ord.id.slice(0, 8).toUpperCase()}: {ord.volumeLiters.toLocaleString()} Litres, ₦{(ord.totalEscrowAmount || 0).toLocaleString()}</p>
+                <PendingAcceptance order={ord} role="VENDOR" compact onChanged={() => Promise.all([loadOrders(), loadActive()])} />
+              </div>
+            ))}
+          </section>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">

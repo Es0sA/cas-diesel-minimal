@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Loader2, ArrowLeft, FileText, CheckCircle2, AlertTriangle, Clock, Plus, Info, Upload, FileCheck2, ExternalLink } from 'lucide-react';
 import { api } from '../api';
+import PendingAcceptance from './PendingAcceptance';
 import { NIGERIAN_STATES } from '../lib/nigeria';
 import { DEPOTS, depotName } from '../data/depots';
 import { closesIn, URGENCY_STYLE } from '../lib/rfqUrgency';
@@ -29,6 +30,7 @@ const STATUS_STYLE = {
   REJECTED: 'bg-slate-100 text-cas-muted',
   WITHDRAWN: 'bg-slate-100 text-cas-muted',
   DRAFT: 'bg-cas-amberLight text-cas-amberDark',
+  HELD: 'bg-cas-amberLight text-cas-amberDark',
 };
 const Pill = ({ status }) => <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${STATUS_STYLE[status] || 'bg-slate-100 text-cas-muted'}`}>{status}</span>;
 
@@ -324,6 +326,7 @@ function BuyerRfqDetail({ id }) {
         {rfq.status === 'OPEN' && <button onClick={cancel} className="ml-auto text-sm font-semibold text-rose-700 hover:underline">Cancel request</button>}
       </div>
       {error && <ErrorNotice message={error} onRetry={() => { setError(null); load(); }} />}
+      <PendingAcceptance order={data.order ? { ...data.order, rfqId: id } : null} role="BUYER" onChanged={load} />
 
       <section className="bg-white border border-cas-border rounded-2xl p-6 mb-8 shadow-sm">
         <h2 className="text-xl font-bold text-cas-slate mb-3 leading-tight">Your specification</h2>
@@ -826,7 +829,7 @@ function SupplierRfqs() {
                     <strong className="text-slate-900">When unchecked (Recommended):</strong> When a buyer posts an RFQ matching this depot and volume range, CAS automatically prepares a private draft quote for you. You receive an alert, review current depot market prices and the buyer's delivery gate, then tap "Confirm and Send" before the buyer can see your bid.
                   </p>
                   <p>
-                    <strong className="text-slate-900">When checked (Instant Bid):</strong> The platform submits your quote immediately to matching buyers as a live bid without waiting for your manual approval. Only select this if your diesel supply costs are locked in and you want to be first to quote.
+                    <strong className="text-slate-900">When checked (Instant Quote):</strong> The platform submits your quote immediately to matching buyers as a live quote without waiting for your manual approval. Only select this if your diesel supply costs are locked in and you want to be first to quote.
                   </p>
                 </div>
               </div>

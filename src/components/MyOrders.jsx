@@ -4,6 +4,7 @@ import { Package } from 'lucide-react';
 import { api } from '../api';
 
 const STATUS = {
+  PENDING_VENDOR_ACCEPTANCE: { label: 'Waiting for vendor', cls: 'bg-cas-amberLight text-cas-amberDark' },
   DRAFT: { label: 'Awaiting funding', cls: 'bg-slate-100 text-slate-700' },
   FUNDED: { label: 'Funded', cls: 'bg-cas-blueLight text-cas-blue' },
   IN_TRANSIT: { label: 'In transit', cls: 'bg-cas-amberLight text-cas-amberDark' },

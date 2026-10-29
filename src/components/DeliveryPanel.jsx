@@ -58,7 +58,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
   const [reason, setReason] = useState('');
   const [offer, setOffer] = useState({ amount: '', note: '' });
 
-  const funded = order.status !== 'DRAFT';
+  const funded = !['DRAFT', 'PENDING_VENDOR_ACCEPTANCE'].includes(order.status);
   const load = useCallback(async () => {
     if (!funded) return;
     const [c, v, l] = await Promise.all([

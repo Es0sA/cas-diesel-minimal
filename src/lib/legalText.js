@@ -11,7 +11,7 @@ export const TERMS_SECTIONS = [
   ],
   [
     '2. Counterparty Requirements and NMDPRA Accreditation',
-    'Platform participation is restricted to incorporated corporate buyers, licensed petroleum marketers and vendors holding valid NMDPRA (Nigerian Midstream and Downstream Petroleum Regulatory Authority) operating credentials, and fleet drivers possessing verified driver licences and calibrated tanker charts. All participants must provide genuine, verifiable documentation. CAS Diesel verifies credentials prior to depot accreditation and reserves the right to suspend or remove any entity that fails ongoing compliance checks.'
+    'Platform participation is restricted to incorporated corporate buyers, licensed petroleum vendors holding valid NMDPRA (Nigerian Midstream and Downstream Petroleum Regulatory Authority) operating credentials and fleet drivers possessing verified driver licences and calibrated tanker charts. All participants must provide genuine, verifiable documentation. CAS Diesel verifies credentials prior to depot accreditation and reserves the right to suspend or remove any entity that fails ongoing compliance checks.'
   ],
   [
     '3. Ex-Depot Pricing and Escrow Settlement Protocol',

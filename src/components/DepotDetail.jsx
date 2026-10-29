@@ -200,7 +200,7 @@ export default function DepotDetail({ user }) {
                 No Accredited Vendors Currently Listed for this Terminal
               </h3>
               <p className="text-xs sm:text-sm text-cas-muted max-w-lg mx-auto leading-relaxed">
-                Verified seller allocations appear here as soon as downstream marketers complete NMDPRA licensing and gantry clearance for {depot.name}.
+                Verified seller allocations appear here as soon as downstream vendors complete NMDPRA licensing and gantry clearance for {depot.name}.
               </p>
               <div className="pt-2">
                 <Link

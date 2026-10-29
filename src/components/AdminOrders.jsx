@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { api } from '../api';
 import { Search, Download } from 'lucide-react';
 
-const STATUSES = ['DRAFT', 'FUNDED', 'IN_TRANSIT', 'ARRIVED', 'SETTLING', 'CANCEL_REQUESTED', 'CANCELLED', 'DELIVERED', 'DISPUTED'];
+const STATUSES = ['PENDING_VENDOR_ACCEPTANCE', 'DRAFT', 'FUNDED', 'IN_TRANSIT', 'ARRIVED', 'SETTLING', 'CANCEL_REQUESTED', 'CANCELLED', 'DELIVERED', 'DISPUTED'];
 const PAGE_SIZE = 20;
 
 export default function AdminOrders() {

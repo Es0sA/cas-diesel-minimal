@@ -60,7 +60,7 @@ export default function BuyerDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
         <Metric icon={Lock} label="Escrow locked" value={locked === null ? dash : naira(locked)} hint="Held until delivery is verified at your gate" />
         <Metric icon={Truck} label="Active deliveries" value={active === null ? dash : active} hint="Funded orders that are not yet settled" />
-        <Metric icon={FileText} label="Pending RFQs" value={pending === null ? dash : pending} hint="Open requests waiting for vendor quotes" />
+        <Metric icon={FileText} label="Active Requests" value={pending === null ? dash : pending} hint="Open requests waiting for vendor quotes" />
       </div>
 
       <div className="flex items-center justify-between mb-4">

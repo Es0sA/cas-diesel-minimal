@@ -7,10 +7,11 @@ import {
 import { api } from '../api';
 import ReviewForm from './ReviewForm';
 import DeliveryPanel from './DeliveryPanel';
+import PendingAcceptance from './PendingAcceptance';
 import { usePageTitle } from '../lib/usePageTitle';
 
-const TIMELINE_STATES = ['DRAFT', 'FUNDED', 'IN_TRANSIT', 'ARRIVED', 'SETTLING', 'DELIVERED'];
-const STATE_LABELS = { SETTLING: 'VERIFIED' };
+const BASE_TIMELINE = ['DRAFT', 'FUNDED', 'IN_TRANSIT', 'ARRIVED', 'SETTLING', 'DELIVERED'];
+const STATE_LABELS = { SETTLING: 'VERIFIED', PENDING_VENDOR_ACCEPTANCE: 'WAITING FOR VENDOR' };
 
 export default function OrderDetail() {
   const { id: orderId } = useParams();
@@ -152,6 +153,8 @@ export default function OrderDetail() {
 
   if (!order) return null;
 
+  // Every order starts by waiting for the vendor to confirm
+  const TIMELINE_STATES = ['PENDING_VENDOR_ACCEPTANCE', ...BASE_TIMELINE];
   const currentStatusIndex = TIMELINE_STATES.indexOf(order.status);
 
   return (
@@ -178,7 +181,7 @@ export default function OrderDetail() {
         <div className="text-left md:text-right flex flex-col items-start md:items-end">
           <p className="text-sm text-cas-muted leading-relaxed">Total Escrow Amount</p>
           <p className="text-3xl font-extrabold text-cas-slate leading-relaxed">₦{(order.totalEscrowAmount ?? order.totalAmount ?? 0).toLocaleString()}</p>
-          {order.status !== 'DRAFT' && (
+          {!['DRAFT', 'PENDING_VENDOR_ACCEPTANCE'].includes(order.status) && (
             <button
               onClick={handleWaybill}
               className="mt-3 px-4 py-2 bg-white hover:bg-slate-50 text-cas-slate border border-slate-300 text-sm font-bold rounded-lg transition-colors"
@@ -204,6 +207,8 @@ export default function OrderDetail() {
           )}
         </div>
       </div>
+
+      <PendingAcceptance order={order} role={viewerRole} onChanged={() => fetchData(true)} />
 
       {viewerRole === 'VENDOR' && !['CANCELLED', 'DELIVERED'].includes(order.status) && order.delivery && (order.delivery.receiverName || order.delivery.receiverPhone || order.delivery.deliveryAddress || order.delivery.city) && (
         <section className="bg-white p-5 rounded-2xl border border-slate-200 mb-8 shadow-sm">
