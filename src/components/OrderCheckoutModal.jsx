@@ -119,11 +119,11 @@ export default function OrderCheckoutModal({ supplier, onClose, onSuccess }) {
             {loading ? (
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
-              <span>Lock Price & Initialize Escrow</span>
+              <span>Send Order to Vendor</span>
             )}
           </button>
           <p className="text-xs text-center text-cas-muted leading-relaxed">
-            You will be redirected to the secure payment gateway on the next screen.
+            The vendor must accept this order before you can fund the escrow. You can cancel it until they do.
           </p>
         </div>
       </div>
