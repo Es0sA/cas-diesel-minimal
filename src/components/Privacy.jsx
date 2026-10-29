@@ -8,7 +8,7 @@ import { usePageTitle } from '../lib/usePageTitle';
 const operator = [LEGAL.entityName, LEGAL.rcNumber && `RC ${LEGAL.rcNumber}`, LEGAL.registeredAddress].filter(Boolean).join(', ');
 
 export default function Privacy({ onOpenTerms }) {
-  usePageTitle('Privacy Policy', 'How CAS Diesel handles account data, delivery gate coordinates and cookies.');
+  usePageTitle('Privacy Policy', 'How CAS Diesel collects, uses, shares and retains personal data under the Nigeria Data Protection Act 2023, and the rights you hold.');
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-8 py-12 sm:py-16">

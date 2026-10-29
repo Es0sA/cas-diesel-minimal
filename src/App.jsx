@@ -27,6 +27,8 @@ import BuyerDashboard from './components/BuyerDashboard';
 import MyOrders from './components/MyOrders';
 import AboutUs from './components/AboutUs';
 import Privacy from './components/Privacy';
+import Terms from './components/Terms';
+import About from './components/About';
 import ResetPassword from './components/ResetPassword';
 import NotFound from './components/NotFound';
 import { 
@@ -383,6 +385,8 @@ export default function App() {
           <Route path="/profile" element={<ProfileSettings user={user} onDeleted={() => { setUser(null); navigate('/account-deleted'); }} />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/privacy" element={<Privacy onOpenTerms={(modal) => setActiveLegalModal(modal)} />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/about" element={<About />} />
           <Route path="/account-deleted" element={<AccountDeleted />} />
           <Route path="/admin" element={<AdminDashboard user={user} />} />
           <Route path="*" element={<NotFound />} />

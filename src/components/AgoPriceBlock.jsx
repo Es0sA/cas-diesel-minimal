@@ -34,7 +34,7 @@ export default function AgoPriceBlock({ price, updatedAt, compact = false, class
           </div>
         ) : (
           <span className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider mt-0.5">
-            Awaiting price
+            Request Quote
           </span>
         )}
       </div>
@@ -72,7 +72,7 @@ export default function AgoPriceBlock({ price, updatedAt, compact = false, class
             </span>
           ) : (
             <span className="font-bold text-xs sm:text-sm font-mono text-slate-500 uppercase tracking-wider mt-1 block">
-              Awaiting price
+              Request Quote
             </span>
           )}
         </div>
