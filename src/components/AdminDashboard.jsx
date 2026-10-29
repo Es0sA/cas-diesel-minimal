@@ -281,7 +281,7 @@ export default function AdminDashboard({ user }) {
                     <span className={`text-xs font-extrabold px-2 py-0.5 rounded-full ${disputesList.length ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-600'}`}>{disputesList.length}</span>
                   </div>
                   {disputesList.length === 0 ? (
-                    <p className="text-sm text-cas-muted leading-relaxed">No active disputes.</p>
+                    <p className="text-sm text-cas-muted leading-relaxed">All clear. No open disputes.</p>
                   ) : (
                     <ul className="divide-y divide-slate-100">
                       {disputesList.slice(0, 3).map((o) => (
