@@ -43,6 +43,17 @@ export const request = async (endpoint, options = {}) => {
   return data;
 };
 
+// Upload responses can be a proxy's HTML or plain text (502, 413), so never assume the body is JSON
+const readJson = async (res) => {
+  const contentType = res.headers.get('content-type');
+  if (!contentType || !contentType.includes('application/json')) return {};
+  try {
+    return await res.json();
+  } catch {
+    return {};
+  }
+};
+
 export const api = {
   auth: {
     register: (data) => request('/auth/register', { method: 'POST', body: JSON.stringify(data) }),
@@ -146,16 +157,16 @@ export const api = {
       const form = new FormData();
       form.append('file', file);
       const res = await fetch(`${API_URL}/rfqs/${id}/samples`, { method: 'POST', body: form, credentials: 'include' });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      const data = await readJson(res);
+      if (!res.ok) throw new Error(data.error || `Upload failed (${res.status}).`);
       return data;
     },
     uploadCertificate: async (file) => {
       const form = new FormData();
       form.append('file', file);
       const res = await fetch(`${API_URL}/rfqs/upload-certificate`, { method: 'POST', body: form, credentials: 'include' });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      const data = await readJson(res);
+      if (!res.ok) throw new Error(data.error || `Upload failed (${res.status}).`);
       return data;
     },
     downloadCertificate: async (rfqId, certId, fileName) => {
@@ -203,8 +214,8 @@ export const api = {
       if (expiresAt) form.append('expiresAt', expiresAt);
       form.append('file', file);
       const res = await fetch(`${API_URL}/kyc/upload`, { method: 'POST', body: form, credentials: 'include' });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      const data = await readJson(res);
+      if (!res.ok) throw new Error(data.error || `Upload failed (${res.status}).`);
       return data;
     },
   },
@@ -215,8 +226,8 @@ export const api = {
       form.append('documentType', documentType);
       form.append('file', file);
       const res = await fetch(`${API_URL}/compliance/upload-file/${orderId}`, { method: 'POST', body: form, credentials: 'include' });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      const data = await readJson(res);
+      if (!res.ok) throw new Error(data.error || `Upload failed (${res.status}).`);
       return data;
     },
     documentUrl: (orderId, docId) => request(`/compliance/${orderId}/${docId}/url`),
