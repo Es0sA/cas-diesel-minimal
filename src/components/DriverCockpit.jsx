@@ -82,7 +82,7 @@ function LocationSharing({ order, onStatusChange }) {
           className={`px-5 min-h-[48px] rounded-lg text-sm font-bold shrink-0 flex items-center justify-center gap-2 ${sharing ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-cas-slate text-white'}`}
         >
           <Radio className="w-4 h-4" aria-hidden="true" />
-          {sharing ? 'Stop sharing' : 'Start sharing'}
+          {sharing ? 'Stop Location Tracking' : 'Start Location Tracking'}
         </button>
       </div>
       {message && <p className="text-xs font-bold text-cas-green mt-3 leading-relaxed">{message}</p>}
@@ -164,6 +164,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                 </span>
               )}
             </div>
+            <p className="mt-4 text-sm text-slate-300 leading-relaxed">You are a critical link in the CAS Diesel secure supply chain. Follow your assigned delivery instructions, maintain location visibility and complete each handover with verified status updates.</p>
           </div>
 
           <div className="p-4 bg-slate-50 border-b border-slate-200">

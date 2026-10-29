@@ -174,7 +174,8 @@ export default function AdminDashboard({ user }) {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <p className="text-xs font-medium uppercase tracking-[0.08em] text-slate-600">Admin</p>
-        <h1 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-cas-slate leading-tight">Operations console</h1>
+        <h1 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-cas-slate leading-tight">Network Operations Control</h1>
+        <p className="mt-2 max-w-3xl text-sm text-slate-600 leading-relaxed">Monitor transactions, oversee vendor verification, coordinate dispute resolution and maintain operational visibility across the CAS Diesel network.</p>
       </div>
 
       {/* Tabs */}
@@ -434,8 +435,9 @@ export default function AdminDashboard({ user }) {
                 {sweepMsg && <span className="text-xs text-slate-600 break-all">{sweepMsg}</span>}
               </div>
               {disputesList.length === 0 ? (
-                <div className="p-8 text-center text-cas-muted text-sm font-bold bg-white rounded-2xl border border-slate-200">
-                  No active disputes.
+                <div className="p-8 text-center bg-white rounded-2xl border border-slate-200">
+                  <h2 className="font-extrabold text-base text-cas-slate">No Active Disputes</h2>
+                  <p className="mt-2 text-sm text-cas-muted leading-relaxed">All clear. There are currently no open disputes requiring operational review. New cases will appear here when they are raised.</p>
                 </div>
               ) : (
                 paginatedDisputes.map(order => (
