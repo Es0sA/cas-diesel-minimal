@@ -18,7 +18,7 @@ function Metric({ icon: Icon, label, value, hint }) {
         <Icon className="w-4 h-4 text-slate-500" aria-hidden="true" />
         <span>{label}</span>
       </div>
-      <p className="mt-3 text-3xl font-extrabold text-cas-slate tabular-nums">{value}</p>
+      <p className="mt-3 font-display text-3xl font-bold tracking-tight text-cas-slate tabular-nums">{value}</p>
       <p className="mt-1 text-xs text-cas-muted">{hint}</p>
     </div>
   );

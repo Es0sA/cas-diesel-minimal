@@ -25,7 +25,7 @@ function Kpi({ label, value, hint, tone = 'text-cas-slate' }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
       <p className="text-xs font-bold uppercase tracking-wider text-cas-muted">{label}</p>
-      <p className={`mt-2 text-2xl sm:text-3xl font-extrabold font-mono ${tone}`}>{value}</p>
+      <p className={`mt-2 font-display tabular-nums text-2xl sm:text-3xl font-bold tracking-tight ${tone}`}>{value}</p>
       {hint && <p className="mt-1 text-xs text-slate-600">{hint}</p>}
     </div>
   );

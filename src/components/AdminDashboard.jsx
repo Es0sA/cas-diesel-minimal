@@ -215,15 +215,15 @@ export default function AdminDashboard({ user }) {
               <div className="grid grid-cols-1 md:grid-cols-[repeat(3,minmax(0,1fr))] gap-6">
                 <div className="bg-white p-5 sm:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
                   <div className="text-cas-muted text-sm font-bold uppercase tracking-wider mb-2">Total Users</div>
-                  <div className="text-3xl lg:text-4xl break-words font-extrabold text-cas-slate">{stats.totalUsers}</div>
+                  <div className="font-display tabular-nums text-3xl lg:text-4xl break-words font-bold tracking-tight text-cas-slate">{stats.totalUsers}</div>
                 </div>
                 <div className="bg-white p-5 sm:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
                   <div className="text-cas-muted text-sm font-bold uppercase tracking-wider mb-2">Total Orders</div>
-                  <div className="text-3xl lg:text-4xl break-words font-extrabold text-cas-slate">{stats.totalOrders}</div>
+                  <div className="font-display tabular-nums text-3xl lg:text-4xl break-words font-bold tracking-tight text-cas-slate">{stats.totalOrders}</div>
                 </div>
                 <div className="bg-white p-5 sm:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
                   <div className="text-cas-muted text-sm font-bold uppercase tracking-wider mb-2">Total Escrow Volume</div>
-                  <div className="text-3xl lg:text-4xl break-words font-extrabold text-slate-900">
+                  <div className="font-display tabular-nums text-3xl lg:text-4xl break-words font-bold tracking-tight text-slate-900">
                     ₦{(stats.totalEscrowVolume).toLocaleString()}
                   </div>
                 </div>
