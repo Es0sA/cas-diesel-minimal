@@ -293,7 +293,7 @@ export default function SupplierPortal() {
           <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
             <div className="flex items-start justify-between gap-3 pb-4 border-b border-slate-200 mb-6">
               <div>
-                <h2 className="font-extrabold text-xl text-cas-slate leading-tight">Open RFQs</h2>
+                <h2 className="font-extrabold text-xl text-cas-slate leading-tight">Open Procurement Requests</h2>
                 <span className="text-xs text-slate-600">Buyers waiting for a price</span>
               </div>
               <Link to="/rfqs" className="inline-flex items-center gap-1 min-h-[44px] text-sm font-semibold text-slate-900 underline underline-offset-4 decoration-slate-300 hover:decoration-slate-900">

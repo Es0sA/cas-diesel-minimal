@@ -57,10 +57,13 @@ export default function LoginPage({
   initialRole = 'buyer',
   initialMode = 'signin' // 'signin' or 'register'
 }) {
-  const urlRole = typeof window !== 'undefined'
+  const rawUrlRole = typeof window !== 'undefined'
     ? new URLSearchParams(window.location.search).get('role')
     : null;
-  const initialRoleChoice = (urlRole && ROLE_CONFIGS[urlRole])
+  // /login?role=vendor is the public spelling of the supplier tab
+  const aliasedRole = rawUrlRole === 'vendor' ? 'supplier' : rawUrlRole;
+  const urlRole = aliasedRole && ROLE_CONFIGS[aliasedRole] ? aliasedRole : null;
+  const initialRoleChoice = urlRole
     ? urlRole
     : (ROLE_CONFIGS[initialRole] ? initialRole : 'buyer');
 
@@ -82,10 +85,11 @@ export default function LoginPage({
   }, [initialMode]);
 
   useEffect(() => {
-    if (initialRole && ROLE_CONFIGS[initialRole]) {
+    // A valid ?role= in the URL wins; the route default only applies when it is missing
+    if (!urlRole && initialRole && ROLE_CONFIGS[initialRole]) {
       setSelectedRole(initialRole);
     }
-  }, [initialRole]);
+  }, [initialRole, urlRole]);
 
   // Common Credential States
   const [email, setEmail] = useState('');
@@ -350,7 +354,7 @@ export default function LoginPage({
 
         {/* Verification View */}
         {verifyEmail && (
-          <form onSubmit={handleVerify} className="space-y-4 animate-fadeIn">
+          <form onSubmit={handleVerify} noValidate className="space-y-4 animate-fadeIn">
             <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
               <div className="text-xs font-bold uppercase tracking-wider text-slate-600">Verify your email</div>
               <p className="text-sm text-slate-700 leading-relaxed">We sent a 6-digit code to <strong>{verifyEmail}</strong>. It expires in 15 minutes.</p>
@@ -386,7 +390,7 @@ export default function LoginPage({
 
         {/* Sign In Form */}
         {!verifyEmail && authMode === 'signin' && (
-          <form onSubmit={handleSignIn} className="space-y-4 animate-fadeIn">
+          <form onSubmit={handleSignIn} noValidate className="space-y-4 animate-fadeIn">
             
             {/* Select account type */}
             <div>
@@ -533,7 +537,7 @@ export default function LoginPage({
 
         {/* Registration Form (Single View) */}
         {!verifyEmail && authMode === 'register' && (
-          <form onSubmit={handleRegister} className="space-y-4 animate-fadeIn">
+          <form onSubmit={handleRegister} noValidate className="space-y-4 animate-fadeIn">
             
             {/* Select account type */}
             <div>
@@ -655,7 +659,7 @@ export default function LoginPage({
             </div>
 
             {/* Legal consent: required before the account can be created */}
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-3 min-h-[44px]">
               <input
                 id="register-consent"
                 type="checkbox"

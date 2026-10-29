@@ -435,7 +435,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <label htmlFor="wl-fullName" className="block text-xs font-bold text-cas-slate mb-1">
-                            Full Name <span className="text-rose-500">*</span>
+                            Full Name <span className="text-rose-700">*</span>
                           </label>
                           <input
                             id="wl-fullName"
@@ -450,7 +450,7 @@ export default function Waitlist({ onOpenLegalModal }) {
 
                         <div>
                           <label htmlFor="wl-whatsapp" className="block text-xs font-bold text-cas-slate mb-1">
-                            WhatsApp Phone <span className="text-rose-500">*</span>
+                            WhatsApp Phone <span className="text-rose-700">*</span>
                           </label>
                           <input
                             id="wl-whatsapp"
@@ -467,7 +467,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                       {/* Row 2: Email (full width, required) */}
                       <div>
                         <label htmlFor="wl-email" className="block text-xs font-bold text-cas-slate mb-1">
-                          Work or Personal Email <span className="text-rose-500">*</span>
+                          Work or Personal Email <span className="text-rose-700">*</span>
                         </label>
                         <input
                           id="wl-email"
@@ -573,7 +573,7 @@ export default function Waitlist({ onOpenLegalModal }) {
 
                       {/* Consent Checkbox */}
                       <div className="pt-1">
-                        <label className="flex items-start gap-2.5 cursor-pointer">
+                        <label className="flex items-start gap-2.5 cursor-pointer min-h-[44px] py-1">
                           <input
                             type="checkbox"
                             required

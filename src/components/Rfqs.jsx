@@ -198,7 +198,7 @@ function BuyerRfqs() {
           </div>
           <fieldset className="rounded-xl border border-slate-200 p-4 space-y-4">
             <legend className="px-2 text-sm font-bold text-cas-slate">Receiving Contact &amp; Location</legend>
-            <label className="flex items-start gap-2.5 text-sm text-cas-slate cursor-pointer">
+            <label className="flex items-start gap-2.5 min-h-[44px] py-1 text-sm text-cas-slate cursor-pointer">
               <input type="checkbox" checked={sameContact} onChange={(e) => setSameContact(e.target.checked)} disabled={!profile} className="mt-1 h-4 w-4 rounded border-slate-300" />
               <span>
                 <span className="font-semibold">Same as registered contact</span>
@@ -447,7 +447,7 @@ function CertificateUploadField({
   return (
     <div className="block">
       <div className="flex items-center justify-between gap-2 mb-1">
-        <label className="text-xs font-bold text-cas-slate">{label}{required && <span className="text-rose-500 ml-0.5">*</span>}</label>
+        <label className="text-xs font-bold text-cas-slate">{label}{required && <span className="text-rose-700 ml-0.5">*</span>}</label>
         <button
           type="button"
           onClick={() => setManualMode((m) => !m)}
