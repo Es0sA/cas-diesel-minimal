@@ -352,7 +352,7 @@ export default function App() {
       <Header user={user} onLogout={handleLogout} onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />
 
       {/* Main Body */}
-      <main className={`flex-1 ${isAuthPage ? '' : 'pb-20 md:pb-0'}`}>
+      <main className="flex-1">
         <Routes>
           <Route path="/" element={WAITLIST.enabled && !user ? <Waitlist onOpenLegalModal={(modal) => setActiveLegalModal(modal)} /> : <HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
           <Route path="/waitlist" element={<Waitlist onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />} />

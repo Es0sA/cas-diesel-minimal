@@ -15,6 +15,7 @@ export default function AdminDashboard({ user }) {
   const [stats, setStats] = useState(null);
   const [usersList, setUsersList] = useState([]);
   const [disputesList, setDisputesList] = useState([]);
+  const [recentOrders, setRecentOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [reviewing, setReviewing] = useState(null);
   const [checks, setChecks] = useState({});
@@ -32,8 +33,17 @@ export default function AdminDashboard({ user }) {
       try {
         setLoading(true);
         if (activeTab === 'overview') {
-          const res = await api.admin.getStats();
+          // The activity panels reuse the same admin endpoints as the other tabs; one failing must not blank the page
+          const [res, usersRes, disputesRes, ordersRes] = await Promise.all([
+            api.admin.getStats(),
+            api.admin.getUsers().catch(() => null),
+            api.admin.getDisputes().catch(() => null),
+            api.admin.getOrders({ page: 1, limit: 3 }).catch(() => null),
+          ]);
           setStats(res);
+          if (usersRes) setUsersList(usersRes);
+          if (disputesRes) setDisputesList(disputesRes.orders || []);
+          if (ordersRes) setRecentOrders(ordersRes.orders || []);
         } else if (activeTab === 'users') {
           const res = await api.admin.getUsers();
           setUsersList(res);
@@ -168,7 +178,7 @@ export default function AdminDashboard({ user }) {
       </div>
 
       {/* Tabs */}
-      <div role="tablist" aria-label="Admin sections" className="flex gap-2 overflow-x-auto snap-x pb-3 mb-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div role="tablist" aria-label="Admin sections" className="flex gap-2 scroll-px-4 overflow-x-auto snap-x pb-3 mb-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {[
           { id: 'overview', label: 'System Overview', short: 'Overview', icon: BarChart },
           { id: 'users', label: 'User Verification', short: 'Users', icon: Users },
@@ -182,7 +192,7 @@ export default function AdminDashboard({ user }) {
             role="tab"
             aria-selected={activeTab === tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`snap-start shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl border font-bold text-sm whitespace-nowrap transition-colors ${
+            className={`snap-start shrink-0 flex items-center gap-2 px-4 min-h-[44px] rounded-xl border font-bold text-sm whitespace-nowrap transition-colors ${
               activeTab === tab.id
                 ? 'bg-cas-slate border-cas-slate text-white shadow-sm'
                 : 'bg-white border-slate-200 text-cas-muted hover:text-cas-slate hover:border-slate-400'
@@ -201,20 +211,90 @@ export default function AdminDashboard({ user }) {
         <div>
           {/* OVERVIEW TAB */}
           {activeTab === 'overview' && stats && (
-            <div className="grid grid-cols-1 md:grid-cols-[repeat(3,minmax(0,1fr))] gap-6">
-              <div className="bg-white p-5 lg:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
-                <div className="text-cas-muted text-sm font-bold uppercase tracking-wider mb-2">Total Users</div>
-                <div className="text-3xl lg:text-4xl break-words font-extrabold text-cas-slate">{stats.totalUsers}</div>
-              </div>
-              <div className="bg-white p-5 lg:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
-                <div className="text-cas-muted text-sm font-bold uppercase tracking-wider mb-2">Total Orders</div>
-                <div className="text-3xl lg:text-4xl break-words font-extrabold text-cas-slate">{stats.totalOrders}</div>
-              </div>
-              <div className="bg-white p-5 lg:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
-                <div className="text-cas-muted text-sm font-bold uppercase tracking-wider mb-2">Total Escrow Volume</div>
-                <div className="text-3xl lg:text-4xl break-words font-extrabold text-cas-green">
-                  ₦{(stats.totalEscrowVolume).toLocaleString()}
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-[repeat(3,minmax(0,1fr))] gap-6">
+                <div className="bg-white p-5 lg:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
+                  <div className="text-cas-muted text-sm font-bold uppercase tracking-wider mb-2">Total Users</div>
+                  <div className="text-3xl lg:text-4xl break-words font-extrabold text-cas-slate">{stats.totalUsers}</div>
                 </div>
+                <div className="bg-white p-5 lg:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
+                  <div className="text-cas-muted text-sm font-bold uppercase tracking-wider mb-2">Total Orders</div>
+                  <div className="text-3xl lg:text-4xl break-words font-extrabold text-cas-slate">{stats.totalOrders}</div>
+                </div>
+                <div className="bg-white p-5 lg:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
+                  <div className="text-cas-muted text-sm font-bold uppercase tracking-wider mb-2">Total Escrow Volume</div>
+                  <div className="text-3xl lg:text-4xl break-words font-extrabold text-cas-green">
+                    ₦{(stats.totalEscrowVolume).toLocaleString()}
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <section className="bg-white p-5 lg:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <h2 className="font-extrabold text-base text-cas-slate">Recent orders</h2>
+                    <button type="button" onClick={() => setActiveTab('orders')} className="inline-flex items-center min-h-[44px] text-sm font-bold text-cas-amberDark hover:underline">View all</button>
+                  </div>
+                  {recentOrders.length === 0 ? (
+                    <p className="text-sm text-cas-muted">No orders yet.</p>
+                  ) : (
+                    <ul className="divide-y divide-slate-100">
+                      {recentOrders.map((o) => (
+                        <li key={o.id} className="py-3 flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="text-sm font-bold text-cas-slate truncate">{o.buyer?.companyName || 'Buyer'} <span className="text-cas-muted font-normal">from</span> {o.supplier?.companyName || 'Vendor'}</p>
+                            <p className="text-xs text-cas-muted mt-0.5">{o.volumeLiters?.toLocaleString()} L · ₦{Number(o.totalEscrowAmount || 0).toLocaleString()} · {new Date(o.createdAt).toLocaleDateString()}</p>
+                          </div>
+                          <span className="shrink-0 text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">{o.status.replace(/_/g, ' ')}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </section>
+
+                <section className="bg-white p-5 lg:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <h2 className="font-extrabold text-base text-cas-slate">Awaiting verification</h2>
+                    <span className="text-xs font-extrabold px-2 py-0.5 rounded-full bg-amber-100 text-cas-amberDark">{usersList.filter(needsReview).length}</span>
+                  </div>
+                  {usersList.filter(needsReview).length === 0 ? (
+                    <p className="text-sm text-cas-muted">Every vendor and driver is verified.</p>
+                  ) : (
+                    <ul className="divide-y divide-slate-100">
+                      {usersList.filter(needsReview).slice(0, 3).map((u) => (
+                        <li key={u.id} className="py-3 flex items-center justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="text-sm font-bold text-cas-slate truncate">{u.companies?.[0]?.companyName || u.email}</p>
+                            <p className="text-xs text-cas-muted">{u.role === 'VENDOR' ? 'Vendor' : 'Driver'}</p>
+                          </div>
+                          <button type="button" onClick={() => { setUserStatus('PENDING'); setUserRole('ALL'); setUserPage(1); setActiveTab('users'); }} className="shrink-0 inline-flex items-center min-h-[44px] px-3 text-sm font-bold text-cas-amberDark hover:underline">Review</button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </section>
+
+                <section className="bg-white p-5 lg:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <h2 className="font-extrabold text-base text-cas-slate">Disputes needing attention</h2>
+                    <span className={`text-xs font-extrabold px-2 py-0.5 rounded-full ${disputesList.length ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-600'}`}>{disputesList.length}</span>
+                  </div>
+                  {disputesList.length === 0 ? (
+                    <p className="text-sm text-cas-muted">No active disputes.</p>
+                  ) : (
+                    <ul className="divide-y divide-slate-100">
+                      {disputesList.slice(0, 3).map((o) => (
+                        <li key={o.id} className="py-3 flex items-center justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="text-sm font-bold text-cas-slate truncate">{o.buyer?.companyName || 'Buyer'} and {o.supplier?.companyName || 'Vendor'}</p>
+                            <p className="text-xs text-cas-muted">{o.volumeLiters?.toLocaleString()} L · ₦{Number(o.totalEscrowAmount || 0).toLocaleString()}</p>
+                          </div>
+                          <button type="button" onClick={() => setActiveTab('disputes')} className="shrink-0 inline-flex items-center min-h-[44px] px-3 text-sm font-bold text-rose-700 hover:underline">Resolve</button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </section>
               </div>
             </div>
           )}
@@ -350,7 +430,7 @@ export default function AdminDashboard({ user }) {
           {activeTab === 'disputes' && (
             <div className="space-y-4">
               <div className="bg-white p-4 rounded-2xl border border-slate-200 flex flex-wrap items-center gap-3">
-                <button type="button" onClick={handleSweep} className="px-4 py-2 rounded-lg bg-cas-slate text-white text-sm font-bold hover:bg-black">Run deadline sweep now</button>
+                <button type="button" onClick={handleSweep} className="px-4 min-h-[44px] rounded-lg bg-cas-slate text-white text-sm font-bold hover:bg-black">Run deadline sweep now</button>
                 {sweepMsg && <span className="text-xs text-slate-600 break-all">{sweepMsg}</span>}
               </div>
               {disputesList.length === 0 ? (

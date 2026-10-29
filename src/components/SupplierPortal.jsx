@@ -8,7 +8,7 @@ import { usePageTitle } from '../lib/usePageTitle';
 import { closesIn, URGENCY_STYLE } from '../lib/rfqUrgency';
 
 const ACTIVE_STATUSES = ['FUNDED', 'IN_TRANSIT', 'ARRIVED', 'SETTLING'];
-const COMMAND_STATUSES = ['FUNDED', 'IN_TRANSIT'];
+const HISTORY_STATUSES = ['DELIVERED', 'CANCELLED', 'COMPLETED'];
 const naira = (n) => `₦${Number(n || 0).toLocaleString()}`;
 
 // Where the load goes: receiver and city/state from the RFQ, else the gate coordinates, else nothing.
@@ -60,8 +60,8 @@ export default function SupplierPortal() {
       else if (filterStatus === 'Cancelled') data = await api.orders.list({ status: 'CANCELLED' });
       else data = await api.orders.list();
 
-      let rows = data?.orders || [];
-      if (filterStatus === 'Active') rows = rows.filter((o) => ACTIVE_STATUSES.includes(o.status));
+      // Live orders live in Active Orders above; history is only what has finished
+      const rows = (data?.orders || []).filter((o) => HISTORY_STATUSES.includes(o.status));
       setOrders(rows);
     } catch (err) {
       console.error('Failed to fetch orders', err);
@@ -72,7 +72,7 @@ export default function SupplierPortal() {
 
   const loadActive = useCallback(() => (
     api.orders.list()
-      .then((data) => setActiveOrders((data?.orders || []).filter((o) => COMMAND_STATUSES.includes(o.status))))
+      .then((data) => setActiveOrders((data?.orders || []).filter((o) => ACTIVE_STATUSES.includes(o.status))))
       .catch((err) => { console.error('Failed to fetch active orders', err); setActiveOrders([]); })
   ), []);
 
@@ -134,8 +134,7 @@ export default function SupplierPortal() {
     }
   };
 
-  const escrowInSettlement = orders
-    .filter((o) => ACTIVE_STATUSES.includes(o.status))
+  const escrowInSettlement = (activeOrders || [])
     .reduce((sum, o) => sum + (o.totalEscrowAmount || 0), 0);
   const depotName = DEPOTS.find((d) => d.id === profile?.depotId)?.name || (profile?.depotId === 'other' && profile?.businessAddress ? profile.businessAddress : profile?.depotId) || 'Depot not set';
 
@@ -173,7 +172,7 @@ export default function SupplierPortal() {
               value={driverChoice[ord.id] || ''}
               onChange={(e) => { setDriverChoice((prev) => ({ ...prev, [ord.id]: e.target.value })); setDispatchMsg((prev) => ({ ...prev, [ord.id]: undefined })); }}
               disabled={drivers.length === 0}
-              className="flex-1 min-w-0 h-9 px-2 bg-white border border-slate-300 rounded font-semibold text-xs text-cas-slate"
+              className="w-full sm:w-auto sm:flex-1 min-w-0 min-h-[44px] sm:min-h-0 sm:h-9 px-2 bg-white border border-slate-300 rounded font-semibold text-xs text-cas-slate"
               aria-label="Select verified driver"
             >
               <option value="">{drivers.length ? 'Select driver' : 'No verified drivers yet'}</option>
@@ -187,7 +186,7 @@ export default function SupplierPortal() {
               type="button"
               onClick={() => handleDispatch(ord.id)}
               disabled={dispatchingId === ord.id || !driverChoice[ord.id]}
-              className="h-9 px-4 bg-cas-slate hover:bg-black text-white font-bold rounded text-xs transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-cas-slate"
+              className="w-full sm:w-auto min-h-[44px] sm:min-h-0 sm:h-9 px-4 bg-cas-slate hover:bg-black text-white font-bold rounded text-xs transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-cas-slate"
             >
               {dispatchingId === ord.id ? 'Dispatching...' : 'Assign & Dispatch'}
             </button>
@@ -217,7 +216,7 @@ export default function SupplierPortal() {
         </p>
       )}
       <div className="flex justify-end border-t border-slate-200 pt-3">
-        <button onClick={() => viewOrder(ord.id)} className="text-xs font-bold text-cas-slate hover:text-cas-blue transition-colors">View Full Details &rarr;</button>
+        <button onClick={() => viewOrder(ord.id)} className="inline-flex items-center min-h-[44px] text-sm font-bold text-cas-slate hover:text-cas-blue transition-colors">View Full Details &rarr;</button>
       </div>
     </div>
   );
@@ -268,7 +267,7 @@ export default function SupplierPortal() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
           <Kpi label="Total Quoted (₦)" value={naira(quotedTotal)} hint={`${liveQuotes} live quote${liveQuotes === 1 ? '' : 's'}`} />
-          <Kpi label="Active Orders" value={activeOrders === null ? '...' : activeOrders.length} hint="Funded or in transit" tone="text-cas-green" />
+          <Kpi label="Active Orders" value={activeOrders === null ? '...' : activeOrders.length} hint="Funded, in transit or at the gate" tone="text-cas-green" />
           <Kpi label="Pending RFQs" value={openRfqs === null ? '...' : pendingRfqs.length} hint="Open and not yet quoted by you" tone="text-cas-amberDark" />
         </div>
 
@@ -276,7 +275,7 @@ export default function SupplierPortal() {
           <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-cas-border shadow-sm">
             <div className="pb-4 border-b border-slate-200 mb-6">
               <h2 className="font-extrabold text-lg text-cas-slate">Active Orders</h2>
-              <span className="text-xs text-cas-muted">Funded orders waiting for a driver, and loads in transit</span>
+              <span className="text-xs text-cas-muted">Funded orders waiting for a driver, and loads on the road</span>
             </div>
             {activeOrders === null ? (
               <div className="py-8 text-center text-cas-muted text-sm font-bold">Loading orders...</div>
@@ -296,7 +295,7 @@ export default function SupplierPortal() {
                 <h2 className="font-extrabold text-lg text-cas-slate">Open RFQs</h2>
                 <span className="text-xs text-cas-muted">Buyers waiting for a price</span>
               </div>
-              <Link to="/rfqs" className="inline-flex items-center gap-1 text-xs font-bold text-cas-amberDark hover:underline">
+              <Link to="/rfqs" className="inline-flex items-center gap-1 min-h-[44px] text-sm font-bold text-cas-amberDark hover:underline">
                 See all <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </Link>
             </div>
@@ -416,7 +415,7 @@ export default function SupplierPortal() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 mb-6 gap-4">
                 <div>
                   <h3 className="font-extrabold text-lg text-cas-slate">Order History</h3>
-                  <span className="text-xs text-cas-muted">Funds secured in CAS Escrow prior to dispatch</span>
+                  <span className="text-xs text-cas-muted">Completed and cancelled orders</span>
                 </div>
                 <span className="text-xs font-bold px-3 py-1 bg-cas-amberLight text-cas-amberDark rounded-full border border-cas-amber/50">
                   {orders.length} Orders
@@ -424,11 +423,11 @@ export default function SupplierPortal() {
               </div>
 
               <div className="flex flex-wrap gap-2 mb-6">
-                {['All', 'Active', 'Completed', 'Cancelled'].map((tab) => (
+                {['All', 'Completed', 'Cancelled'].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setFilterStatus(tab)}
-                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
+                    className={`px-5 min-h-[44px] rounded-full text-xs font-bold transition-colors ${
                       filterStatus === tab
                         ? 'bg-cas-amber text-slate-900 border-2 border-cas-amber'
                         : 'bg-transparent text-cas-slate border-2 border-slate-300 hover:border-cas-amber'

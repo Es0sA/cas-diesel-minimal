@@ -169,7 +169,7 @@ function BuyerRfqs() {
       {error && <p role="alert" className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm">{error}</p>}
 
       {!open ? (
-        <button onClick={() => setOpen(true)} className="mb-8 inline-flex items-center gap-2 px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-lg">
+        <button onClick={() => setOpen(true)} className="mb-8 inline-flex items-center gap-2 px-5 min-h-[44px] bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-lg">
           <Plus className="w-4 h-4" aria-hidden="true" /> New request
         </button>
       ) : (

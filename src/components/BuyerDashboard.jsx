@@ -52,7 +52,7 @@ export default function BuyerDashboard() {
           </h1>
           <p className="text-sm text-cas-muted mt-1">Your escrow, deliveries and requests in one place.</p>
         </div>
-        <Link to="/rfqs" className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-lg">
+        <Link to="/rfqs" className="inline-flex items-center justify-center gap-2 px-5 min-h-[44px] bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-lg">
           <Plus className="w-4 h-4" aria-hidden="true" /> New request
         </Link>
       </div>
@@ -65,7 +65,7 @@ export default function BuyerDashboard() {
 
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold text-cas-slate">My orders</h2>
-        <Link to="/rfqs" className="text-sm font-bold text-cas-amberDark hover:underline">View requests</Link>
+        <Link to="/rfqs" className="inline-flex items-center min-h-[44px] text-sm font-bold text-cas-amberDark hover:underline">View requests</Link>
       </div>
       <MyOrders onLoaded={onOrders} />
     </div>
