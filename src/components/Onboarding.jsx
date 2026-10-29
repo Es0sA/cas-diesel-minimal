@@ -13,7 +13,7 @@ const ROLE_COPY = {
   DRIVER: { icon: Truck, title: 'Set up your driver profile', intro: 'Your details and truck, then your licence and calibration chart.', home: '/driver' }
 };
 
-const inputCls = 'w-full px-3 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-cas-amber';
+const inputCls = 'w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors';
 const Field = ({ id, label, children }) => (
   <div>
     <label htmlFor={id} className="block text-xs font-bold text-slate-700 mb-1">{label}</label>
@@ -139,9 +139,9 @@ export default function Onboarding({ user }) {
       </div>
       <div className="flex items-center gap-3 mb-2">
         <span className="w-10 h-10 rounded-xl bg-cas-slate text-cas-amber flex items-center justify-center"><Icon className="w-5 h-5" aria-hidden="true" /></span>
-        <h1 className="text-2xl font-extrabold tracking-tight text-cas-slate">{step === 'details' ? copy.title : 'Upload your documents'}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight text-cas-slate leading-tight">{step === 'details' ? copy.title : 'Upload your documents'}</h1>
       </div>
-      <p className="text-sm text-slate-600 mb-6">{step === 'details' ? copy.intro : 'An admin reviews each document. You can add them now or come back to them later from your desk.'}</p>
+      <p className="text-sm text-slate-600 mb-6 leading-relaxed">{step === 'details' ? copy.intro : 'An admin reviews each document. You can add them now or come back to them later from your desk.'}</p>
 
       {error && <div role="alert" className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">{error}</div>}
 
@@ -200,7 +200,7 @@ export default function Onboarding({ user }) {
                     <MapPin className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
                     <span>Custom Depot / Loading Terminal Details</span>
                   </div>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-500 leading-relaxed">
                     Provide the loading terminal details so buyers and admins have accurate facility information.
                   </p>
 

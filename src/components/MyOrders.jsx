@@ -43,7 +43,7 @@ export default function MyOrders({ onLoaded }) {
   }, [onLoaded]);
 
   if (error) {
-    return <p role="alert" className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm">{error}</p>;
+    return <p role="alert" className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm leading-relaxed">{error}</p>;
   }
 
   if (orders === null) {
@@ -96,17 +96,17 @@ export default function MyOrders({ onLoaded }) {
           <li key={o.id}>
             <Link to={`/orders/${o.id}`} className="block bg-white border border-cas-border rounded-xl p-4 shadow-sm">
               <div className="flex items-center justify-between gap-3">
-                <p className="font-bold text-cas-slate">{o.supplier?.companyName || 'Vendor'}</p>
+                <p className="font-bold text-cas-slate leading-relaxed">{o.supplier?.companyName || 'Vendor'}</p>
                 <StatusChip status={o.status} />
               </div>
-              <p className="text-xs text-cas-muted mt-1.5">{Number(o.volumeLiters).toLocaleString()} L · {day(o.createdAt)}</p>
+              <p className="text-xs text-cas-muted mt-1.5 leading-relaxed">{Number(o.volumeLiters).toLocaleString()} L · {day(o.createdAt)}</p>
             </Link>
           </li>
         ))}
       </ul>
 
       {total > orders.length && (
-        <p className="text-xs text-cas-muted mt-3">Showing the latest {orders.length} of {total} orders.</p>
+        <p className="text-xs text-cas-muted mt-3 leading-relaxed">Showing the latest {orders.length} of {total} orders.</p>
       )}
     </div>
   );

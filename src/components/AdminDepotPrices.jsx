@@ -31,8 +31,8 @@ export default function AdminDepotPrices() {
 
   return (
     <div>
-      <p className="text-sm text-cas-muted mb-4">Enter prices exactly as the depot sales team gives them. These are diesel (AGO) prices per litre. Buyers see these publicly with the time of the last update.</p>
-      {msg && <p role="status" className="mb-4 text-sm font-bold text-cas-slate">{msg}</p>}
+      <p className="text-sm text-cas-muted mb-4 leading-relaxed">Enter prices exactly as the depot sales team gives them. These are diesel (AGO) prices per litre. Buyers see these publicly with the time of the last update.</p>
+      {msg && <p role="status" className="mb-4 text-sm font-bold text-cas-slate leading-relaxed">{msg}</p>}
       <div className="space-y-4">
         {DEPOTS.map((d) => (
           <div key={d.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5">

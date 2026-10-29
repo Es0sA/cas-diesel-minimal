@@ -58,7 +58,7 @@ export default function FeaturedDepotsRow() {
       {/* Controls & Section Eyebrow */}
       <div className="flex items-center justify-between mb-4 px-1">
         <div>
-          <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-cas-amberDark block">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-cas-amberDark block">
             Featured Depots
           </span>
           <span className="text-xs text-cas-muted font-medium">
@@ -103,15 +103,15 @@ export default function FeaturedDepotsRow() {
             >
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                  <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
                     {depot.loadingAxis}
                   </span>
-                  <span className="text-[10px] font-mono text-slate-400 uppercase">
+                  <span className="text-xs font-mono text-slate-400 uppercase">
                     {depot.state} State
                   </span>
                 </div>
 
-                <h3 className="font-extrabold text-base text-cas-slate group-hover:text-cas-amberDark transition-colors line-clamp-1">
+                <h3 className="font-extrabold text-base text-cas-slate group-hover:text-cas-amberDark transition-colors line-clamp-1 leading-tight">
                   {depot.name}
                 </h3>
 

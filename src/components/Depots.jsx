@@ -65,7 +65,7 @@ export default function Depots({ user }) {
             <Layers className="w-3.5 h-3.5 text-cas-amberDark" aria-hidden="true" />
             <span>Terminal Intelligence & Directory</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-cas-slate tracking-tight leading-tight">
             Depot Directory & Loading Corridors
           </h1>
           <p className="text-sm sm:text-base text-cas-muted leading-relaxed">
@@ -80,10 +80,10 @@ export default function Depots({ user }) {
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
               <span className="flex items-center gap-1.5">
-                <span className="w-5 h-5 rounded-full bg-cas-slate text-white text-[11px] flex items-center justify-center font-bold">1</span>
+                <span className="w-5 h-5 rounded-full bg-cas-slate text-white text-xs flex items-center justify-center font-bold">1</span>
                 <span>Select Region</span>
               </span>
-              <span className="text-[11px] text-cas-muted">
+              <span className="text-xs text-cas-muted">
                 {selectedRegion === 'All' ? 'All Nigerian Corridors' : selectedRegion}
               </span>
             </div>
@@ -113,10 +113,10 @@ export default function Depots({ user }) {
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
               <span className="flex items-center gap-1.5">
-                <span className="w-5 h-5 rounded-full bg-cas-slate text-white text-[11px] flex items-center justify-center font-bold">2</span>
+                <span className="w-5 h-5 rounded-full bg-cas-slate text-white text-xs flex items-center justify-center font-bold">2</span>
                 <span>Select Loading Axis</span>
               </span>
-              <span className="text-[11px] text-cas-muted">
+              <span className="text-xs text-cas-muted">
                 {selectedAxis === 'All' ? 'All Loading Axes' : selectedAxis}
               </span>
             </div>
@@ -178,7 +178,7 @@ export default function Depots({ user }) {
                     >
                       {depot.name}
                     </Link>
-                    <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                    <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
                       {depot.loadingAxis}
                     </span>
                   </div>

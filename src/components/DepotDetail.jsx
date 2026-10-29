@@ -60,8 +60,8 @@ export default function DepotDetail({ user }) {
       <section className="bg-cas-canvas py-16 px-4">
         <div className="max-w-3xl mx-auto text-center bg-white p-8 rounded-2xl border-2 border-cas-border">
           <AlertTriangle className="w-10 h-10 text-cas-amber mx-auto mb-3" aria-hidden="true" />
-          <h1 className="text-2xl font-extrabold text-cas-slate">Terminal Not Found</h1>
-          <p className="text-cas-muted text-sm mt-2">
+          <h1 className="text-2xl font-extrabold text-cas-slate leading-tight">Terminal Not Found</h1>
+          <p className="text-cas-muted text-sm mt-2 leading-relaxed">
             The loading depot requested does not exist or has not yet been confirmed in our network.
           </p>
           <div className="mt-6">
@@ -105,7 +105,7 @@ export default function DepotDetail({ user }) {
                 <span>Official Depot Notice Board</span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
                 {depot.name}
               </h1>
 
@@ -136,7 +136,7 @@ export default function DepotDetail({ user }) {
             </div>
 
             <div className="shrink-0 flex md:flex-col items-start md:items-end justify-between border-t md:border-t-0 pt-4 md:pt-0 border-slate-700">
-              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 block mb-1">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 block mb-1">
                 Terminal ID
               </span>
               <span className="font-mono text-sm font-bold px-3 py-1 bg-black/40 border border-white/20 rounded-lg text-amber-300">
@@ -148,7 +148,7 @@ export default function DepotDetail({ user }) {
 
         {/* 2. Official Indicative AGO Price Block */}
         <div>
-          <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 mb-2">
+          <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 mb-2 leading-tight">
             Terminal Benchmark Rate
           </h2>
           <AgoPriceBlock
@@ -177,7 +177,7 @@ export default function DepotDetail({ user }) {
               <div className="text-xs font-mono font-bold uppercase tracking-wider text-cas-amberDark">
                 Direct Terminal Allocation
               </div>
-              <h2 className="text-2xl font-extrabold text-cas-slate tracking-tight">
+              <h2 className="text-2xl font-extrabold text-cas-slate tracking-tight leading-tight">
                 Accredited Depot Vendors
               </h2>
             </div>
@@ -196,7 +196,7 @@ export default function DepotDetail({ user }) {
               <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
                 <Building2 className="w-6 h-6" aria-hidden="true" />
               </div>
-              <h3 className="font-extrabold text-base sm:text-lg text-cas-slate">
+              <h3 className="font-extrabold text-base sm:text-xl text-cas-slate leading-tight">
                 No Accredited Vendors Currently Listed for this Terminal
               </h3>
               <p className="text-xs sm:text-sm text-cas-muted max-w-lg mx-auto leading-relaxed">
@@ -242,10 +242,10 @@ export default function DepotDetail({ user }) {
 
                   <div className="flex items-center md:flex-col md:items-end justify-between border-t md:border-t-0 pt-4 md:pt-0 border-slate-100 gap-2">
                     <div>
-                      <span className="text-[11px] font-mono uppercase tracking-wider text-cas-muted block md:text-right">
+                      <span className="text-xs font-mono uppercase tracking-wider text-cas-muted block md:text-right">
                         Spot Price
                       </span>
-                      <div className="text-xl sm:text-2xl font-extrabold font-mono text-cas-slate md:text-right">
+                      <div className="text-xl sm:text-2xl font-display tabular-nums font-bold tracking-tight text-cas-slate md:text-right">
                         ₦{Number(vendor.pricePerLitre).toLocaleString('en-NG')}
                         <span className="text-xs font-normal text-cas-muted ml-0.5">/L</span>
                       </div>

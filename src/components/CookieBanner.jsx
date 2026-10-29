@@ -39,7 +39,7 @@ export default function CookieBanner({ onOpenPolicy }) {
           <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
         </div>
         <div className="flex-1">
-          <h4 className="font-extrabold text-xs sm:text-sm text-cas-slate">Essential Security Cookies</h4>
+          <h4 className="font-extrabold text-xs sm:text-sm text-cas-slate leading-tight">Essential Security Cookies</h4>
           <p className="text-xs sm:text-xs text-cas-muted mt-0.5 leading-relaxed">
             CAS Diesel uses one essential cookie to keep you signed in. No advertising or third-party trackers.
           </p>

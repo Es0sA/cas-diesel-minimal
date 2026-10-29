@@ -50,7 +50,7 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="max-w-3xl mb-10">
             <div className="text-xs font-bold uppercase tracking-wider text-cas-amberDark mb-2">Vendor directory</div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">Prefer to order straight from a vendor?</h2>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight leading-tight">Prefer to order straight from a vendor?</h2>
             <p className="text-base text-cas-muted mt-3 leading-relaxed">
               Browse verified vendors by depot, compare price per litre and minimum order, then order at the listed price. Ideal for repeat purchases.
             </p>
@@ -59,8 +59,8 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl bg-cas-amberLight text-cas-amberDark flex items-center justify-center shrink-0"><ShieldCheck className="w-6 h-6" aria-hidden="true" /></div>
               <div>
-                <h3 className="font-extrabold text-cas-slate text-lg">Vendors appear here once CAS verifies them</h3>
-                <p className="text-sm text-cas-muted mt-1 max-w-xl">Every vendor is checked for a CAC certificate and an NMDPRA licence before they can quote. Meanwhile, compare what depots charge today.</p>
+                <h3 className="font-extrabold text-cas-slate text-xl leading-tight">Vendors appear here once CAS verifies them</h3>
+                <p className="text-sm text-cas-muted mt-1 max-w-xl leading-relaxed">Every vendor is checked for a CAC certificate and an NMDPRA licence before they can quote. Meanwhile, compare what depots charge today.</p>
               </div>
             </div>
             <Link to="/depots" className="shrink-0 px-6 py-3 rounded-xl bg-cas-slate text-white text-sm font-bold text-center hover:bg-black">See depot prices</Link>
@@ -80,10 +80,10 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
             <div className="text-xs font-bold uppercase tracking-wider text-cas-amberDark mb-2">
               Verified Vendors
             </div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight leading-tight">
               Vendor Directory
             </h2>
-            <p className="text-base text-cas-muted mt-1 max-w-2xl">
+            <p className="text-base text-cas-muted mt-1 max-w-2xl leading-relaxed">
               Compare verified vendors by price and depot. Every vendor listed here has been verified by CAS.
             </p>
           </div>
@@ -159,7 +159,7 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
         ) : (
           <div className="space-y-4">
             {filteredSuppliers.length === 0 && (
-              <p className="py-10 text-center text-sm text-cas-muted">No registered vendors match your search yet.</p>
+              <p className="py-10 text-center text-sm text-cas-muted leading-relaxed">No registered vendors match your search yet.</p>
             )}
             {filteredSuppliers.map((supplier) => (
               <div
@@ -197,7 +197,7 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
               <div className="flex flex-row lg:flex-col sm:items-end justify-between lg:justify-center border-t lg:border-t-0 pt-4 lg:pt-0 border-slate-100">
                 <div className="text-left lg:text-right">
                   <div className="text-xs text-cas-muted font-bold uppercase tracking-wider">Spot Ex-Depot</div>
-                  <div className="text-2xl sm:text-3xl font-extrabold font-mono text-cas-slate">
+                  <div className="text-2xl sm:text-3xl font-display tabular-nums font-bold tracking-tight text-cas-slate">
                     ₦{supplier.pricePerLitre}
                     <span className="text-sm font-normal text-cas-muted">/L</span>
                   </div>

@@ -4,7 +4,7 @@ import { KeyRound, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 import { api } from '../api';
 import { usePageTitle } from '../lib/usePageTitle';
 
-const inputCls = 'w-full px-3 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-cas-amber';
+const inputCls = 'w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors';
 
 export default function ResetPassword() {
   usePageTitle('Reset password', 'Choose a new password for your CAS Diesel account.');
@@ -45,24 +45,24 @@ export default function ResetPassword() {
         {done ? (
           <div className="text-center">
             <CheckCircle2 className="w-10 h-10 text-cas-green mx-auto mb-3" aria-hidden="true" />
-            <h1 className="text-xl font-extrabold text-cas-slate">Password updated</h1>
-            <p role="status" className="text-sm text-cas-muted mt-2 mb-6">Password reset successfully. You can now log in.</p>
+            <h1 className="text-xl font-extrabold text-cas-slate leading-tight">Password updated</h1>
+            <p role="status" className="text-sm text-cas-muted mt-2 mb-6 leading-relaxed">Password reset successfully. You can now log in.</p>
             <Link to="/login" className="inline-block w-full py-2.5 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-xl transition-colors">Go to sign in</Link>
           </div>
         ) : !token ? (
           <div className="text-center">
-            <h1 className="text-xl font-extrabold text-cas-slate">Reset link is missing</h1>
-            <p className="text-sm text-cas-muted mt-2 mb-6">Open the link from your email, or ask for a new one from the sign-in page.</p>
+            <h1 className="text-xl font-extrabold text-cas-slate leading-tight">Reset link is missing</h1>
+            <p className="text-sm text-cas-muted mt-2 mb-6 leading-relaxed">Open the link from your email, or ask for a new one from the sign-in page.</p>
             <Link to="/login" className="inline-block w-full py-2.5 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-xl transition-colors">Back to sign in</Link>
           </div>
         ) : (
           <form onSubmit={submit}>
             <div className="flex items-center gap-2 mb-1">
               <KeyRound className="w-5 h-5 text-cas-amberDark" aria-hidden="true" />
-              <h1 className="text-xl font-extrabold text-cas-slate">Choose a new password</h1>
+              <h1 className="text-xl font-extrabold text-cas-slate leading-tight">Choose a new password</h1>
             </div>
-            <p className="text-sm text-cas-muted mb-5">At least 6 characters, with an uppercase letter and a number. Signing in on other devices will stop working.</p>
-            {error && <p role="alert" className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">{error}</p>}
+            <p className="text-sm text-cas-muted mb-5 leading-relaxed">At least 6 characters, with an uppercase letter and a number. Signing in on other devices will stop working.</p>
+            {error && <p role="alert" className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs font-semibold leading-relaxed">{error}</p>}
 
             <label htmlFor="new-password" className="block text-xs font-semibold text-slate-700 mb-1.5">New Password</label>
             <div className="relative mb-4">

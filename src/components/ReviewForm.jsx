@@ -24,9 +24,9 @@ export default function ReviewForm({ order, onSubmitted }) {
   if (order.review) {
     return (
       <div className="bg-white p-6 rounded-2xl border border-slate-200 mb-8 shadow-sm">
-        <h2 className="text-lg font-bold text-cas-slate mb-2">Your Review</h2>
+        <h2 className="text-xl font-bold text-cas-slate mb-2 leading-tight">Your Review</h2>
         <StarRow value={order.review.rating} size="w-5 h-5" />
-        {order.review.comment && <p className="text-sm text-cas-muted mt-2">{order.review.comment}</p>}
+        {order.review.comment && <p className="text-sm text-cas-muted mt-2 leading-relaxed">{order.review.comment}</p>}
       </div>
     );
   }
@@ -51,8 +51,8 @@ export default function ReviewForm({ order, onSubmitted }) {
 
   return (
     <form onSubmit={submit} className="bg-white p-6 rounded-2xl border border-slate-200 mb-8 shadow-sm">
-      <h2 className="text-lg font-bold text-cas-slate mb-1">Rate this delivery</h2>
-      <p className="text-sm text-cas-muted mb-4">Your review is shown to other buyers on the vendor's listing.</p>
+      <h2 className="text-xl font-bold text-cas-slate mb-1 leading-tight">Rate this delivery</h2>
+      <p className="text-sm text-cas-muted mb-4 leading-relaxed">Your review is shown to other buyers on the vendor's listing.</p>
       <div className="flex items-center gap-1 mb-4" role="radiogroup" aria-label="Rating">
         {[1, 2, 3, 4, 5].map((n) => (
           <button key={n} type="button" onClick={() => setRating(n)} aria-label={`${n} stars`} aria-pressed={rating === n}>
@@ -68,7 +68,7 @@ export default function ReviewForm({ order, onSubmitted }) {
         placeholder="Quality, timing, documentation (optional)"
         className="w-full border border-slate-300 rounded-lg p-3 text-sm mb-3"
       />
-      {error && <p className="text-sm text-rose-700 mb-3">{error}</p>}
+      {error && <p className="text-sm text-rose-700 mb-3 leading-relaxed">{error}</p>}
       <button type="submit" disabled={saving} className="px-5 py-2.5 bg-cas-slate text-white text-sm font-bold rounded-lg disabled:opacity-50">
         {saving ? 'Submitting...' : 'Submit Review'}
       </button>

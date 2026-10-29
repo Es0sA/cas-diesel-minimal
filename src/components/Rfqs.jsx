@@ -8,7 +8,7 @@ import { closesIn, URGENCY_STYLE } from '../lib/rfqUrgency';
 
 const naira = (n) => `₦${Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
 const when = (d) => new Date(d).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
-const inputCls = 'w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cas-blue focus:border-transparent';
+const inputCls = 'w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors';
 
 const isSafeUrl = (u) => {
   try {
@@ -37,7 +37,7 @@ function Field({ label, hint, children }) {
     <label className="block">
       <span className="block text-xs font-bold text-cas-slate mb-1">{label}</span>
       {children}
-      {hint && <span className="block text-[11px] text-cas-muted mt-1">{hint}</span>}
+      {hint && <span className="block text-xs text-cas-muted mt-1">{hint}</span>}
     </label>
   );
 }
@@ -50,8 +50,8 @@ function Shell({ title, subtitle, back, children }) {
           <ArrowLeft className="w-4 h-4" aria-hidden="true" /> Back
         </Link>
       )}
-      <h1 className="text-2xl font-extrabold text-cas-slate">{title}</h1>
-      {subtitle && <p className="text-cas-muted mt-1 mb-6 max-w-2xl">{subtitle}</p>}
+      <h1 className="text-2xl font-extrabold text-cas-slate leading-tight">{title}</h1>
+      {subtitle && <p className="text-cas-muted mt-1 mb-6 max-w-2xl leading-relaxed">{subtitle}</p>}
       {children}
     </div>
   );
@@ -85,8 +85,8 @@ function SamplePhotos({ id, title = 'Buyer sample photos' }) {
   if (!samples || samples.length === 0) return null;
   return (
     <section className="bg-white border border-cas-border rounded-2xl p-6 mb-8 shadow-sm">
-      <h2 className="text-lg font-bold text-cas-slate mb-1">{title}</h2>
-      <p className="text-xs text-cas-muted mb-3">The product loaded must match these samples.</p>
+      <h2 className="text-xl font-bold text-cas-slate mb-1 leading-tight">{title}</h2>
+      <p className="text-xs text-cas-muted mb-3 leading-relaxed">The product loaded must match these samples.</p>
       <div className="flex flex-wrap gap-3">
         {samples.map((x) => <a key={x.id} href={x.url} target="_blank" rel="noopener noreferrer"><img src={x.url} alt={x.fileName} className="h-28 w-28 object-cover rounded-lg border border-slate-200" /></a>)}
       </div>
@@ -166,7 +166,7 @@ function BuyerRfqs() {
 
   return (
     <Shell title="Requests for quotes" subtitle="Say what you need once. Verified vendors answer with a price and a batch certificate, and you pick the offer that fits.">
-      {error && <p role="alert" className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm">{error}</p>}
+      {error && <p role="alert" className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm leading-relaxed">{error}</p>}
 
       {!open ? (
         <button onClick={() => setOpen(true)} className="mb-8 inline-flex items-center gap-2 px-5 min-h-[44px] bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-lg">
@@ -174,7 +174,7 @@ function BuyerRfqs() {
         </button>
       ) : (
         <form onSubmit={create} className="bg-white border border-cas-border rounded-2xl p-6 mb-8 shadow-sm space-y-5">
-          <h2 className="text-lg font-bold text-cas-slate">New request for quotes</h2>
+          <h2 className="text-xl font-bold text-cas-slate leading-tight">New request for quotes</h2>
           <div className="grid sm:grid-cols-3 gap-4">
             <Field label="Volume (litres)"><input required type="number" min="1" step="1" value={f.volumeLiters} onChange={set('volumeLiters')} className={inputCls} /></Field>
             <Field label="Loading depot" hint="Optional. Leave blank to accept any."><select value={f.depotId} onChange={set('depotId')} className={inputCls}><option value="">Any depot</option>{DEPOTS.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}</select></Field>
@@ -215,11 +215,11 @@ function BuyerRfqs() {
           </fieldset>
           <Field label="Sample photos" hint="Up to 3 JPG or PNG photos of the product you want. The vendor compares these with the sample at the depot.">
             <input type="file" accept="image/jpeg,image/png" multiple onChange={(e) => setPhotos(Array.from(e.target.files || []).slice(0, 3))} className={`${inputCls} file:mr-3 file:px-4 file:py-1.5 file:rounded-md file:border-0 file:bg-cas-slate file:text-white file:text-xs file:font-bold file:cursor-pointer hover:file:bg-black`} />
-            {photos.length > 0 && <p className="text-xs text-cas-muted mt-1">{photos.length} photo{photos.length === 1 ? '' : 's'} selected</p>}
+            {photos.length > 0 && <p className="text-xs text-cas-muted mt-1 leading-relaxed">{photos.length} photo{photos.length === 1 ? '' : 's'} selected</p>}
           </Field>
           <details className="rounded-xl border border-slate-200 p-4">
             <summary className="cursor-pointer text-sm font-bold text-cas-slate">Product specification (prefilled with the AGO standard)</summary>
-            <p className="text-xs text-cas-muted mt-2 mb-3">Leave a field blank to keep the standard value. Tighten it if you need to.</p>
+            <p className="text-xs text-cas-muted mt-2 mb-3 leading-relaxed">Leave a field blank to keep the standard value. Tighten it if you need to.</p>
             <div className="grid sm:grid-cols-3 gap-3">
               <Field label="Density min (kg/L)" hint="Standard 0.830"><input type="number" step="any" value={f.densityMin} onChange={set('densityMin')} className={inputCls} /></Field>
               <Field label="Density max (kg/L)" hint="Standard 0.840"><input type="number" step="any" value={f.densityMax} onChange={set('densityMax')} className={inputCls} /></Field>
@@ -249,8 +249,8 @@ function BuyerRfqs() {
               <Link to={`/rfqs/${r.id}`} className="block bg-white border border-cas-border rounded-xl p-4 hover:border-slate-400 transition-colors shadow-sm">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <p className="font-bold text-cas-slate">{Number(r.volumeLiters).toLocaleString()} L of AGO</p>
-                    <p className="text-xs text-cas-muted mt-0.5">{r.deliveryAddress || 'No address given'} · {r.status === 'OPEN' ? `closes ${when(r.expiresAt)}` : `raised ${when(r.createdAt)}`}</p>
+                    <p className="font-bold text-cas-slate leading-relaxed">{Number(r.volumeLiters).toLocaleString()} L of AGO</p>
+                    <p className="text-xs text-cas-muted mt-0.5 leading-relaxed">{r.deliveryAddress || 'No address given'} · {r.status === 'OPEN' ? `closes ${when(r.expiresAt)}` : `raised ${when(r.createdAt)}`}</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-sm text-cas-muted">{r._count?.quotes || 0} quote{r._count?.quotes === 1 ? '' : 's'}</span>
@@ -298,7 +298,7 @@ function BuyerRfqDetail({ id }) {
     try { await api.rfqs.cancel(id); load(); } catch (err) { setError(err.message); }
   };
 
-  if (!data) return <Shell title="Request" back="/rfqs">{error ? <p role="alert" className="text-rose-700">{error}</p> : <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cas-blue" /></div>}</Shell>;
+  if (!data) return <Shell title="Request" back="/rfqs">{error ? <p role="alert" className="text-rose-700 leading-relaxed">{error}</p> : <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cas-blue" /></div>}</Shell>;
   const { rfq, quotes } = data;
   const live = quotes.filter((q) => q.status === 'SUBMITTED');
   const cheapest = live.length ? Math.min(...live.map((q) => q.pricePerLitre)) : null;
@@ -310,16 +310,16 @@ function BuyerRfqDetail({ id }) {
         <span className="text-sm text-cas-muted flex items-center gap-1.5"><Clock className="w-4 h-4" aria-hidden="true" /> {rfq.status === 'OPEN' ? `Closes ${when(rfq.expiresAt)}` : `Closed`}</span>
         {rfq.status === 'OPEN' && <button onClick={cancel} className="ml-auto text-sm font-semibold text-rose-700 hover:underline">Cancel request</button>}
       </div>
-      {error && <p role="alert" className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm">{error}</p>}
+      {error && <p role="alert" className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm leading-relaxed">{error}</p>}
 
       <section className="bg-white border border-cas-border rounded-2xl p-6 mb-8 shadow-sm">
-        <h2 className="text-lg font-bold text-cas-slate mb-3">Your specification</h2>
+        <h2 className="text-xl font-bold text-cas-slate mb-3 leading-tight">Your specification</h2>
         <SpecTable requirements={rfq.requirements} />
-        <p className="text-xs text-cas-muted mt-3">Dispatch within {rfq.terms?.dispatchHours} hours of funding. Delivery within {rfq.terms?.deliveryWorkingDays} working days. The specification above governs the order, whatever the quote says.</p>
+        <p className="text-xs text-cas-muted mt-3 leading-relaxed">Dispatch within {rfq.terms?.dispatchHours} hours of funding. Delivery within {rfq.terms?.deliveryWorkingDays} working days. The specification above governs the order, whatever the quote says.</p>
       </section>
       <SamplePhotos id={id} title="Your sample photos" />
 
-      <h2 className="text-lg font-bold text-cas-slate mb-3">Quotes ({live.length})</h2>
+      <h2 className="text-xl font-bold text-cas-slate mb-3 leading-tight">Quotes ({live.length})</h2>
       {live.length === 0 && quotes.length === 0 && <div className="text-center p-10 border-2 border-dashed border-slate-200 rounded-2xl text-cas-muted">No quotes yet. Verified vendors can see your request and quote until it closes.</div>}
       <ul className="space-y-4">
         {quotes.map((q) => {
@@ -329,12 +329,12 @@ function BuyerRfqDetail({ id }) {
             <li key={q.id} className={`bg-white border rounded-2xl p-5 shadow-sm ${q.status === 'ACCEPTED' ? 'border-green-300' : 'border-cas-border'}`}>
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <p className="font-bold text-cas-slate flex items-center gap-2">{q.supplier?.companyName}{q.pricePerLitre === cheapest && q.status === 'SUBMITTED' && <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-cas-greenLight text-cas-green">Lowest price</span>}</p>
-                  <p className="text-xs text-cas-muted mt-0.5">Loading at {q.sourceDepot}{q.batchNumber ? ` · batch ${q.batchNumber}` : ''}</p>
+                  <p className="font-bold text-cas-slate flex items-center gap-2 leading-relaxed">{q.supplier?.companyName}{q.pricePerLitre === cheapest && q.status === 'SUBMITTED' && <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-cas-greenLight text-cas-green">Lowest price</span>}</p>
+                  <p className="text-xs text-cas-muted mt-0.5 leading-relaxed">Loading at {q.sourceDepot}{q.batchNumber ? ` · batch ${q.batchNumber}` : ''}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl font-extrabold text-cas-slate">{naira(q.pricePerLitre)}<span className="text-sm font-semibold text-cas-muted"> / L</span></p>
-                  <p className="text-xs text-cas-muted">Total {naira(q.totalValue)}</p>
+                  <p className="text-2xl font-extrabold text-cas-slate leading-relaxed">{naira(q.pricePerLitre)}<span className="text-sm font-semibold text-cas-muted"> / L</span></p>
+                  <p className="text-xs text-cas-muted leading-relaxed">Total {naira(q.totalValue)}</p>
                 </div>
               </div>
               <dl className="grid sm:grid-cols-3 gap-3 mt-4 text-sm">
@@ -438,7 +438,7 @@ function CertificateUploadField({
         <button
           type="button"
           onClick={() => setManualMode((m) => !m)}
-          className="text-[11px] text-cas-blue hover:underline"
+          className="text-xs text-cas-blue hover:underline"
         >
           {manualMode ? 'Upload file instead' : 'Or paste URL'}
         </button>
@@ -465,7 +465,7 @@ function CertificateUploadField({
                     href={isSafeUrl(certificateUrl) ? certificateUrl : '#'}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-0.5 text-cas-blue hover:underline text-[11px] ml-1 shrink-0"
+                    className="inline-flex items-center gap-0.5 text-cas-blue hover:underline text-xs ml-1 shrink-0"
                   >
                     View
                     <ExternalLink className="w-2.5 h-2.5" aria-hidden="true" />
@@ -508,8 +508,8 @@ function CertificateUploadField({
         </div>
       )}
 
-      {hint && <span className="block text-[11px] text-cas-muted mt-1">{hint}</span>}
-      {uploadError && <p className="text-xs font-bold text-rose-600 mt-1">{uploadError}</p>}
+      {hint && <span className="block text-xs text-cas-muted mt-1">{hint}</span>}
+      {uploadError && <p className="text-xs font-bold text-rose-600 mt-1 leading-relaxed">{uploadError}</p>}
     </div>
   );
 }
@@ -546,14 +546,14 @@ function QuoteForm({ rfq, onDone }) {
 
   return (
     <form onSubmit={submit} className="bg-white border border-cas-border rounded-2xl p-6 shadow-sm space-y-5">
-      <h2 className="text-lg font-bold text-cas-slate">Your quote</h2>
-      {error && <p role="alert" className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm">{error}</p>}
+      <h2 className="text-xl font-bold text-cas-slate leading-tight">Your quote</h2>
+      {error && <p role="alert" className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm leading-relaxed">{error}</p>}
       <div className="grid sm:grid-cols-3 gap-4">
         <Field label="Price per litre (₦)"><input required type="number" step="any" min="1" value={f.pricePerLitre} onChange={set('pricePerLitre')} className={inputCls} /></Field>
         <Field label="Loading depot"><select required value={f.sourceDepot} onChange={set('sourceDepot')} className={inputCls}><option value="">Choose</option>{DEPOTS.map((d) => <option key={d.id} value={d.name}>{d.name}</option>)}</select></Field>
         <Field label="Payment terms"><input type="text" maxLength={200} value={f.paymentTerms} onChange={set('paymentTerms')} className={inputCls} /></Field>
       </div>
-      {total && <p className="text-sm text-cas-muted">Total for {Number(rfq.volumeLiters).toLocaleString()} L: <strong className="text-cas-slate">{naira(total)}</strong></p>}
+      {total && <p className="text-sm text-cas-muted leading-relaxed">Total for {Number(rfq.volumeLiters).toLocaleString()} L: <strong className="text-cas-slate">{naira(total)}</strong></p>}
 
       <fieldset>
         <legend className="text-sm font-bold text-cas-slate mb-2">Declared specification from your batch certificate</legend>
@@ -602,7 +602,7 @@ function SupplierRfqDetail({ id }) {
   const load = useCallback(() => api.rfqs.get(id).then(setData).catch((e) => setError(e.message)), [id]);
   useEffect(() => { load(); }, [load]);
 
-  if (!data) return <Shell title="Request" back="/rfqs">{error ? <p role="alert" className="text-rose-700">{error}</p> : <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cas-blue" /></div>}</Shell>;
+  if (!data) return <Shell title="Request" back="/rfqs">{error ? <p role="alert" className="text-rose-700 leading-relaxed">{error}</p> : <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cas-blue" /></div>}</Shell>;
   const { rfq, quotes } = data;
   const mine = quotes.find((q) => q.status === 'SUBMITTED' || q.status === 'DRAFT');
 
@@ -610,13 +610,13 @@ function SupplierRfqDetail({ id }) {
     <Shell title={`${Number(rfq.volumeLiters).toLocaleString()} L of AGO`} back="/rfqs" subtitle={[rfq.buyerName || 'Buyer', [rfq.city, rfq.state].filter(Boolean).join(', ')].filter(Boolean).join(' · ')}>
       <div className="flex items-center gap-3 mb-6"><Pill status={rfq.status} /><span className="text-sm text-cas-muted">Closes {when(rfq.expiresAt)}</span></div>
       <section className="bg-white border border-cas-border rounded-2xl p-6 mb-8 shadow-sm">
-        <h2 className="text-lg font-bold text-cas-slate mb-3">What the buyer needs</h2>
+        <h2 className="text-xl font-bold text-cas-slate mb-3 leading-tight">What the buyer needs</h2>
         <SpecTable requirements={rfq.requirements} />
-        <p className="text-xs text-cas-muted mt-3">If awarded you must dispatch within {rfq.terms?.dispatchHours} hours of funding and deliver within {rfq.terms?.deliveryWorkingDays} working days, or the escrow is refunded. Gate coordinates are shared after the award.</p>
+        <p className="text-xs text-cas-muted mt-3 leading-relaxed">If awarded you must dispatch within {rfq.terms?.dispatchHours} hours of funding and deliver within {rfq.terms?.deliveryWorkingDays} working days, or the escrow is refunded. Gate coordinates are shared after the award.</p>
       </section>
       {(rfq.receiverName || rfq.receiverPhone || rfq.deliveryAddress) && (
         <section className="bg-white border border-cas-border rounded-2xl p-6 mb-8 shadow-sm">
-          <h2 className="text-lg font-bold text-cas-slate mb-3">Deliver to</h2>
+          <h2 className="text-xl font-bold text-cas-slate mb-3 leading-tight">Deliver to</h2>
           <dl className="grid sm:grid-cols-3 gap-4 text-sm">
             <div><dt className="text-xs font-bold text-cas-muted">Receiver</dt><dd className="mt-0.5 text-cas-slate">{rfq.receiverName || 'Not given'}</dd></div>
             <div><dt className="text-xs font-bold text-cas-muted">Phone</dt><dd className="mt-0.5 text-cas-slate">{rfq.receiverPhone ? <a href={`tel:${rfq.receiverPhone.replace(/\s/g, '')}`} className="underline underline-offset-2">{rfq.receiverPhone}</a> : 'Not given'}</dd></div>
@@ -627,12 +627,12 @@ function SupplierRfqDetail({ id }) {
       <SamplePhotos id={id} />
       {mine && (
         <div className="bg-cas-greenLight/50 border border-green-200 rounded-2xl p-5 mb-8">
-          <p className="font-bold text-cas-slate">You quoted {naira(mine.pricePerLitre)} per litre</p>
-          <p className="text-sm text-cas-muted mt-1">Submitting again replaces this quote.</p>
-          {mine.status === 'DRAFT' && <p className="text-sm text-amber-800 mt-1">This is an automatic draft from your standing rates. Confirm it from your quotes list.</p>}
+          <p className="font-bold text-cas-slate leading-relaxed">You quoted {naira(mine.pricePerLitre)} per litre</p>
+          <p className="text-sm text-cas-muted mt-1 leading-relaxed">Submitting again replaces this quote.</p>
+          {mine.status === 'DRAFT' && <p className="text-sm text-amber-800 mt-1 leading-relaxed">This is an automatic draft from your standing rates. Confirm it from your quotes list.</p>}
         </div>
       )}
-      {rfq.status === 'OPEN' ? <QuoteForm rfq={rfq} onDone={load} /> : <p className="text-cas-muted">This request is closed. Late quotes have no effect.</p>}
+      {rfq.status === 'OPEN' ? <QuoteForm rfq={rfq} onDone={load} /> : <p className="text-cas-muted leading-relaxed">This request is closed. Late quotes have no effect.</p>}
     </Shell>
   );
 }
@@ -687,12 +687,12 @@ function SupplierRfqs() {
 
   return (
     <Shell title="Open requests" subtitle="Buyers post what they need. Quote with your price and a current batch certificate. Only verified vendors can quote.">
-      {error && <p role="alert" className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm">{error}</p>}
+      {error && <p role="alert" className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm leading-relaxed">{error}</p>}
 
       {drafts.length > 0 && (
         <section className="mb-8 bg-cas-amberLight/60 border border-amber-200 rounded-2xl p-5">
-          <h2 className="font-bold text-cas-slate mb-1">Drafts from your standing rates</h2>
-          <p className="text-sm text-cas-muted mb-3">These were prepared automatically. Confirm each with one tap.</p>
+          <h2 className="font-bold text-cas-slate mb-1 leading-tight">Drafts from your standing rates</h2>
+          <p className="text-sm text-cas-muted mb-3 leading-relaxed">These were prepared automatically. Confirm each with one tap.</p>
           <ul className="space-y-2">
             {drafts.map((q) => (
               <li key={q.id} className="flex flex-wrap items-center justify-between gap-3 bg-white rounded-lg border border-amber-200 px-4 py-2.5 text-sm">
@@ -710,7 +710,7 @@ function SupplierRfqs() {
         <div className="text-center p-10 border-2 border-dashed border-slate-200 rounded-2xl text-cas-muted">
           <FileText className="w-8 h-8 mx-auto mb-2 opacity-50" aria-hidden="true" />
           <p>No open requests right now.</p>
-          <p className="text-xs mt-1">If you have not been verified yet, upload your documents in the Vendor Desk first.</p>
+          <p className="text-xs mt-1 leading-relaxed">If you have not been verified yet, upload your documents in the Vendor Desk first.</p>
         </div>
       ) : (
         <ul className="space-y-4">
@@ -722,8 +722,8 @@ function SupplierRfqs() {
                 <Link to={`/rfqs/${r.id}`} className="block bg-white border-2 border-cas-border rounded-2xl p-5 sm:p-6 hover:border-cas-amber shadow-sm transition-colors">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <p className="text-2xl font-extrabold text-cas-slate">{Number(r.volumeLiters).toLocaleString()} <span className="text-base font-bold text-cas-muted">L of AGO</span></p>
-                      <p className="text-sm text-cas-muted mt-1">{r.buyerName} · {[r.city, r.state].filter(Boolean).join(', ') || 'Location not given'}</p>
+                      <p className="text-2xl font-extrabold text-cas-slate leading-relaxed">{Number(r.volumeLiters).toLocaleString()} <span className="text-base font-bold text-cas-muted">L of AGO</span></p>
+                      <p className="text-sm text-cas-muted mt-1 leading-relaxed">{r.buyerName} · {[r.city, r.state].filter(Boolean).join(', ') || 'Location not given'}</p>
                     </div>
                     <span className={`text-xs font-bold px-3 py-1.5 rounded-full border ${URGENCY_STYLE[urgency.tone]}`}>{urgency.label}</span>
                   </div>
@@ -743,8 +743,8 @@ function SupplierRfqs() {
       )}
 
       <section className="mt-12">
-        <h2 className="text-xl font-extrabold text-cas-slate">Standing rates</h2>
-        <p className="text-cas-muted mt-1 mb-4 max-w-2xl">Set a price once for a depot and volume range. When a matching request arrives, a quote is prepared for you. Turn on auto-send to skip the confirmation tap.</p>
+        <h2 className="text-xl font-extrabold text-cas-slate leading-tight">Standing rates</h2>
+        <p className="text-cas-muted mt-1 mb-4 max-w-2xl leading-relaxed">Set a price once for a depot and volume range. When a matching request arrives, a quote is prepared for you. Turn on auto-send to skip the confirmation tap.</p>
         {rates.length > 0 && (
           <ul className="space-y-2 mb-6">
             {rates.map((r) => (
@@ -835,8 +835,8 @@ export default function Rfqs({ user }) {
     return (
       <Shell title="Requests for quotes" subtitle="Buyers post what they need once. Verified vendors answer with a price and a batch certificate.">
         <div className="bg-white border border-cas-border rounded-2xl p-6 sm:p-8 shadow-sm max-w-xl">
-          <h2 className="text-lg font-extrabold text-cas-slate">Sign in to continue</h2>
-          <p className="text-sm text-cas-muted mt-1">Requests are shared with verified vendors, so you need an account as a buyer or a vendor.</p>
+          <h2 className="text-xl font-extrabold text-cas-slate leading-tight">Sign in to continue</h2>
+          <p className="text-sm text-cas-muted mt-1 leading-relaxed">Requests are shared with verified vendors, so you need an account as a buyer or a vendor.</p>
           <div className="mt-5 flex flex-col sm:flex-row gap-3">
             <Link to="/login" className="px-6 py-2.5 rounded-xl bg-cas-slate text-white text-sm font-bold text-center hover:bg-black">Sign in</Link>
             <Link to="/register" className="px-6 py-2.5 rounded-xl border border-slate-300 text-cas-slate text-sm font-bold text-center hover:border-slate-500">Create an account</Link>
@@ -847,5 +847,5 @@ export default function Rfqs({ user }) {
   }
   if (role === 'BUYER') return id ? <BuyerRfqDetail id={id} /> : <BuyerRfqs />;
   if (role === 'VENDOR') return id ? <SupplierRfqDetail id={id} /> : <SupplierRfqs />;
-  return <Shell title="Requests for quotes"><p className="text-cas-muted">Requests are available to buyers and vendors.</p></Shell>;
+  return <Shell title="Requests for quotes"><p className="text-cas-muted leading-relaxed">Requests are available to buyers and vendors.</p></Shell>;
 }

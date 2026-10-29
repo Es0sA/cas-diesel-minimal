@@ -24,9 +24,9 @@ function destinationOf(ord) {
 function Kpi({ label, value, hint, tone = 'text-cas-slate' }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
-      <p className="text-xs font-bold uppercase tracking-wider text-cas-muted">{label}</p>
+      <p className="text-xs font-bold uppercase tracking-wider text-cas-muted leading-relaxed">{label}</p>
       <p className={`mt-2 font-display tabular-nums text-2xl sm:text-3xl font-bold tracking-tight ${tone}`}>{value}</p>
-      {hint && <p className="mt-1 text-xs text-slate-600">{hint}</p>}
+      {hint && <p className="mt-1 text-xs text-slate-600 leading-relaxed">{hint}</p>}
     </div>
   );
 }
@@ -143,14 +143,14 @@ export default function SupplierPortal() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
           <span className="font-mono font-bold text-xs text-slate-500">#{ord.id.slice(0, 8).toUpperCase()}</span>
-          <h4 className="font-extrabold text-base text-cas-slate">{ord.buyer?.companyName || 'Unknown Buyer'}</h4>
+          <h4 className="font-extrabold text-base text-cas-slate leading-tight">{ord.buyer?.companyName || 'Unknown Buyer'}</h4>
           <span className="text-xs text-slate-600">
             Destination: {destinationOf(ord)}
           </span>
         </div>
         <div className="sm:text-right">
           <span className="text-xs font-bold text-cas-muted block">Escrow Amount</span>
-          <span className="text-xl font-extrabold font-mono text-cas-green">
+          <span className="text-xl font-display tabular-nums font-bold tracking-tight text-cas-green">
             ₦{(ord.totalEscrowAmount || 0).toLocaleString()}
           </span>
           <span className="text-xs text-slate-500 block">({ord.volumeLiters.toLocaleString()} Litres)</span>
@@ -191,7 +191,7 @@ export default function SupplierPortal() {
               {dispatchingId === ord.id ? 'Dispatching...' : 'Assign & Dispatch'}
             </button>
             {drivers.length === 0 && (
-              <p className="w-full text-cas-muted">No verified drivers are available yet. A driver must register and be verified by CAS before you can dispatch.</p>
+              <p className="w-full text-cas-muted leading-relaxed">No verified drivers are available yet. A driver must register and be verified by CAS before you can dispatch.</p>
             )}
           </div>
         ) : ord.driver ? (
@@ -236,10 +236,10 @@ export default function SupplierPortal() {
             <UserCheck className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Downstream Vendor Operations Desk</span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight leading-tight">
             {profile ? `${profile.companyName} Operations Desk` : 'Vendor Operations Desk'}
           </h1>
-          <p className="text-base text-cas-muted mt-2">
+          <p className="text-base text-cas-muted mt-2 leading-relaxed">
             Quote open requests, dispatch funded orders and keep your spot price current.
           </p>
         </div>
@@ -274,15 +274,15 @@ export default function SupplierPortal() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
             <div className="pb-4 border-b border-slate-200 mb-6">
-              <h2 className="font-extrabold text-lg text-cas-slate">Active Orders</h2>
+              <h2 className="font-extrabold text-xl text-cas-slate leading-tight">Active Orders</h2>
               <span className="text-xs text-slate-600">Funded orders waiting for a driver, and loads on the road</span>
             </div>
             {activeOrders === null ? (
               <div className="py-8 text-center text-cas-muted text-sm font-bold">Loading orders...</div>
             ) : activeOrders.length === 0 ? (
               <div className="py-8 text-center text-cas-muted text-sm">
-                <p className="font-bold">Nothing to dispatch.</p>
-                <p className="mt-1">Funded orders appear here the moment a buyer pays into escrow.</p>
+                <p className="font-bold leading-relaxed">Nothing to dispatch.</p>
+                <p className="mt-1 leading-relaxed">Funded orders appear here the moment a buyer pays into escrow.</p>
               </div>
             ) : (
               <div className="space-y-4">{activeOrders.map((ord) => renderOrder(ord, true))}</div>
@@ -292,7 +292,7 @@ export default function SupplierPortal() {
           <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
             <div className="flex items-start justify-between gap-3 pb-4 border-b border-slate-200 mb-6">
               <div>
-                <h2 className="font-extrabold text-lg text-cas-slate">Open RFQs</h2>
+                <h2 className="font-extrabold text-xl text-cas-slate leading-tight">Open RFQs</h2>
                 <span className="text-xs text-slate-600">Buyers waiting for a price</span>
               </div>
               <Link to="/rfqs" className="inline-flex items-center gap-1 min-h-[44px] text-sm font-bold text-slate-900 hover:underline">
@@ -303,8 +303,8 @@ export default function SupplierPortal() {
               <div className="py-8 text-center text-cas-muted text-sm font-bold">Loading requests...</div>
             ) : openRfqs.length === 0 ? (
               <div className="py-8 text-center text-cas-muted text-sm">
-                <p className="font-bold">No open requests right now.</p>
-                <p className="mt-1">{profile && !profile.isVerified ? 'You will see requests once CAS verifies your company.' : 'New requests show up here as buyers post them.'}</p>
+                <p className="font-bold leading-relaxed">No open requests right now.</p>
+                <p className="mt-1 leading-relaxed">{profile && !profile.isVerified ? 'You will see requests once CAS verifies your company.' : 'New requests show up here as buyers post them.'}</p>
               </div>
             ) : (
               <ul className="space-y-3">
@@ -314,11 +314,11 @@ export default function SupplierPortal() {
                     <li key={r.id}>
                       <Link to={`/rfqs/${r.id}`} className="flex items-center justify-between gap-3 p-4 bg-slate-50 border border-slate-200 rounded-xl hover:border-cas-amber transition-colors">
                         <div className="min-w-0">
-                          <p className="font-extrabold text-cas-slate">{Number(r.volumeLiters).toLocaleString()} L</p>
-                          <p className="text-xs text-slate-600 truncate">{r.buyerName} · {[r.city, r.state].filter(Boolean).join(', ') || 'Location not given'}</p>
+                          <p className="font-extrabold text-cas-slate leading-relaxed">{Number(r.volumeLiters).toLocaleString()} L</p>
+                          <p className="text-xs text-slate-600 truncate leading-relaxed">{r.buyerName} · {[r.city, r.state].filter(Boolean).join(', ') || 'Location not given'}</p>
                         </div>
                         <div className="flex flex-col items-end gap-1 shrink-0">
-                          <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${URGENCY_STYLE[urgency.tone]}`}>{urgency.label}</span>
+                          <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${URGENCY_STYLE[urgency.tone]}`}>{urgency.label}</span>
                           <span className="text-xs font-bold text-cas-slate">{r.myQuote ? `Quoted ${naira(r.myQuote.pricePerLitre)}` : 'Quote now'}</span>
                         </div>
                       </Link>
@@ -335,7 +335,7 @@ export default function SupplierPortal() {
           <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
             <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-6">
               <div>
-                <h2 className="font-extrabold text-base text-cas-slate">Daily Spot Management</h2>
+                <h2 className="font-extrabold text-base text-cas-slate leading-tight">Daily Spot Management</h2>
                 <span className="text-xs text-slate-600">Depot: {depotName}</span>
               </div>
               <span className={`text-xs font-mono font-bold px-2 py-1 rounded border ${profile?.isVerified ? 'bg-emerald-50 text-cas-green border-emerald-200' : 'bg-slate-50 text-cas-muted border-slate-200'}`}>
@@ -349,14 +349,14 @@ export default function SupplierPortal() {
                   Your Spot Price Per Litre (Ex-Depot)
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-3 text-cas-slate font-bold font-mono">₦</span>
+                  <span className="absolute left-3 top-3 text-cas-slate font-display font-bold">₦</span>
                   <input
                     id="spot-price"
                     type="number"
                     min="1"
                     value={dailySpotPrice}
                     onChange={(e) => setDailySpotPrice(Number(e.target.value))}
-                    className="w-full pl-8 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-lg font-bold font-mono text-cas-slate focus:border-cas-amber"
+                    className="w-full pl-8 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-lg font-display tabular-nums font-bold tracking-tight text-cas-slate focus:border-slate-900"
                   />
                 </div>
               </div>
@@ -414,7 +414,7 @@ export default function SupplierPortal() {
             <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 mb-6 gap-4">
                 <div>
-                  <h3 className="font-extrabold text-lg text-cas-slate">Order History</h3>
+                  <h3 className="font-extrabold text-xl text-cas-slate leading-tight">Order History</h3>
                   <span className="text-xs text-slate-600">Completed and cancelled orders</span>
                 </div>
                 <span className="text-xs font-bold px-3 py-1 bg-slate-100 text-slate-700 rounded-full border border-slate-200">

@@ -85,9 +85,9 @@ function LocationSharing({ order, onStatusChange }) {
           {sharing ? 'Stop sharing' : 'Start sharing'}
         </button>
       </div>
-      {message && <p className="text-xs font-bold text-cas-green mt-3">{message}</p>}
+      {message && <p className="text-xs font-bold text-cas-green mt-3 leading-relaxed">{message}</p>}
       {error && (
-        <p className="text-xs text-rose-700 mt-3 flex items-center gap-1.5">
+        <p className="text-xs text-rose-700 mt-3 flex items-center gap-1.5 leading-relaxed">
           <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
           {error}
         </p>
@@ -152,7 +152,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                   <Truck className="w-6 h-6" aria-hidden="true" />
                 </div>
                 <div>
-                  <h1 className="font-extrabold text-base sm:text-lg text-white">
+                  <h1 className="font-extrabold text-base sm:text-lg text-white leading-tight">
                     {driver ? `Driver ${driver.firstName} ${driver.lastName}` : 'Driver Cockpit'}
                   </h1>
                   <span className="text-xs text-slate-300">Your assigned deliveries</span>
@@ -188,7 +188,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
             <div className="p-8 text-center text-cas-muted text-sm font-bold">Loading deliveries...</div>
           ) : authError ? (
             <div className="p-8 text-center space-y-4">
-              <p className="text-cas-muted text-sm font-bold">Sign in with a driver account to see your deliveries.</p>
+              <p className="text-cas-muted text-sm font-bold leading-relaxed">Sign in with a driver account to see your deliveries.</p>
               {onNavigateToRegister && (
                 <button onClick={onNavigateToRegister} className="inline-flex items-center gap-2 px-4 py-2 bg-cas-slate text-white text-xs font-bold rounded-lg">
                   <UserPlus className="w-4 h-4" aria-hidden="true" />
@@ -272,7 +272,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                   </div>
 
                   {order.status === 'ARRIVED' && (
-                    <p className="text-xs text-cas-muted">You are at the gate. The buyer confirms delivery after discharge, which releases payment to the supplier.</p>
+                    <p className="text-xs text-cas-muted leading-relaxed">You are at the gate. The buyer confirms delivery after discharge, which releases payment to the supplier.</p>
                   )}
 
                   {order.status !== 'DELIVERED' && (
@@ -281,7 +281,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                         <MapPin className="w-5 h-5 text-cas-blue shrink-0 mt-0.5" aria-hidden="true" />
                         <div>
                           <span className="text-xs font-bold uppercase tracking-wider text-cas-muted block">Delivery Destination</span>
-                          <h2 className="font-extrabold text-base text-cas-slate mt-0.5">{order.buyer?.companyName}</h2>
+                          <h2 className="font-extrabold text-base text-cas-slate mt-0.5 leading-tight">{order.buyer?.companyName}</h2>
                           {order.buyer?.businessAddress && <div className="text-xs text-cas-muted">{order.buyer.businessAddress}</div>}
                         </div>
                       </div>

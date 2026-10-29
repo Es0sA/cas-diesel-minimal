@@ -165,18 +165,18 @@ export default function OrderDetail() {
 
       <div className="flex flex-col md:flex-row gap-6 mb-8 items-start justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-cas-slate flex items-center gap-3">
+          <h1 className="text-2xl font-extrabold text-cas-slate flex items-center gap-3 leading-tight">
             Order #{order.id?.slice(0,8).toUpperCase()}
             <span className="text-sm font-bold px-3 py-1 bg-cas-blueLight text-cas-blue rounded-full">
               {STATE_LABELS[order.status] || order.status}
             </span>
           </h1>
-          <p className="text-cas-muted mt-1">Created on {new Date(order.createdAt).toLocaleDateString()}</p>
+          <p className="text-cas-muted mt-1 leading-relaxed">Created on {new Date(order.createdAt).toLocaleDateString()}</p>
         </div>
         
         <div className="text-left md:text-right flex flex-col items-start md:items-end">
-          <p className="text-sm text-cas-muted">Total Escrow Amount</p>
-          <p className="text-3xl font-extrabold text-cas-slate">₦{(order.totalEscrowAmount ?? order.totalAmount ?? 0).toLocaleString()}</p>
+          <p className="text-sm text-cas-muted leading-relaxed">Total Escrow Amount</p>
+          <p className="text-3xl font-extrabold text-cas-slate leading-relaxed">₦{(order.totalEscrowAmount ?? order.totalAmount ?? 0).toLocaleString()}</p>
           {order.status !== 'DRAFT' && (
             <button
               onClick={handleWaybill}
@@ -206,7 +206,7 @@ export default function OrderDetail() {
 
       {viewerRole === 'VENDOR' && !['CANCELLED', 'DELIVERED'].includes(order.status) && order.delivery && (order.delivery.receiverName || order.delivery.receiverPhone || order.delivery.deliveryAddress || order.delivery.city) && (
         <section className="bg-white p-5 rounded-2xl border border-slate-200 mb-8 shadow-sm">
-          <h2 className="text-base font-bold text-cas-slate mb-3 flex items-center gap-2"><MapPin className="w-4 h-4 text-cas-amberDark" aria-hidden="true" /> Deliver to</h2>
+          <h2 className="text-base font-bold text-cas-slate mb-3 flex items-center gap-2 leading-tight"><MapPin className="w-4 h-4 text-cas-amberDark" aria-hidden="true" /> Deliver to</h2>
           <dl className="grid sm:grid-cols-3 gap-4 text-sm">
             <div><dt className="text-xs font-bold text-cas-muted">Receiver</dt><dd className="mt-0.5 text-cas-slate">{order.delivery.receiverName || 'Not given'}</dd></div>
             <div><dt className="text-xs font-bold text-cas-muted">Phone</dt><dd className="mt-0.5 text-cas-slate">{order.delivery.receiverPhone ? <a href={`tel:${order.delivery.receiverPhone.replace(/\s/g, '')}`} className="underline underline-offset-2">{order.delivery.receiverPhone}</a> : 'Not given'}</dd></div>
@@ -238,7 +238,7 @@ export default function OrderDetail() {
 
       {/* Timeline */}
       <div className="bg-white p-6 rounded-2xl border border-cas-border mb-8 shadow-sm">
-        <h2 className="text-lg font-bold text-cas-slate mb-6">Status Timeline</h2>
+        <h2 className="text-xl font-bold text-cas-slate mb-6 leading-tight">Status Timeline</h2>
         <div className="relative flex justify-between items-center w-full">
           <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-slate-100 -z-10"></div>
           <div 
@@ -267,7 +267,7 @@ export default function OrderDetail() {
             );
           })}
         </div>
-        <p className="sm:hidden mt-4 text-center text-sm font-bold text-cas-blue">
+        <p className="sm:hidden mt-4 text-center text-sm font-bold text-cas-blue leading-relaxed">
           {order.status.replace('_', ' ')}
         </p>
       </div>
@@ -276,34 +276,34 @@ export default function OrderDetail() {
         <div className="lg:col-span-2 space-y-8">
           {/* Order Details */}
           <div className="bg-white p-6 rounded-2xl border border-cas-border shadow-sm">
-            <h2 className="text-lg font-bold text-cas-slate mb-4">Order Details</h2>
+            <h2 className="text-xl font-bold text-cas-slate mb-4 leading-tight">Order Details</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div>
-                <p className="text-xs text-cas-muted mb-1 flex items-center gap-1"><Package className="w-3 h-3" aria-hidden="true" /> Volume</p>
-                <p className="font-bold text-cas-slate">{(order.volumeLiters || 0).toLocaleString()} Litres</p>
+                <p className="text-xs text-cas-muted mb-1 flex items-center gap-1 leading-relaxed"><Package className="w-3 h-3" aria-hidden="true" /> Volume</p>
+                <p className="font-bold text-cas-slate leading-relaxed">{(order.volumeLiters || 0).toLocaleString()} Litres</p>
               </div>
               <div>
-                <p className="text-xs text-cas-muted mb-1">Price per Litre</p>
-                <p className="font-bold text-cas-slate">₦{(order.pricePerLiter || 0).toLocaleString()}</p>
+                <p className="text-xs text-cas-muted mb-1 leading-relaxed">Price per Litre</p>
+                <p className="font-bold text-cas-slate leading-relaxed">₦{(order.pricePerLiter || 0).toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-xs text-cas-muted mb-1 flex items-center gap-1"><Truck className="w-3 h-3" aria-hidden="true" /> Driver</p>
-                <p className="font-bold text-cas-slate break-words">
+                <p className="text-xs text-cas-muted mb-1 flex items-center gap-1 leading-relaxed"><Truck className="w-3 h-3" aria-hidden="true" /> Driver</p>
+                <p className="font-bold text-cas-slate break-words leading-relaxed">
                   {order.driver ? `${order.driver.firstName} ${order.driver.lastName}` : 'Unassigned'}
                 </p>
-                {order.driver?.truckPlateNumber && <p className="text-xs font-mono text-cas-muted">{order.driver.truckPlateNumber}</p>}
+                {order.driver?.truckPlateNumber && <p className="text-xs font-mono text-cas-muted leading-relaxed">{order.driver.truckPlateNumber}</p>}
               </div>
               <div>
-                <p className="text-xs text-cas-muted mb-1 flex items-center gap-1"><MapPin className="w-3 h-3" aria-hidden="true" /> {order.supplier ? 'Supplier' : 'Buyer'}</p>
-                <p className="font-bold text-cas-slate break-words">{(order.supplier || order.buyer)?.companyName || 'Unknown'}</p>
+                <p className="text-xs text-cas-muted mb-1 flex items-center gap-1 leading-relaxed"><MapPin className="w-3 h-3" aria-hidden="true" /> {order.supplier ? 'Supplier' : 'Buyer'}</p>
+                <p className="font-bold text-cas-slate break-words leading-relaxed">{(order.supplier || order.buyer)?.companyName || 'Unknown'}</p>
               </div>
             </div>
             {order.disputeReason && (
               <div className="mt-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-sm">
-                <p className="font-bold text-rose-700 mb-1">Dispute reason</p>
-                <p className="text-slate-700 break-words">{order.disputeReason}</p>
+                <p className="font-bold text-rose-700 mb-1 leading-relaxed">Dispute reason</p>
+                <p className="text-slate-700 break-words leading-relaxed">{order.disputeReason}</p>
                 {order.disputeResolution && (
-                  <p className="mt-2 font-bold text-slate-700">Resolution: {order.disputeResolution.replace(/_/g, ' ').toLowerCase()}</p>
+                  <p className="mt-2 font-bold text-slate-700 leading-relaxed">Resolution: {order.disputeResolution.replace(/_/g, ' ').toLowerCase()}</p>
                 )}
               </div>
             )}
@@ -312,7 +312,7 @@ export default function OrderDetail() {
           {/* Chat */}
           <div className="bg-white rounded-2xl border border-cas-border shadow-sm overflow-hidden flex flex-col h-[400px]">
             <div className="p-4 border-b border-cas-border bg-slate-50">
-              <h2 className="text-lg font-bold text-cas-slate">Order Chat</h2>
+              <h2 className="text-xl font-bold text-cas-slate leading-tight">Order Chat</h2>
             </div>
             
             <div className="flex-1 p-4 overflow-y-auto space-y-4" role="log" aria-label="Order chat messages" tabIndex={0}>
@@ -327,7 +327,7 @@ export default function OrderDetail() {
                     className={`flex flex-col p-3 rounded-lg border max-w-[85%] ${msg.mine ? 'bg-blue-50 border-blue-100 self-end' : 'bg-slate-50 border-slate-100 self-start'}`}
                   >
                     <span className="text-xs font-bold text-cas-blue mb-1">{msg.mine ? 'You' : msg.senderRole || 'User'}</span>
-                    <p className="text-sm text-cas-slate whitespace-pre-wrap break-words">{msg.messageContent}</p>
+                    <p className="text-sm text-cas-slate whitespace-pre-wrap break-words leading-relaxed">{msg.messageContent}</p>
                     <span className="text-xs text-cas-muted mt-1">{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                   </div>
                 ))
@@ -358,12 +358,12 @@ export default function OrderDetail() {
         <div className="space-y-8">
           {/* Documents */}
           <div className="bg-white p-6 rounded-2xl border border-cas-border shadow-sm">
-            <h2 className="text-lg font-bold text-cas-slate mb-4">Compliance Documents</h2>
+            <h2 className="text-xl font-bold text-cas-slate mb-4 leading-tight">Compliance Documents</h2>
             
             {documents.length === 0 ? (
               <div className="text-center p-6 border-2 border-dashed border-slate-200 rounded-xl text-cas-muted">
                 <FileText className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">No documents uploaded yet</p>
+                <p className="text-sm leading-relaxed">No documents uploaded yet</p>
               </div>
             ) : (
               <ul className="space-y-3">

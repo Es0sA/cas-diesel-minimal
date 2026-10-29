@@ -50,7 +50,7 @@ function HomePage({ user, handleOpenRegistration }) {
   };
   return (
     <>
-      {user && <h1 className="sr-only">Fuel marketplace</h1>}
+      {user && <h1 className="sr-only leading-tight">Fuel marketplace</h1>}
       {!user && (
         <>
           <Hero 
@@ -69,10 +69,10 @@ function HomePage({ user, handleOpenRegistration }) {
               <ShieldCheck className="w-3.5 h-3.5 text-cas-amberDark" aria-hidden="true" />
               <span>How CAS Diesel Operates</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight leading-tight">
               Vendors Meet The Companies That Need Diesel
             </h2>
-            <p className="text-base sm:text-lg text-cas-muted mt-2">
+            <p className="text-base sm:text-lg text-cas-muted mt-2 leading-relaxed">
               Stop chasing quotes and phone calls. Browse verified vendors, compare prices by depot and order in minutes. Your payment stays in escrow until the diesel is delivered.
             </p>
           </div>
@@ -84,7 +84,7 @@ function HomePage({ user, handleOpenRegistration }) {
                 <div className="w-12 h-12 rounded-xl bg-sky-100 text-cas-blue flex items-center justify-center mb-6">
                   <Building2 className="w-6 h-6" aria-hidden="true" />
                 </div>
-                <h3 className="text-xl font-extrabold text-cas-slate mb-2">For Corporate Buyers</h3>
+                <h3 className="text-xl font-extrabold text-cas-slate mb-2 leading-tight">For Corporate Buyers</h3>
                 <p className="text-sm text-cas-muted leading-relaxed mb-6">
                   Procurement managers pick a depot by price, then vendors quote to supply it. Funds are held in escrow. During registration, you map your exact GPS discharge gate so trucks never get lost.
                 </p>
@@ -114,7 +114,7 @@ function HomePage({ user, handleOpenRegistration }) {
                 <div className="w-12 h-12 rounded-xl bg-amber-100 text-cas-amberDark flex items-center justify-center mb-6">
                   <UserCheck className="w-6 h-6" aria-hidden="true" />
                 </div>
-                <h3 className="text-xl font-extrabold text-cas-slate mb-2">For Vendors</h3>
+                <h3 className="text-xl font-extrabold text-cas-slate mb-2 leading-tight">For Vendors</h3>
                 <p className="text-sm text-cas-muted leading-relaxed mb-6">
                   Get buyer requests, quote one all-in price, and see the money secured in escrow before you load. You never chase payment after delivery.
                 </p>
@@ -144,7 +144,7 @@ function HomePage({ user, handleOpenRegistration }) {
                 <div className="w-12 h-12 rounded-xl bg-emerald-100 text-cas-green flex items-center justify-center mb-6">
                   <Truck className="w-6 h-6" aria-hidden="true" />
                 </div>
-                <h3 className="text-xl font-extrabold text-cas-slate mb-2">For Fleet Tanker Drivers</h3>
+                <h3 className="text-xl font-extrabold text-cas-slate mb-2 leading-tight">For Fleet Tanker Drivers</h3>
                 <p className="text-sm text-cas-muted leading-relaxed mb-6">
                   Register under your vendor. Receive verified dispatch orders with exact gate coordinates and turn-by-turn route navigation.
                 </p>
@@ -186,10 +186,10 @@ function HomePage({ user, handleOpenRegistration }) {
               <UserCheck className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Vendor Operations Desk</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-cas-slate tracking-tight mb-3">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-cas-slate tracking-tight mb-3 leading-tight">
               Your Vendor Workspace
             </h2>
-            <p className="text-sm text-cas-muted max-w-xl mx-auto mb-8">
+            <p className="text-sm text-cas-muted max-w-xl mx-auto mb-8 leading-relaxed">
               Review open buyer requests to place private quotes, check official refinery depot prices, or manage your stock and spot pricing from your Vendor Desk.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -266,7 +266,7 @@ function OrdersPage() {
   usePageTitle('My orders', 'Every order you have placed on CAS Diesel, with its escrow status.');
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 min-h-[60vh]">
-      <h1 className="text-2xl sm:text-3xl font-extrabold text-cas-slate tracking-tight mb-6">My orders</h1>
+      <h1 className="text-2xl sm:text-3xl font-extrabold text-cas-slate tracking-tight mb-6 leading-tight">My orders</h1>
       <MyOrders />
     </div>
   );

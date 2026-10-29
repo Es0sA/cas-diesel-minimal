@@ -306,7 +306,7 @@ export default function LoginPage({
               CAS Diesel
             </span>
           </button>
-          <h1 className="text-3xl font-bold tracking-tight text-cas-slate mt-5">
+          <h1 className="text-3xl font-bold tracking-tight text-cas-slate mt-5 leading-tight">
             {authMode === 'register' ? 'Create your account' : 'Sign in to your account'}
           </h1>
         </div>
@@ -316,7 +316,7 @@ export default function LoginPage({
           <div ref={alertRef} role="alert" tabIndex={-1} className="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2.5 animate-fadeIn focus:outline-none">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-700" aria-hidden="true" />
             <div className="flex-1">
-              <p className="font-semibold">{errorMessage}</p>
+              <p className="font-semibold leading-relaxed">{errorMessage}</p>
             </div>
           </div>
         )}
@@ -334,7 +334,7 @@ export default function LoginPage({
           <form onSubmit={handleVerify} className="space-y-4 animate-fadeIn">
             <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
               <div className="text-xs font-bold uppercase tracking-wider text-slate-600">Verify your email</div>
-              <p className="text-sm text-slate-700">We sent a 6-digit code to <strong>{verifyEmail}</strong>. It expires in 15 minutes.</p>
+              <p className="text-sm text-slate-700 leading-relaxed">We sent a 6-digit code to <strong>{verifyEmail}</strong>. It expires in 15 minutes.</p>
               <div>
                 <label htmlFor="fld-verify-code" className="block text-xs font-bold text-slate-700 mb-1">Verification code</label>
                 <input id="fld-verify-code"
@@ -433,7 +433,7 @@ export default function LoginPage({
                 autoCorrect="off"
                 spellCheck={false}
                 placeholder="you@company.com"
-                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-cas-amber transition-all"
+                className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
               />
             </div>
 
@@ -576,7 +576,7 @@ export default function LoginPage({
                 autoCorrect="off"
                 spellCheck={false}
                 placeholder="you@company.com"
-                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-cas-amber transition-all"
+                className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
               />
             </div>
 
@@ -622,7 +622,7 @@ export default function LoginPage({
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-cas-amber transition-all"
+                className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
               />
             </div>
 
@@ -659,7 +659,7 @@ export default function LoginPage({
 
         {/* Quiet Bottom Subtext */}
         <div className="mt-6 pt-5 border-t border-slate-100 text-center">
-          <p className="text-[11px] text-slate-600 leading-normal">
+          <p className="text-xs text-slate-600 leading-normal">
             Secure escrow settlement and verified depot distribution.
           </p>
         </div>
@@ -673,7 +673,7 @@ export default function LoginPage({
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <KeyRound className="w-5 h-5 text-slate-700" aria-hidden="true" />
-                <h3 id="reset-title" className="font-bold text-base text-cas-slate">Reset Password</h3>
+                <h3 id="reset-title" className="font-bold text-base text-cas-slate leading-tight">Reset Password</h3>
               </div>
               <button
                 type="button"
@@ -703,7 +703,7 @@ export default function LoginPage({
                 <p className="text-xs text-slate-600 leading-relaxed mb-4">
                   Enter the email you registered with and we will send you a link to choose a new password.
                 </p>
-                {resetError && <p role="alert" className="mb-3 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">{resetError}</p>}
+                {resetError && <p role="alert" className="mb-3 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs font-semibold leading-relaxed">{resetError}</p>}
                 <label htmlFor="reset-email" className="block text-xs font-semibold text-slate-700 mb-1.5">Email</label>
                 <input
                   id="reset-email"
@@ -713,7 +713,7 @@ export default function LoginPage({
                   value={resetEmail}
                   onChange={(e) => setResetEmail(e.target.value.toLowerCase())}
                   placeholder="you@company.com"
-                  className="w-full px-3 py-2.5 mb-5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-slate-900"
+                  className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors mb-5"
                 />
                 <div className="flex items-center gap-3">
                   <button
@@ -738,7 +738,7 @@ export default function LoginPage({
       )}
 
       {/* Peripheral Terminal Metadata */}
-      <div className="absolute bottom-4 left-0 right-0 z-10 hidden sm:flex items-center justify-center gap-6 text-[10px] font-mono uppercase tracking-wider text-slate-500 pointer-events-none">
+      <div className="absolute bottom-4 left-0 right-0 z-10 hidden sm:flex items-center justify-center gap-6 text-xs font-mono uppercase tracking-wider text-slate-500 pointer-events-none">
         <span>Lagos Corridor (Apapa / Ijegun)</span>
         <span>•</span>
         <span>Niger Delta Corridor (Warri / Port Harcourt)</span>

@@ -40,12 +40,12 @@ function Field({ label, hint, children }) {
     <label className="block">
       <span className="block text-xs font-bold text-cas-slate mb-1">{label}</span>
       {children}
-      {hint && <span className="block text-[11px] text-cas-muted mt-1">{hint}</span>}
+      {hint && <span className="block text-xs text-cas-muted mt-1">{hint}</span>}
     </label>
   );
 }
 
-const inputCls = 'w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cas-blue focus:border-transparent';
+const inputCls = 'w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors';
 
 export default function DeliveryPanel({ order, viewerRole, onChanged }) {
   const [checklist, setChecklist] = useState(null);
@@ -119,8 +119,8 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
     <section className="bg-white p-6 rounded-2xl border border-cas-border shadow-sm mb-8" aria-label="Delivery verification">
       <div className="flex items-start justify-between gap-3 mb-5">
         <div>
-          <h2 className="text-lg font-bold text-cas-slate flex items-center gap-2"><Scale className="w-5 h-5 text-cas-amber" aria-hidden="true" /> Delivery and payment</h2>
-          <p className="text-sm text-cas-muted mt-1">Payment is based on the verified quantity, not the ordered one.</p>
+          <h2 className="text-xl font-bold text-cas-slate flex items-center gap-2 leading-tight"><Scale className="w-5 h-5 text-cas-amber" aria-hidden="true" /> Delivery and payment</h2>
+          <p className="text-sm text-cas-muted mt-1 leading-relaxed">Payment is based on the verified quantity, not the ordered one.</p>
         </div>
         {order.overdueFlag && (
           <span className="shrink-0 text-xs font-bold px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
@@ -130,32 +130,32 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
       </div>
 
       {(order.dispatchDeadline || order.deliveryDeadline) && inField === false && order.status === 'FUNDED' && (
-        <p className="text-sm text-cas-muted mb-4 flex items-center gap-2"><Timer className="w-4 h-4 shrink-0" aria-hidden="true" /><span>Supplier must dispatch within <strong className="text-cas-slate"><Countdown until={order.dispatchDeadline} /></strong>{' or the escrow is refunded.'}</span></p>
+        <p className="text-sm text-cas-muted mb-4 flex items-center gap-2 leading-relaxed"><Timer className="w-4 h-4 shrink-0" aria-hidden="true" /><span>Supplier must dispatch within <strong className="text-cas-slate"><Countdown until={order.dispatchDeadline} /></strong>{' or the escrow is refunded.'}</span></p>
       )}
       {order.deliveryDeadline && inField && (
-        <p className="text-sm text-cas-muted mb-4 flex items-center gap-2"><Timer className="w-4 h-4 shrink-0" aria-hidden="true" /><span>{`Delivery is due by ${new Date(order.deliveryDeadline).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}.`}</span></p>
+        <p className="text-sm text-cas-muted mb-4 flex items-center gap-2 leading-relaxed"><Timer className="w-4 h-4 shrink-0" aria-hidden="true" /><span>{`Delivery is due by ${new Date(order.deliveryDeadline).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}.`}</span></p>
       )}
 
       {/* Document checklist */}
       {checklist && (
         <div className="mb-6">
-          <h3 className="text-sm font-bold text-cas-slate mb-2">Documents on file</h3>
+          <h3 className="text-sm font-bold text-cas-slate mb-2 leading-tight">Documents on file</h3>
           <ul className="grid sm:grid-cols-2 gap-2">
             {checklist.items.map((i) => (
               <li key={i.type} className={`flex items-center gap-2 text-sm px-3 py-2 rounded-lg border ${i.present ? 'bg-cas-greenLight/50 border-green-200 text-cas-slate' : 'bg-slate-50 border-slate-200 text-cas-muted'}`}>
                 {i.present ? <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0" aria-hidden="true" /> : <Circle className="w-4 h-4 shrink-0" aria-hidden="true" />}
                 <span>{DOC_LABELS[i.type] || i.type}</span>
-                {SOURCE_LABELS[i.source] && <span className="ml-auto text-[11px] text-cas-muted">{SOURCE_LABELS[i.source]}</span>}
+                {SOURCE_LABELS[i.source] && <span className="ml-auto text-xs text-cas-muted">{SOURCE_LABELS[i.source]}</span>}
                 <span className="sr-only">{i.present ? 'received' : 'missing'}</span>
               </li>
             ))}
           </ul>
-          {!checklist.complete && !finished && <p className="text-xs text-cas-muted mt-2">Missing documents are flagged, never blocking. The waybill carries the batch certificate, loading ticket and seal record, and doubles as the invoice for depot purchases. Delivery orders also need a delivery invoice.</p>}
+          {!checklist.complete && !finished && <p className="text-xs text-cas-muted mt-2 leading-relaxed">Missing documents are flagged, never blocking. The waybill carries the batch certificate, loading ticket and seal record, and doubles as the invoice for depot purchases. Delivery orders also need a delivery invoice.</p>}
 
           {missingMine.length > 0 && inField && (
             <div className="mt-4 rounded-xl border border-slate-200 p-4">
-              <h4 className="text-sm font-bold text-cas-slate mb-1">Add a document</h4>
-              <p className="text-xs text-cas-muted mb-3">Take a photo or pick a file. PDF, JPG or PNG, up to 5 MB.</p>
+              <h4 className="text-sm font-bold text-cas-slate mb-1 leading-tight">Add a document</h4>
+              <p className="text-xs text-cas-muted mb-3 leading-relaxed">Take a photo or pick a file. PDF, JPG or PNG, up to 5 MB.</p>
               <div className="flex flex-wrap gap-2">
                 {missingMine.map((t) => (
                   <label key={t} className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold border border-slate-300 text-cas-slate cursor-pointer hover:border-cas-amber ${busy ? 'opacity-50 pointer-events-none' : ''}`}>
@@ -179,8 +179,8 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
           </div>
         ) : (
           <form onSubmit={submitVerification} className="border border-slate-200 rounded-xl p-4 space-y-4">
-            <h3 className="font-bold text-cas-slate flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-cas-blue" aria-hidden="true" /> Record the delivery</h3>
-            <p className="text-xs text-cas-muted">Enter the weighbridge and tank readings. The server works out the final verified quantity, so you cannot type it in.</p>
+            <h3 className="font-bold text-cas-slate flex items-center gap-2 leading-tight"><ShieldCheck className="w-4 h-4 text-cas-blue" aria-hidden="true" /> Record the delivery</h3>
+            <p className="text-xs text-cas-muted leading-relaxed">Enter the weighbridge and tank readings. The server works out the final verified quantity, so you cannot type it in.</p>
             <div className="grid sm:grid-cols-3 gap-3">
               <Field label="Gross weight (kg)"><input required type="number" step="any" min="0" value={form.grossKg} onChange={set('grossKg')} className={inputCls} /></Field>
               <Field label="Tare weight (kg)"><input required type="number" step="any" min="0" value={form.tareKg} onChange={set('tareKg')} className={inputCls} /></Field>
@@ -196,7 +196,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
                 <label className="flex items-center gap-2"><input type="radio" name="seals" checked={form.sealsIntact === 'yes'} onChange={() => setForm((f) => ({ ...f, sealsIntact: 'yes' }))} /> Yes, intact</label>
                 <label className="flex items-center gap-2"><input type="radio" name="seals" checked={form.sealsIntact === 'no'} onChange={() => setForm((f) => ({ ...f, sealsIntact: 'no' }))} /> No, broken or missing</label>
               </div>
-              {form.sealsIntact === 'no' && <p className="text-xs text-rose-700 mt-1">Broken seals freeze the payment and send the order to the dispute desk.</p>}
+              {form.sealsIntact === 'no' && <p className="text-xs text-rose-700 mt-1 leading-relaxed">Broken seals freeze the payment and send the order to the dispute desk.</p>}
             </fieldset>
             <label className="flex items-start gap-2 text-sm">
               <input type="checkbox" className="mt-1" checked={form.excessApproved} onChange={set('excessApproved')} />
@@ -213,7 +213,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
       {/* Waiting for the vendor */}
       {settling && verification && (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
-          <h3 className="font-bold text-cas-slate">Verified, waiting for the vendor</h3>
+          <h3 className="font-bold text-cas-slate leading-tight">Verified, waiting for the vendor</h3>
           <dl className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-3 text-sm">
             <div><dt className="text-xs text-cas-muted">Weighbridge</dt><dd className="font-bold">{litres(verification.weighbridgeL)}</dd></div>
             <div><dt className="text-xs text-cas-muted">Tank received</dt><dd className="font-bold">{litres(verification.tankReceivedL)}</dd></div>
@@ -222,7 +222,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
             <div><dt className="text-xs text-cas-muted">To vendor</dt><dd className="font-bold text-cas-green">{naira(order.amountPayable)}</dd></div>
             <div><dt className="text-xs text-cas-muted">Back to buyer</dt><dd className="font-bold">{naira(order.refundAmount)}</dd></div>
           </dl>
-          <p className="text-sm text-slate-700 mt-4 flex items-center gap-2">
+          <p className="text-sm text-slate-700 mt-4 flex items-center gap-2 leading-relaxed">
             <Timer className="w-4 h-4 shrink-0" aria-hidden="true" />
             <span>{viewerRole === 'VENDOR'
               ? <>Accept or contest within <strong><Countdown until={order.settleAfter} /></strong>{'. '}Silence releases the payment.</>
@@ -251,14 +251,14 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
       {/* Settled, or held in dispute with measurements */}
       {order.status === 'DISPUTED' && (viewerRole === 'BUYER' || viewerRole === 'VENDOR') && (
         <div className="mb-5 p-4 rounded-xl border border-amber-200 bg-amber-50">
-          <h3 className="text-sm font-bold text-cas-slate mb-1">Negotiate a split</h3>
-          <p className="text-xs text-cas-muted mb-3">
+          <h3 className="text-sm font-bold text-cas-slate mb-1 leading-tight">Negotiate a split</h3>
+          <p className="text-xs text-cas-muted mb-3 leading-relaxed">
             Agree between yourselves how the {naira(order.totalEscrowAmount)} escrow is shared. If nothing is agreed {order.disputeOpenedAt ? <>in <strong><Countdown until={new Date(new Date(order.disputeOpenedAt).getTime() + 72 * 3600000)} /></strong></> : 'within 72 hours'}, CAS settles by its guidelines.
           </p>
           {order.splitProposal && (
             <div className="mb-3 text-sm">
               <p><strong>{order.splitProposal.byRole === viewerRole ? 'Your offer' : `Offer from the ${order.splitProposal.byRole.toLowerCase()}`}:</strong> {naira(order.splitProposal.releaseAmount)} to the vendor, {naira(order.splitProposal.refundAmount)} back to the buyer.</p>
-              {order.splitProposal.note && <p className="text-xs text-cas-muted mt-1">{order.splitProposal.note}</p>}
+              {order.splitProposal.note && <p className="text-xs text-cas-muted mt-1 leading-relaxed">{order.splitProposal.note}</p>}
               {order.splitProposal.byRole !== viewerRole && (
                 <button type="button" disabled={busy} onClick={() => run(() => api.orders.acceptSplit(order.id, order.splitProposal.releaseAmount), 'Agreement reached. Payment settled.')} className="mt-2 px-4 py-2 rounded-lg bg-cas-blue text-white text-sm font-bold disabled:opacity-50">Accept this split</button>
               )}
@@ -274,7 +274,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
 
       {!settling && verification && (
         <div className={`rounded-xl border p-4 ${finished ? 'border-green-200 bg-cas-greenLight/40' : 'border-rose-200 bg-rose-50'}`}>
-          <h3 className="font-bold text-cas-slate">
+          <h3 className="font-bold text-cas-slate leading-tight">
             {finished ? 'Settled on the verified quantity' : verification.status === 'CONTESTED' ? 'Contested by the vendor, funds locked' : 'Verification suspended, funds locked'}
           </h3>
           <dl className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-3 text-sm">
@@ -283,7 +283,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
             <div><dt className="text-xs text-cas-muted">Seals</dt><dd className="font-bold">{verification.sealsIntact ? 'Intact' : 'Broken'}</dd></div>
             {finished && <div><dt className="text-xs text-cas-muted">Paid to vendor</dt><dd className="font-bold text-cas-green">{naira(order.amountPayable)}</dd></div>}
           </dl>
-          {verification.suspendReason && <p className="text-sm text-slate-700 mt-3 break-words">{verification.suspendReason}</p>}
+          {verification.suspendReason && <p className="text-sm text-slate-700 mt-3 break-words leading-relaxed">{verification.suspendReason}</p>}
         </div>
       )}
 
@@ -292,7 +292,7 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
       {/* Ledger */}
       {ledger.length > 0 && (
         <div className="mt-6">
-          <h3 className="text-sm font-bold text-cas-slate mb-2">Escrow ledger</h3>
+          <h3 className="text-sm font-bold text-cas-slate mb-2 leading-tight">Escrow ledger</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead><tr className="text-left text-xs text-cas-muted"><th className="py-1 pr-3 font-semibold">When</th><th className="py-1 pr-3 font-semibold">Entry</th><th className="py-1 pr-3 font-semibold">Party</th><th className="py-1 pr-3 font-semibold text-right">Amount</th></tr></thead>
@@ -302,13 +302,13 @@ export default function DeliveryPanel({ order, viewerRole, onChanged }) {
                     <td className="py-2 pr-3 whitespace-nowrap text-cas-muted">{new Date(e.createdAt).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</td>
                     <td className="py-2 pr-3 font-semibold">{e.kind === 'FUND' ? 'Funded' : e.kind === 'RELEASE' ? 'Released' : 'Refunded'}</td>
                     <td className="py-2 pr-3 text-cas-muted">{e.party === 'ESCROW' ? 'Escrow' : e.party === 'SUPPLIER' ? 'Vendor' : 'Buyer'}</td>
-                    <td className="py-2 pr-3 text-right font-mono">{naira(e.amount)}</td>
+                    <td className="py-2 pr-3 text-right font-display tabular-nums font-bold tracking-tight">{naira(e.amount)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className="text-[11px] text-cas-muted mt-2">The ledger records what should move. Payment rails are connected separately.</p>
+          <p className="text-xs text-cas-muted mt-2 leading-relaxed">The ledger records what should move. Payment rails are connected separately.</p>
         </div>
       )}
     </section>

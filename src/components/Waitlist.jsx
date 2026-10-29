@@ -264,7 +264,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                 <span>Priority Access Allocation</span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-cas-slate tracking-tighter leading-[1.05]">
+              <h1 className="text-4xl sm:text-5xl font-bold text-cas-slate tracking-tighter leading-[1.05]">
                 Wholesale diesel. Protected by escrow.
               </h1>
 
@@ -279,7 +279,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                     <Fuel className="w-4 h-4" />
                   </div>
                   <div>
-                    <h2 className="text-sm font-bold text-cas-slate">Direct Ex-Depot Pricing</h2>
+                    <h2 className="text-sm font-bold text-cas-slate leading-tight">Direct Ex-Depot Pricing</h2>
                     <p className="text-sm leading-relaxed text-slate-600 mt-0.5">Live depot prices posted by CAS, with no broker markups.</p>
                   </div>
                 </div>
@@ -289,7 +289,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                     <Lock className="w-4 h-4" />
                   </div>
                   <div>
-                    <h2 className="text-sm font-bold text-cas-slate">Payment Released At Gate</h2>
+                    <h2 className="text-sm font-bold text-cas-slate leading-tight">Payment Released At Gate</h2>
                     <p className="text-sm leading-relaxed text-slate-600 mt-0.5">Funds stay safe in escrow until you verify quantity and quality upon delivery.</p>
                   </div>
                 </div>
@@ -299,7 +299,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                     <FileCheck className="w-4 h-4" />
                   </div>
                   <div>
-                    <h2 className="text-sm font-bold text-cas-slate">Verified Loading Documents</h2>
+                    <h2 className="text-sm font-bold text-cas-slate leading-tight">Verified Loading Documents</h2>
                     <p className="text-sm leading-relaxed text-slate-600 mt-0.5">NMDPRA licences, batch test certs, and loading tickets matched to every order.</p>
                   </div>
                 </div>
@@ -307,7 +307,7 @@ export default function Waitlist({ onOpenLegalModal }) {
 
               {/* Active Depot Coverage Strip */}
               <div className="hidden lg:block pt-4 border-t border-slate-200">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-cas-muted mb-2.5">Depot Coverage</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-cas-muted mb-2.5 leading-relaxed">Depot Coverage</p>
                 <div className="flex flex-wrap gap-1.5">
                   {['Apapa', 'Ibafon / Tin Can', 'Port Harcourt', 'Warri', 'Oghara', 'Calabar'].map((depot) => (
                     <span key={depot} className="px-2.5 py-1 rounded-md bg-white border border-slate-200 text-xs font-semibold text-cas-slate shadow-2xs">
@@ -340,7 +340,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                       Priority Pass: {refCode}
                     </span>
 
-                    <h2 className="text-2xl font-extrabold text-cas-slate">
+                    <h2 className="text-2xl font-extrabold text-cas-slate leading-tight">
                       Your Access Spot Is Reserved
                     </h2>
 
@@ -349,7 +349,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                     </p>
 
                     <div className="mt-6 p-5 rounded-xl bg-slate-50 border border-slate-200 text-left max-w-md mx-auto text-xs text-cas-muted space-y-2.5">
-                      <p className="font-bold text-cas-slate uppercase tracking-wider text-[11px]">Next Steps</p>
+                      <p className="font-bold text-cas-slate uppercase tracking-wider text-xs leading-relaxed">Next Steps</p>
                       <div className="flex items-start gap-2">
                         <Check className="w-4 h-4 text-cas-green shrink-0 mt-0.5" />
                         <span>Your WhatsApp contact is queued for priority onboarding.</span>
@@ -378,10 +378,10 @@ export default function Waitlist({ onOpenLegalModal }) {
                   /* Input Form */
                   <div className="p-6 sm:p-8">
                     <div className="mb-6">
-                      <h2 className="text-xl sm:text-2xl font-extrabold text-cas-slate">
+                      <h2 className="text-xl sm:text-2xl font-extrabold text-cas-slate leading-tight">
                         Join the priority waitlist
                       </h2>
-                      <p className="text-xs sm:text-sm text-cas-muted mt-1">
+                      <p className="text-xs sm:text-sm text-cas-muted mt-1 leading-relaxed">
                         Select your role below to secure your allocation.
                       </p>
                     </div>
@@ -444,7 +444,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                             placeholder="e.g. Aliko Mohammed"
                             value={fullName}
                             onChange={(e) => setFullName(e.target.value)}
-                            className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate"
+                            className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
                           />
                         </div>
 
@@ -459,7 +459,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                             placeholder="e.g. 0803 123 4567"
                             value={whatsapp}
                             onChange={(e) => setWhatsapp(e.target.value)}
-                            className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate"
+                            className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
                           />
                         </div>
                       </div>
@@ -479,7 +479,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                           autoCapitalize="none"
                           autoCorrect="off"
                           spellCheck={false}
-                          className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate"
+                          className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
                         />
                       </div>
 
@@ -504,7 +504,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                               placeholder={role === 'BUYER' ? 'e.g. Pinnacle Mills Ltd' : 'e.g. Sahara Downstream Ltd'}
                               value={company}
                               onChange={(e) => setCompany(e.target.value)}
-                              className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate"
+                              className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
                             />
                           </div>
 
@@ -517,7 +517,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                                 id="wl-location"
                                 value={location}
                                 onChange={(e) => setLocation(e.target.value)}
-                                className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate bg-white"
+                                className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
                               >
                                 <option value="">Select location...</option>
                                 {(role === 'BUYER' ? STATES : DEPOTS).map((item) => (
@@ -534,7 +534,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                                 id="wl-volume"
                                 value={volume}
                                 onChange={(e) => setVolume(e.target.value)}
-                                className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate bg-white"
+                                className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
                               >
                                 <option value="">Select monthly volume...</option>
                                 {VOLUME_TIERS.map((tier) => (
@@ -552,7 +552,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                               id="wl-referral"
                               value={referral}
                               onChange={(e) => setReferral(e.target.value)}
-                              className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-cas-slate bg-white"
+                              className="w-full min-h-[44px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10 transition-colors"
                             >
                               <option value="">Select source...</option>
                               {REFERRAL_SOURCES.map((src) => (
@@ -585,7 +585,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                             I agree to receive CAS Diesel access updates, depot price notifications, and onboarding alerts.
                           </span>
                         </label>
-                        <p className="text-[11px] text-cas-muted mt-1.5 ml-6">
+                        <p className="text-xs text-cas-muted mt-1.5 ml-6 leading-relaxed">
                           By joining, you agree to our{' '}
                           <Link to="/privacy" className="underline underline-offset-2 hover:text-cas-slate">Privacy Policy</Link>.
                         </p>
@@ -595,19 +595,19 @@ export default function Waitlist({ onOpenLegalModal }) {
                       <button
                         type="submit"
                         disabled={submitting}
-                        className="w-full py-3.5 px-6 rounded-xl bg-cas-slate hover:bg-black text-white font-bold text-sm tracking-wide transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+                        className="w-full min-h-[48px] py-3.5 px-6 rounded-xl bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white font-bold text-sm tracking-wide transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
                       >
                         {submitting ? (
                           <span>Registering your priority spot...</span>
                         ) : (
                           <>
                             <span>Join the priority waitlist</span>
-                            <ArrowRight className="w-4 h-4 text-cas-amber" />
+                            <ArrowRight className="w-4 h-4" />
                           </>
                         )}
                       </button>
 
-                      <p className="text-center text-[11px] text-cas-muted pt-1">
+                      <p className="text-center text-xs text-cas-muted pt-1 leading-relaxed">
                         Zero obligation. Strictly used for priority onboarding allocation.
                       </p>
                     </form>
@@ -624,8 +624,8 @@ export default function Waitlist({ onOpenLegalModal }) {
       <section className="py-12 sm:py-16 border-b border-cas-border bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-10">
-            <p className="text-xs font-bold uppercase tracking-wider text-cas-muted">Transaction Flow</p>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-cas-slate mt-1.5">
+            <p className="text-xs font-bold uppercase tracking-wider text-cas-muted leading-relaxed">Transaction Flow</p>
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-cas-slate mt-1.5 leading-tight">
               Three steps from order to gate discharge
             </h3>
           </div>
@@ -635,7 +635,7 @@ export default function Waitlist({ onOpenLegalModal }) {
               <div className="w-9 h-9 rounded-lg bg-sky-50 text-cas-blue flex items-center justify-center mb-3.5 font-bold text-sm">
                 1
               </div>
-              <h4 className="font-bold text-cas-slate text-base">Compare & Fund Escrow</h4>
+              <h4 className="font-bold text-cas-slate text-base leading-tight">Compare & Fund Escrow</h4>
               <p className="text-sm text-slate-600 mt-2 leading-relaxed">
                 Review verified depot prices from vendors. Lock payment in secure escrow so vendors see funds are secured before trucks load.
               </p>
@@ -645,7 +645,7 @@ export default function Waitlist({ onOpenLegalModal }) {
               <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center mb-3.5 font-bold text-sm">
                 2
               </div>
-              <h4 className="font-bold text-cas-slate text-base">Track Truck Dispatch</h4>
+              <h4 className="font-bold text-cas-slate text-base leading-tight">Track Truck Dispatch</h4>
               <p className="text-sm text-slate-600 mt-2 leading-relaxed">
                 A verified driver is assigned. Track transit in real time with automated digital loading tickets and waybills attached directly to your order.
               </p>
@@ -655,7 +655,7 @@ export default function Waitlist({ onOpenLegalModal }) {
               <div className="w-9 h-9 rounded-lg bg-emerald-50 text-cas-green flex items-center justify-center mb-3.5 font-bold text-sm">
                 3
               </div>
-              <h4 className="font-bold text-cas-slate text-base">Confirm & Release</h4>
+              <h4 className="font-bold text-cas-slate text-base leading-tight">Confirm & Release</h4>
               <p className="text-sm text-slate-600 mt-2 leading-relaxed">
                 Inspect quantity and test quality at your facility gate. Once you confirm receipt, escrow releases payout directly to the vendor.
               </p>

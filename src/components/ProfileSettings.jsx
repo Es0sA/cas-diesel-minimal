@@ -106,8 +106,8 @@ export default function ProfileSettings({ user, onDeleted }) {
             <Settings className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-xl font-extrabold text-slate-800">Profile Settings</h1>
-            <p className="text-sm text-slate-500">Manage your account information</p>
+            <h1 className="text-xl font-extrabold text-slate-800 leading-tight">Profile Settings</h1>
+            <p className="text-sm text-slate-500 leading-relaxed">Manage your account information</p>
           </div>
         </div>
 
@@ -160,7 +160,7 @@ export default function ProfileSettings({ user, onDeleted }) {
                     onChange={handleChange}
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-cas-slate focus:ring-1 focus:ring-cas-slate outline-none transition-all"
                   />
-                  <p className="text-xs text-slate-500 mt-1">Where deliveries arrive. Used as the default delivery address on new requests.</p>
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">Where deliveries arrive. Used as the default delivery address on new requests.</p>
                 </div>
                 {role === 'BUYER' && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -36,7 +36,7 @@ export default function OrderCheckoutModal({ supplier, onClose, onSuccess }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
       <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
         <div className="px-6 py-4 border-b border-cas-border flex items-center justify-between bg-slate-50">
-          <h3 className="text-lg font-extrabold text-cas-slate">Secure Escrow Checkout</h3>
+          <h3 className="text-xl font-extrabold text-cas-slate leading-tight">Secure Escrow Checkout</h3>
           <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-full text-slate-500 transition-colors">
             <X className="w-5 h-5" />
           </button>
@@ -51,12 +51,12 @@ export default function OrderCheckoutModal({ supplier, onClose, onSuccess }) {
           )}
 
           <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
-            <h4 className="text-sm font-bold text-cas-slate mb-1 flex items-center gap-2">
+            <h4 className="text-sm font-bold text-cas-slate mb-1 flex items-center gap-2 leading-tight">
               <CheckCircle2 className="w-4 h-4 text-cas-green" />
               Supplier Selected
             </h4>
-            <p className="text-sm text-cas-muted font-medium">{supplier.companyName}</p>
-            <p className="text-xs text-cas-muted mt-1">Spot Price: ₦{supplier.pricePerLitre}/L • Depot: {supplier.primaryDepot}</p>
+            <p className="text-sm text-cas-muted font-medium leading-relaxed">{supplier.companyName}</p>
+            <p className="text-xs text-cas-muted mt-1 leading-relaxed">Spot Price: ₦{supplier.pricePerLitre}/L • Depot: {supplier.primaryDepot}</p>
           </div>
 
           <form id="checkout-form" onSubmit={handleSubmit} className="space-y-5">
@@ -71,7 +71,7 @@ export default function OrderCheckoutModal({ supplier, onClose, onSuccess }) {
                 onChange={(e) => setVolume(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl border border-cas-border focus:border-cas-amber focus:ring-1 focus:ring-cas-amber outline-none transition-all text-sm font-mono"
               />
-              <p className="text-xs text-cas-muted mt-1">Minimum Order: {supplier.minOrderVolume.toLocaleString()}L</p>
+              <p className="text-xs text-cas-muted mt-1 leading-relaxed">Minimum Order: {supplier.minOrderVolume.toLocaleString()}L</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -98,7 +98,7 @@ export default function OrderCheckoutModal({ supplier, onClose, onSuccess }) {
                 />
               </div>
             </div>
-            <p className="text-xs text-cas-muted flex items-start gap-1">
+            <p className="text-xs text-cas-muted flex items-start gap-1 leading-relaxed">
               <Navigation className="w-3.5 h-3.5 mt-0.5 shrink-0" />
               These coordinates lock the geofence. The supplier's truck must be within 100 meters of this point before discharge is permitted.
             </p>
@@ -122,7 +122,7 @@ export default function OrderCheckoutModal({ supplier, onClose, onSuccess }) {
               <span>Lock Price & Initialize Escrow</span>
             )}
           </button>
-          <p className="text-xs text-center text-cas-muted">
+          <p className="text-xs text-center text-cas-muted leading-relaxed">
             You will be redirected to the secure payment gateway on the next screen.
           </p>
         </div>

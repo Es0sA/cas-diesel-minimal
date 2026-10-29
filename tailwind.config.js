@@ -22,6 +22,10 @@ export default {
           blueLight: '#E0F2FE'
         }
       },
+      letterSpacing: {
+        tight: '-0.015em',
+        tighter: '-0.03em',
+      },
       fontFamily: {
         sans: ['Inter Variable', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         display: ['Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'Inter Variable', 'system-ui', 'sans-serif'],

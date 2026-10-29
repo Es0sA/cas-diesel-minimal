@@ -174,7 +174,7 @@ export default function AdminDashboard({ user }) {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center gap-3 mb-8">
         <ShieldCheck className="w-8 h-8 text-slate-700" />
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-cas-slate">CAS Admin Operations Console</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-cas-slate leading-tight">CAS Admin Operations Console</h1>
       </div>
 
       {/* Tabs */}
@@ -232,18 +232,18 @@ export default function AdminDashboard({ user }) {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <section className="bg-white p-5 sm:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
                   <div className="flex items-center justify-between gap-3 mb-4">
-                    <h2 className="font-extrabold text-base text-cas-slate">Recent orders</h2>
+                    <h2 className="font-extrabold text-base text-cas-slate leading-tight">Recent orders</h2>
                     <button type="button" onClick={() => setActiveTab('orders')} className="inline-flex items-center min-h-[44px] text-sm font-bold text-slate-900 hover:underline">View all</button>
                   </div>
                   {recentOrders.length === 0 ? (
-                    <p className="text-sm text-cas-muted">No orders yet.</p>
+                    <p className="text-sm text-cas-muted leading-relaxed">No orders yet.</p>
                   ) : (
                     <ul className="divide-y divide-slate-100">
                       {recentOrders.map((o) => (
                         <li key={o.id} className="py-3 flex items-start justify-between gap-3">
                           <div className="min-w-0">
-                            <p className="text-sm font-bold text-cas-slate truncate">{o.buyer?.companyName || 'Buyer'} <span className="text-cas-muted font-normal">from</span> {o.supplier?.companyName || 'Vendor'}</p>
-                            <p className="text-xs text-cas-muted mt-0.5">{o.volumeLiters?.toLocaleString()} L · ₦{Number(o.totalEscrowAmount || 0).toLocaleString()} · {new Date(o.createdAt).toLocaleDateString()}</p>
+                            <p className="text-sm font-bold text-cas-slate truncate leading-relaxed">{o.buyer?.companyName || 'Buyer'} <span className="text-cas-muted font-normal">from</span> {o.supplier?.companyName || 'Vendor'}</p>
+                            <p className="text-xs text-cas-muted mt-0.5 leading-relaxed">{o.volumeLiters?.toLocaleString()} L · ₦{Number(o.totalEscrowAmount || 0).toLocaleString()} · {new Date(o.createdAt).toLocaleDateString()}</p>
                           </div>
                           <span className="shrink-0 text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">{o.status.replace(/_/g, ' ')}</span>
                         </li>
@@ -254,18 +254,18 @@ export default function AdminDashboard({ user }) {
 
                 <section className="bg-white p-5 sm:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
                   <div className="flex items-center justify-between gap-3 mb-4">
-                    <h2 className="font-extrabold text-base text-cas-slate">Awaiting verification</h2>
+                    <h2 className="font-extrabold text-base text-cas-slate leading-tight">Awaiting verification</h2>
                     <span className="text-xs font-extrabold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">{usersList.filter(needsReview).length}</span>
                   </div>
                   {usersList.filter(needsReview).length === 0 ? (
-                    <p className="text-sm text-cas-muted">Every vendor and driver is verified.</p>
+                    <p className="text-sm text-cas-muted leading-relaxed">Every vendor and driver is verified.</p>
                   ) : (
                     <ul className="divide-y divide-slate-100">
                       {usersList.filter(needsReview).slice(0, 3).map((u) => (
                         <li key={u.id} className="py-3 flex items-center justify-between gap-3">
                           <div className="min-w-0">
-                            <p className="text-sm font-bold text-cas-slate truncate">{u.companies?.[0]?.companyName || u.email}</p>
-                            <p className="text-xs text-cas-muted">{u.role === 'VENDOR' ? 'Vendor' : 'Driver'}</p>
+                            <p className="text-sm font-bold text-cas-slate truncate leading-relaxed">{u.companies?.[0]?.companyName || u.email}</p>
+                            <p className="text-xs text-cas-muted leading-relaxed">{u.role === 'VENDOR' ? 'Vendor' : 'Driver'}</p>
                           </div>
                           <button type="button" onClick={() => { setUserStatus('PENDING'); setUserRole('ALL'); setUserPage(1); setActiveTab('users'); }} className="shrink-0 inline-flex items-center min-h-[44px] px-3 text-sm font-bold text-slate-900 hover:underline">Review</button>
                         </li>
@@ -276,18 +276,18 @@ export default function AdminDashboard({ user }) {
 
                 <section className="bg-white p-5 sm:p-6 min-w-0 rounded-2xl border border-slate-200 shadow-sm">
                   <div className="flex items-center justify-between gap-3 mb-4">
-                    <h2 className="font-extrabold text-base text-cas-slate">Disputes needing attention</h2>
+                    <h2 className="font-extrabold text-base text-cas-slate leading-tight">Disputes needing attention</h2>
                     <span className={`text-xs font-extrabold px-2 py-0.5 rounded-full ${disputesList.length ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-600'}`}>{disputesList.length}</span>
                   </div>
                   {disputesList.length === 0 ? (
-                    <p className="text-sm text-cas-muted">No active disputes.</p>
+                    <p className="text-sm text-cas-muted leading-relaxed">No active disputes.</p>
                   ) : (
                     <ul className="divide-y divide-slate-100">
                       {disputesList.slice(0, 3).map((o) => (
                         <li key={o.id} className="py-3 flex items-center justify-between gap-3">
                           <div className="min-w-0">
-                            <p className="text-sm font-bold text-cas-slate truncate">{o.buyer?.companyName || 'Buyer'} and {o.supplier?.companyName || 'Vendor'}</p>
-                            <p className="text-xs text-cas-muted">{o.volumeLiters?.toLocaleString()} L · ₦{Number(o.totalEscrowAmount || 0).toLocaleString()}</p>
+                            <p className="text-sm font-bold text-cas-slate truncate leading-relaxed">{o.buyer?.companyName || 'Buyer'} and {o.supplier?.companyName || 'Vendor'}</p>
+                            <p className="text-xs text-cas-muted leading-relaxed">{o.volumeLiters?.toLocaleString()} L · ₦{Number(o.totalEscrowAmount || 0).toLocaleString()}</p>
                           </div>
                           <button type="button" onClick={() => setActiveTab('disputes')} className="shrink-0 inline-flex items-center min-h-[44px] px-3 text-sm font-bold text-rose-700 hover:underline">Resolve</button>
                         </li>
@@ -555,8 +555,8 @@ export default function AdminDashboard({ user }) {
             <div className="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h2 className="text-lg font-extrabold text-cas-slate">{isVerified ? 'Verified account' : 'Review submitted details'}</h2>
-                  <p className="text-xs text-cas-muted">{u.role}</p>
+                  <h2 className="text-xl font-extrabold text-cas-slate leading-tight">{isVerified ? 'Verified account' : 'Review submitted details'}</h2>
+                  <p className="text-xs text-cas-muted leading-relaxed">{u.role}</p>
                 </div>
                 <button onClick={() => setReviewing(null)} aria-label="Close" className="p-1 text-cas-muted hover:text-cas-slate"><X className="w-5 h-5" /></button>
               </div>

@@ -18,8 +18,8 @@ function Metric({ icon: Icon, label, value, hint }) {
         <Icon className="w-4 h-4 text-slate-500" aria-hidden="true" />
         <span>{label}</span>
       </div>
-      <p className="mt-3 font-display text-3xl font-bold tracking-tight text-cas-slate tabular-nums">{value}</p>
-      <p className="mt-1 text-xs text-cas-muted">{hint}</p>
+      <p className="mt-3 font-display text-3xl font-bold tracking-tight text-cas-slate tabular-nums leading-relaxed">{value}</p>
+      <p className="mt-1 text-xs text-cas-muted leading-relaxed">{hint}</p>
     </div>
   );
 }
@@ -46,11 +46,11 @@ export default function BuyerDashboard() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Buyer dashboard</p>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-cas-slate tracking-tight mt-1">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 leading-relaxed">Buyer dashboard</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-cas-slate tracking-tight mt-1 leading-tight">
             Welcome{company?.companyName ? `, ${company.companyName}` : ''}
           </h1>
-          <p className="text-sm text-cas-muted mt-1">Your escrow, deliveries and requests in one place.</p>
+          <p className="text-sm text-cas-muted mt-1 leading-relaxed">Your escrow, deliveries and requests in one place.</p>
         </div>
         <Link to="/rfqs" className="inline-flex items-center justify-center gap-2 px-5 min-h-[44px] bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-lg">
           <Plus className="w-4 h-4" aria-hidden="true" /> New request
@@ -64,7 +64,7 @@ export default function BuyerDashboard() {
       </div>
 
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-cas-slate">My orders</h2>
+        <h2 className="text-xl font-bold text-cas-slate leading-tight">My orders</h2>
         <Link to="/rfqs" className="inline-flex items-center min-h-[44px] text-sm font-bold text-slate-900 hover:underline">View requests</Link>
       </div>
       <MyOrders onLoaded={onOrders} />

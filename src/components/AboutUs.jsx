@@ -25,7 +25,7 @@ export default function AboutUs() {
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="max-w-3xl">
           <div className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 mb-2">About CAS Diesel</div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-cas-slate tracking-tight leading-tight">
             Nigeria&apos;s enterprise diesel marketplace.
           </h2>
           <p className="text-base text-cas-muted mt-4 leading-relaxed">
@@ -39,7 +39,7 @@ export default function AboutUs() {
               <div className="w-11 h-11 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center mb-4">
                 <Icon className="w-5 h-5" aria-hidden="true" />
               </div>
-              <h3 className="font-extrabold text-cas-slate text-lg">{title}</h3>
+              <h3 className="font-extrabold text-cas-slate text-xl leading-tight">{title}</h3>
               <p className="text-sm text-cas-muted mt-2 leading-relaxed">{text}</p>
             </div>
           ))}

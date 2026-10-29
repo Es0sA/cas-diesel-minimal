@@ -62,7 +62,7 @@ export default function LegalModals({ activeModal, onClose }) {
         <div className="p-5 sm:p-6 bg-cas-slate text-white flex items-center justify-between border-b border-slate-700">
           <div className="flex items-center gap-2">
             <Scale className="w-5 h-5 text-cas-amber" aria-hidden="true" />
-            <h3 id="modal-title" className="font-extrabold text-lg sm:text-xl text-white">
+            <h3 id="modal-title" className="font-extrabold text-xl sm:text-xl text-white leading-tight">
               Terms & Conditions
             </h3>
           </div>
@@ -86,7 +86,7 @@ export default function LegalModals({ activeModal, onClose }) {
 
           {UNIFIED_TERMS.map(([title, text]) => (
             <div key={title} className="space-y-1.5">
-              <h4 className="font-semibold text-base sm:text-lg text-cas-slate">{title}</h4>
+              <h4 className="font-semibold text-base sm:text-xl text-cas-slate leading-tight">{title}</h4>
               <p className="text-sm leading-6 sm:text-base sm:leading-7 text-slate-600">{text}</p>
             </div>
           ))}

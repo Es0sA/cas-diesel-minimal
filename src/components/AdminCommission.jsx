@@ -33,12 +33,12 @@ export default function AdminCommission() {
     } finally { setSaving(false); }
   };
 
-  if (!tiers) return <p className="text-sm text-cas-muted font-bold">{msg ? msg.text : 'Loading fees...'}</p>;
+  if (!tiers) return <p className="text-sm text-cas-muted font-bold leading-relaxed">{msg ? msg.text : 'Loading fees...'}</p>;
 
   return (
     <div className="max-w-3xl">
-      <p className="text-sm text-cas-muted mb-2">Set one fee for each order size. The buyer pays half on top of the escrow, and the vendor's half is taken from what is released to them. A blank fee means no commission for that size.</p>
-      <p className="text-sm text-cas-muted mb-5">Orders are capped at {litres(max)} litres, the legal limit for one load. Fees apply to orders created after you save. Existing orders keep the fee they were created with.</p>
+      <p className="text-sm text-cas-muted mb-2 leading-relaxed">Set one fee for each order size. The buyer pays half on top of the escrow, and the vendor's half is taken from what is released to them. A blank fee means no commission for that size.</p>
+      <p className="text-sm text-cas-muted mb-5 leading-relaxed">Orders are capped at {litres(max)} litres, the legal limit for one load. Fees apply to orders created after you save. Existing orders keep the fee they were created with.</p>
       {msg && <p role={msg.ok ? 'status' : 'alert'} className={`mb-4 p-3 rounded-lg text-sm font-bold ${msg.ok ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : 'bg-rose-50 border border-rose-200 text-rose-800'}`}>{msg.text}</p>}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm divide-y divide-slate-100">
         {tiers.map((t, i) => {

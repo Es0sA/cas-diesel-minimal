@@ -22,12 +22,12 @@ export default function AgoPriceBlock({ price, updatedAt, compact = false, class
   if (compact) {
     return (
       <div className={`flex flex-col ${className}`}>
-        <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 font-bold">
+        <span className="text-xs font-mono uppercase tracking-wider text-slate-500 font-bold">
           AGO (Diesel)
         </span>
         {hasPrice ? (
           <div className="flex items-baseline gap-1">
-            <span className="text-xl font-extrabold font-mono text-cas-slate">
+            <span className="text-xl font-display tabular-nums font-bold tracking-tight text-cas-slate">
               {formatNaira(price)}
             </span>
             <span className="text-xs text-cas-muted font-bold">per liter</span>
@@ -45,7 +45,7 @@ export default function AgoPriceBlock({ price, updatedAt, compact = false, class
     <div className={`p-5 sm:p-6 bg-slate-50 border-2 border-slate-200 rounded-2xl ${className}`}>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pb-4 border-b border-slate-200">
         <div>
-          <span className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500">
+          <span className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
             Product
           </span>
           <span className="font-extrabold text-sm sm:text-base text-cas-slate mt-0.5 block">
@@ -54,7 +54,7 @@ export default function AgoPriceBlock({ price, updatedAt, compact = false, class
         </div>
 
         <div>
-          <span className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500">
+          <span className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
             Unit
           </span>
           <span className="font-extrabold text-sm sm:text-base text-cas-slate mt-0.5 block">
@@ -63,11 +63,11 @@ export default function AgoPriceBlock({ price, updatedAt, compact = false, class
         </div>
 
         <div>
-          <span className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500">
+          <span className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
             Official Indicative Price
           </span>
           {hasPrice ? (
-            <span className="font-extrabold text-xl sm:text-2xl font-mono text-cas-slate mt-0.5 block">
+            <span className="font-display tabular-nums font-bold tracking-tight text-xl sm:text-2xl text-cas-slate mt-0.5 block">
               {formatNaira(price)}
             </span>
           ) : (
@@ -78,7 +78,7 @@ export default function AgoPriceBlock({ price, updatedAt, compact = false, class
         </div>
 
         <div>
-          <span className="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500">
+          <span className="block text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
             Last Confirmed
           </span>
           <span className="text-xs sm:text-sm text-cas-muted flex items-center gap-1 mt-1 font-medium">

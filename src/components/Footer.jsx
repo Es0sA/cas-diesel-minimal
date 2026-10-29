@@ -38,7 +38,7 @@ export default function Footer({ onOpenLegalModal }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             {hasContact && (
               <div className="space-y-3">
-                <h2 className="text-xs font-bold uppercase tracking-wider text-white">Contact</h2>
+                <h2 className="text-xs font-bold uppercase tracking-wider text-white leading-tight">Contact</h2>
                 <div className="space-y-2 text-xs text-slate-400">
                   {CONTACT.phone && (
                     <div className="flex items-center gap-2">
@@ -64,7 +64,7 @@ export default function Footer({ onOpenLegalModal }) {
             )}
 
             <div className="space-y-3">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-white">Company</h2>
+              <h2 className="text-xs font-bold uppercase tracking-wider text-white leading-tight">Company</h2>
               <ul className="space-y-2 text-xs">
                 <li>
                   <button type="button" onClick={goToAbout} className="text-slate-400 hover:text-white underline underline-offset-2 transition-colors">About Us</button>

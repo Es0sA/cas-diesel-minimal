@@ -97,10 +97,10 @@ export default function Hero({ onOpenRegister }) {
       <section className="bg-slate-50/70 border-b border-cas-border py-12 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="mb-8">
-            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500 block">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 block">
               Settlement Protocol
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-cas-slate tracking-tight mt-1">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-cas-slate tracking-tight mt-1 leading-tight">
               Three steps between purchase and gate delivery
             </h2>
           </div>
@@ -112,7 +112,7 @@ export default function Hero({ onOpenRegister }) {
                   <step.icon className="w-5 h-5" aria-hidden="true" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-cas-slate text-base">
+                  <h3 className="font-extrabold text-cas-slate text-base leading-tight">
                     {i + 1}. {step.title}
                   </h3>
                   <p className="text-xs sm:text-sm text-cas-muted leading-relaxed mt-1.5">

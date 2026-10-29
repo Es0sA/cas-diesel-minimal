@@ -48,8 +48,8 @@ export default function KycUpload({ types }) {
 
   return (
     <div className="p-5 sm:p-4 mb-6 bg-white border border-slate-200 rounded-xl">
-      <h2 className="font-extrabold text-base text-cas-slate mb-1">Verification documents</h2>
-      <p className="text-xs text-cas-muted mb-4">PDF, JPG or PNG, up to 5 MB each. An admin will either approve or reject each document.</p>
+      <h2 className="font-extrabold text-base text-cas-slate mb-1 leading-tight">Verification documents</h2>
+      <p className="text-xs text-cas-muted mb-4 leading-relaxed">PDF, JPG or PNG, up to 5 MB each. An admin will either approve or reject each document.</p>
       <div className="space-y-3">
         {types.map((type) => {
           const doc = docs.find((d) => d.documentType === type);
@@ -83,7 +83,7 @@ export default function KycUpload({ types }) {
           );
         })}
       </div>
-      {error && <p className="mt-3 text-xs font-bold text-rose-600">{error}</p>}
+      {error && <p className="mt-3 text-xs font-bold text-rose-600 leading-relaxed">{error}</p>}
     </div>
   );
 }
