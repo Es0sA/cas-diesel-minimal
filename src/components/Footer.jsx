@@ -43,18 +43,18 @@ export default function Footer({ onOpenLegalModal }) {
                   {CONTACT.phone && (
                     <div className="flex items-center gap-2">
                       <Phone className="w-4 h-4 text-cas-amber shrink-0" aria-hidden="true" />
-                      <a href={`tel:${CONTACT.phone.replace(/\s/g, '')}`} className="hover:text-white transition-colors">{CONTACT.phone}</a>
+                      <a href={`tel:${CONTACT.phone.replace(/\s/g, '')}`} className="inline-link hover:text-white transition-colors">{CONTACT.phone}</a>
                     </div>
                   )}
                   {CONTACT.email && (
                     <div className="flex items-center gap-2">
                       <Mail className="w-4 h-4 text-cas-amber shrink-0" aria-hidden="true" />
-                      <a href={`mailto:${CONTACT.email}`} className="hover:text-white transition-colors">{CONTACT.email}</a>
+                      <a href={`mailto:${CONTACT.email}`} className="inline-link hover:text-white transition-colors">{CONTACT.email}</a>
                     </div>
                   )}
                   {CONTACT.address && (
-                    <div className="flex items-start gap-2">
-                      <MapPin className="w-4 h-4 text-cas-amber shrink-0 mt-0.5" aria-hidden="true" />
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-cas-amber shrink-0" aria-hidden="true" />
                       <span>{CONTACT.address}</span>
                     </div>
                   )}
@@ -65,19 +65,19 @@ export default function Footer({ onOpenLegalModal }) {
 
             <div className="space-y-3">
               <h2 className="text-xs font-bold uppercase tracking-wider text-white leading-tight">Company</h2>
-              <ul className="space-y-2 text-xs">
+              <ul className="space-y-1 text-xs">
                 <li>
-                  <button type="button" onClick={goToAbout} className="text-slate-400 hover:text-white underline underline-offset-2 transition-colors">About Us</button>
+                  <button type="button" onClick={goToAbout} className="inline-link inline-block py-1 text-slate-400 hover:text-white underline underline-offset-4 decoration-slate-600 hover:decoration-white transition-colors">About Us</button>
                 </li>
                 <li>
-                  <Link to="/privacy" className="text-slate-400 hover:text-white underline underline-offset-2 transition-colors">Privacy</Link>
+                  <Link to="/privacy" className="inline-link inline-block py-1 text-slate-400 hover:text-white underline underline-offset-4 decoration-slate-600 hover:decoration-white transition-colors">Privacy</Link>
                 </li>
                 {LEGAL_LINKS.map((l) => (
                   <li key={l.key}>
                     <button
                       type="button"
                       onClick={() => onOpenLegalModal(l.key)}
-                      className="text-slate-400 hover:text-white underline underline-offset-2 transition-colors"
+                      className="inline-link inline-block py-1 text-slate-400 hover:text-white underline underline-offset-4 decoration-slate-600 hover:decoration-white transition-colors"
                     >
                       {l.label}
                     </button>

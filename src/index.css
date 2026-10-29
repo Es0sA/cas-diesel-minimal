@@ -48,7 +48,7 @@
 /* Touch devices: every control is at least 44px tall (WCAG 2.5.5 / Apple HIG) */
 @media (pointer: coarse) {
   a[href]:not(p a):not(li a):not(.inline-link),
-  button,
+  button:not(.inline-link),
   select,
   input:not([type='checkbox']):not([type='radio']):not([type='hidden']),
   textarea,
