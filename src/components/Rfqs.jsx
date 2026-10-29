@@ -604,7 +604,7 @@ function QuoteForm({ rfq, onDone }) {
           ))}
         </ul>
       )}
-      <button disabled={busy || uploadingCert} className="btn-primary">{uploadingCert ? 'Uploading certificate...' : busy ? (<><Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /><span>Sending...</span></>) : 'Submit quote'}</button>
+      <button disabled={busy || uploadingCert} className="btn-primary">{uploadingCert ? 'Uploading certificate...' : busy ? (<><Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /><span>Sending...</span></>) : 'Submit Binding Offer'}</button>
     </form>
   );
 }
@@ -722,8 +722,8 @@ function SupplierRfqs() {
       ) : rfqs.length === 0 ? (
         <div className="text-center p-10 border-2 border-dashed border-slate-200 rounded-2xl text-cas-muted">
           <FileText className="w-8 h-8 mx-auto mb-2 opacity-50" aria-hidden="true" />
-          <p>No open requests right now.</p>
-          <p className="text-xs mt-1 leading-relaxed">If you have not been verified yet, upload your documents in the Vendor Desk first.</p>
+          <h2 className="font-display text-base font-bold text-cas-slate leading-tight">No Open Procurement Requests</h2>
+          <p className="text-sm mt-1 leading-relaxed">There are no open requests requiring a quote at the moment. Check back regularly for new procurement opportunities.</p>
         </div>
       ) : (
         <ul className="space-y-4">

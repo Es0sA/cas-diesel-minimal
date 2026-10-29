@@ -168,6 +168,7 @@ export default function SupplierPortal() {
 
         {canDispatch && ord.status === 'FUNDED' && !ord.driver ? (
           <div className="flex flex-wrap items-center gap-2 w-full">
+            <p className="w-full text-sm text-slate-500 leading-relaxed mb-1">Select a verified driver to authorize this delivery for transit. Confirm the driver's details before proceeding, as this action initiates the dispatch process for the assigned order.</p>
             <select
               value={driverChoice[ord.id] || ''}
               onChange={(e) => { setDriverChoice((prev) => ({ ...prev, [ord.id]: e.target.value })); setDispatchMsg((prev) => ({ ...prev, [ord.id]: undefined })); }}
@@ -188,7 +189,7 @@ export default function SupplierPortal() {
               disabled={dispatchingId === ord.id || !driverChoice[ord.id]}
               className="w-full sm:w-auto min-h-[44px] sm:min-h-0 sm:h-9 px-4 bg-cas-slate hover:bg-black text-white font-bold rounded text-xs transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-cas-slate"
             >
-              {dispatchingId === ord.id ? 'Dispatching...' : 'Assign & Dispatch'}
+              {dispatchingId === ord.id ? 'Dispatching...' : 'Authorize Dispatch'}
             </button>
             {drivers.length === 0 && (
               <p className="w-full text-cas-muted leading-relaxed">No verified drivers are available yet. A driver must register and be verified by CAS before you can dispatch.</p>
@@ -240,7 +241,7 @@ export default function SupplierPortal() {
             {profile ? `${profile.companyName} Operations Desk` : 'Vendor Operations Desk'}
           </h1>
           <p className="text-base text-cas-muted mt-2 leading-relaxed">
-            Quote open requests, dispatch funded orders and keep your spot price current.
+            Manage your supply commitments, respond to procurement requests and coordinate high-value diesel deliveries from one operational dashboard.
           </p>
         </div>
 
@@ -266,23 +267,23 @@ export default function SupplierPortal() {
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
-          <Kpi label="Total Quoted (₦)" value={naira(quotedTotal)} hint={`${liveQuotes} live quote${liveQuotes === 1 ? '' : 's'}`} />
-          <Kpi label="Active Orders" value={activeOrders === null ? '...' : activeOrders.length} hint="Funded, in transit or at the gate" tone="text-slate-900" />
-          <Kpi label="Pending RFQs" value={openRfqs === null ? '...' : pendingRfqs.length} hint="Open and not yet quoted by you" tone="text-slate-900" />
+          <Kpi label="Quoted Pipeline" value={naira(quotedTotal)} hint={`${liveQuotes} live quote${liveQuotes === 1 ? '' : 's'}`} />
+          <Kpi label="Active Supply Orders" value={activeOrders === null ? '...' : activeOrders.length} hint="Funded, in transit or at the gate" tone="text-slate-900" />
+          <Kpi label="Open Procurement Requests" value={openRfqs === null ? '...' : pendingRfqs.length} hint="Open and not yet quoted by you" tone="text-slate-900" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
             <div className="pb-4 border-b border-slate-200 mb-6">
-              <h2 className="font-extrabold text-xl text-cas-slate leading-tight">Active Orders</h2>
+              <h2 className="font-extrabold text-xl text-cas-slate leading-tight">Active Supply Orders</h2>
               <span className="text-xs text-slate-600">Funded orders waiting for a driver, and loads on the road</span>
             </div>
             {activeOrders === null ? (
               <div className="py-8 text-center text-cas-muted text-sm font-bold">Loading orders...</div>
             ) : activeOrders.length === 0 ? (
               <div className="py-8 text-center text-cas-muted text-sm">
-                <p className="font-bold leading-relaxed">Nothing to dispatch.</p>
-                <p className="mt-1 leading-relaxed">Funded orders appear here the moment a buyer pays into escrow.</p>
+                <p className="font-bold leading-relaxed">No Active Supply Orders</p>
+                <p className="mt-1 leading-relaxed">You have no orders awaiting fulfilment at this time. New funded orders will appear here when they are ready for dispatch.</p>
               </div>
             ) : (
               <div className="space-y-4">{activeOrders.map((ord) => renderOrder(ord, true))}</div>

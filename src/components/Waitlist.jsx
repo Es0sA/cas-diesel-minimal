@@ -379,7 +379,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                   <div className="p-6 sm:p-8">
                     <div className="mb-6">
                       <h2 className="text-xl font-bold text-cas-slate leading-tight">
-                        Join the priority waitlist
+                        Request Corporate Allocation
                       </h2>
                       <p className="text-xs sm:text-sm text-cas-muted mt-1 leading-relaxed">
                         Select your role below to secure your allocation.
