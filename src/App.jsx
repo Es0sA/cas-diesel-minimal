@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { api } from './api';
 import { WAITLIST } from './config';
@@ -9,19 +9,15 @@ import Hero from './components/Hero';
 import Waitlist from './components/Waitlist';
 import Marketplace from './components/Marketplace';
 import LoginPage from './components/LoginPage';
-import SupplierPortal from './components/SupplierPortal';
 import Depots from './components/Depots';
 import DepotDetail from './components/DepotDetail';
-import DriverCockpit from './components/DriverCockpit';
 import OrderDetail from './components/OrderDetail';
 import ProfileSettings from './components/ProfileSettings';
 import AccountDeleted from './components/AccountDeleted';
-import AdminDashboard from './components/AdminDashboard';
 import OrderCheckoutModal from './components/OrderCheckoutModal';
 import LegalModals from './components/LegalModals';
 import CookieBanner from './components/CookieBanner';
 import Footer from './components/Footer';
-import Rfqs from './components/Rfqs';
 import Onboarding from './components/Onboarding';
 import BuyerDashboard from './components/BuyerDashboard';
 import MyOrders from './components/MyOrders';
@@ -40,6 +36,12 @@ import {
   ArrowRight, 
   CheckCircle2
 } from 'lucide-react';
+
+// Heavy role pages load only when someone opens them
+const SupplierPortal = lazy(() => import('./components/SupplierPortal'));
+const DriverCockpit = lazy(() => import('./components/DriverCockpit'));
+const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
+const Rfqs = lazy(() => import('./components/Rfqs'));
 
 function HomePage({ user, handleOpenRegistration }) {
   usePageTitle(null, "Browse accredited diesel vendors by depot and price, and order with escrow-protected payment on CAS Diesel.");
@@ -366,6 +368,7 @@ export default function App() {
 
       {/* Main Body */}
       <main className="flex-grow">
+        <Suspense fallback={<div role="status" aria-label="Loading" className="flex min-h-[50vh] items-center justify-center"><div className="cas-boot-spinner" /></div>}>
         <Routes>
           <Route path="/" element={WAITLIST.enabled && !user ? <Waitlist onOpenLegalModal={(modal) => setActiveLegalModal(modal)} /> : <HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
           <Route path="/waitlist" element={<Waitlist onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />} />
@@ -391,6 +394,7 @@ export default function App() {
           <Route path="/admin" element={<AdminDashboard user={user} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
       </main>
 
       {/* Compliance Modals */}
