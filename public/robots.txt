@@ -1,4 +1,11 @@
 User-agent: *
 Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /vendor
+Disallow: /driver
+Disallow: /orders
+Disallow: /rfqs
+Disallow: /profile
 
 Sitemap: https://casdiesel.com/sitemap.xml

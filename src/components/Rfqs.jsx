@@ -99,7 +99,7 @@ function SamplePhotos({ id, title = 'Buyer sample photos' }) {
       <h2 className="text-xl font-bold text-cas-slate mb-1 leading-tight">{title}</h2>
       <p className="text-xs text-cas-muted mb-3 leading-relaxed">The product loaded must match these samples.</p>
       <div className="flex flex-wrap gap-3">
-        {samples.map((x) => <a key={x.id} href={x.url} target="_blank" rel="noopener noreferrer"><img src={x.url} alt={x.fileName} className="h-28 w-28 object-cover rounded-lg border border-slate-200" /></a>)}
+        {samples.map((x) => <a key={x.id} href={x.url} target="_blank" rel="noopener noreferrer"><img src={x.url} alt="Buyer reference sample" className="h-28 w-28 object-cover rounded-lg border border-slate-200" /></a>)}
       </div>
     </section>
   );

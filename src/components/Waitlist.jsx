@@ -279,7 +279,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                     <Fuel className="w-4 h-4" />
                   </div>
                   <div>
-                    <h2 className="text-sm font-bold text-cas-slate leading-tight">Direct Ex-Depot Pricing</h2>
+                    <p className="font-display tracking-tight text-sm font-bold text-cas-slate leading-tight">Direct Ex-Depot Pricing</p>
                     <p className="text-sm leading-relaxed text-slate-600 mt-0.5">Live depot prices posted by CAS, with no broker markups.</p>
                   </div>
                 </div>
@@ -289,7 +289,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                     <Lock className="w-4 h-4" />
                   </div>
                   <div>
-                    <h2 className="text-sm font-bold text-cas-slate leading-tight">Payment Released At Gate</h2>
+                    <p className="font-display tracking-tight text-sm font-bold text-cas-slate leading-tight">Payment Released At Gate</p>
                     <p className="text-sm leading-relaxed text-slate-600 mt-0.5">Funds stay safe in escrow until you verify quantity and quality upon delivery.</p>
                   </div>
                 </div>
@@ -299,7 +299,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                     <FileCheck className="w-4 h-4" />
                   </div>
                   <div>
-                    <h2 className="text-sm font-bold text-cas-slate leading-tight">Verified Loading Documents</h2>
+                    <p className="font-display tracking-tight text-sm font-bold text-cas-slate leading-tight">Verified Loading Documents</p>
                     <p className="text-sm leading-relaxed text-slate-600 mt-0.5">NMDPRA licences, batch test certs, and loading tickets matched to every order.</p>
                   </div>
                 </div>
@@ -625,9 +625,9 @@ export default function Waitlist({ onOpenLegalModal }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-10">
             <p className="text-xs font-bold uppercase tracking-wider text-cas-muted leading-relaxed">Transaction Flow</p>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-cas-slate mt-1.5 leading-tight">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-cas-slate mt-1.5 leading-tight">
               Three steps from order to gate discharge
-            </h3>
+            </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -635,7 +635,7 @@ export default function Waitlist({ onOpenLegalModal }) {
               <div className="w-9 h-9 rounded-lg bg-sky-50 text-cas-blue flex items-center justify-center mb-3.5 font-bold text-sm">
                 1
               </div>
-              <h4 className="font-bold text-cas-slate text-base leading-tight">Compare & Fund Escrow</h4>
+              <h3 className="font-bold text-cas-slate text-base leading-tight">Compare & Fund Escrow</h3>
               <p className="text-sm text-slate-600 mt-2 leading-relaxed">
                 Review verified depot prices from vendors. Lock payment in secure escrow so vendors see funds are secured before trucks load.
               </p>
@@ -645,7 +645,7 @@ export default function Waitlist({ onOpenLegalModal }) {
               <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center mb-3.5 font-bold text-sm">
                 2
               </div>
-              <h4 className="font-bold text-cas-slate text-base leading-tight">Track Truck Dispatch</h4>
+              <h3 className="font-bold text-cas-slate text-base leading-tight">Track Truck Dispatch</h3>
               <p className="text-sm text-slate-600 mt-2 leading-relaxed">
                 A verified driver is assigned. Track transit in real time with automated digital loading tickets and waybills attached directly to your order.
               </p>
@@ -655,7 +655,7 @@ export default function Waitlist({ onOpenLegalModal }) {
               <div className="w-9 h-9 rounded-lg bg-emerald-50 text-cas-green flex items-center justify-center mb-3.5 font-bold text-sm">
                 3
               </div>
-              <h4 className="font-bold text-cas-slate text-base leading-tight">Confirm & Release</h4>
+              <h3 className="font-bold text-cas-slate text-base leading-tight">Confirm & Release</h3>
               <p className="text-sm text-slate-600 mt-2 leading-relaxed">
                 Inspect quantity and test quality at your facility gate. Once you confirm receipt, escrow releases payout directly to the vendor.
               </p>
