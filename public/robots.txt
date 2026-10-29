@@ -7,5 +7,7 @@ Disallow: /driver
 Disallow: /orders
 Disallow: /rfqs
 Disallow: /profile
+Disallow: /onboarding
+Disallow: /reset-password
 
 Sitemap: https://casdiesel.com/sitemap.xml
