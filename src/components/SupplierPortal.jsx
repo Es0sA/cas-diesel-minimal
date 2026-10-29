@@ -1,12 +1,25 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { UserCheck, CheckCircle2, Lock } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { UserCheck, CheckCircle2, Lock, ArrowRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import KycUpload from './KycUpload';
 import { DEPOTS } from '../data/depots';
 import { usePageTitle } from '../lib/usePageTitle';
+import { closesIn, URGENCY_STYLE } from '../lib/rfqUrgency';
 
 const ACTIVE_STATUSES = ['FUNDED', 'IN_TRANSIT', 'ARRIVED', 'SETTLING'];
+const COMMAND_STATUSES = ['FUNDED', 'IN_TRANSIT'];
+const naira = (n) => `₦${Number(n || 0).toLocaleString()}`;
+
+function Kpi({ label, value, hint, tone = 'text-cas-slate' }) {
+  return (
+    <div className="bg-white p-5 sm:p-6 rounded-2xl border-2 border-cas-border shadow-sm">
+      <p className="text-xs font-bold uppercase tracking-wider text-cas-muted">{label}</p>
+      <p className={`mt-2 text-2xl sm:text-3xl font-extrabold font-mono ${tone}`}>{value}</p>
+      {hint && <p className="mt-1 text-xs text-cas-muted">{hint}</p>}
+    </div>
+  );
+}
 
 export default function SupplierPortal() {
   usePageTitle('Vendor Desk', 'Publish your spot price, manage standing rates, and track escrow-protected orders on the CAS Diesel vendor desk.');
@@ -25,6 +38,9 @@ export default function SupplierPortal() {
   const [filterStatus, setFilterStatus] = useState('All');
   const [loading, setLoading] = useState(true);
   const [dispatchingId, setDispatchingId] = useState(null);
+  const [activeOrders, setActiveOrders] = useState(null);
+  const [openRfqs, setOpenRfqs] = useState(null);
+  const [myQuotes, setMyQuotes] = useState([]);
 
   const loadOrders = useCallback(async () => {
     try {
@@ -43,10 +59,22 @@ export default function SupplierPortal() {
     }
   }, [filterStatus]);
 
+  const loadActive = useCallback(() => (
+    api.orders.list()
+      .then((data) => setActiveOrders((data?.orders || []).filter((o) => COMMAND_STATUSES.includes(o.status))))
+      .catch((err) => { console.error('Failed to fetch active orders', err); setActiveOrders([]); })
+  ), []);
+
   useEffect(() => {
     setLoading(true);
     loadOrders();
   }, [loadOrders]);
+
+  useEffect(() => {
+    loadActive();
+    api.rfqs.list().then((r) => setOpenRfqs(r.rfqs || [])).catch(() => setOpenRfqs([]));
+    api.rfqs.myQuotes().then((r) => setMyQuotes(r.quotes || [])).catch(() => {});
+  }, [loadActive]);
 
   useEffect(() => {
     api.companies.getProfile()
@@ -86,7 +114,7 @@ export default function SupplierPortal() {
     try {
       setDispatchingId(orderId);
       const res = await api.orders.dispatch(orderId, { driverId });
-      await loadOrders();
+      await Promise.all([loadOrders(), loadActive()]);
       const gaps = res.standingDocs?.missing || [];
       if (gaps.length) alert(`Dispatched, but the driver has no approved, unexpired ${gaps.map((g) => g.type === 'DRIVER_ID' ? 'driver licence' : 'truck calibration chart').join(' or ')} on file. Ask the driver to upload it in their profile, or add the document on the order page, or the buyer cannot clear offloading.`);
     } catch (err) {
@@ -101,6 +129,86 @@ export default function SupplierPortal() {
     .reduce((sum, o) => sum + (o.totalEscrowAmount || 0), 0);
   const depotName = DEPOTS.find((d) => d.id === profile?.depotId)?.name || (profile?.depotId === 'other' && profile?.businessAddress ? profile.businessAddress : profile?.depotId) || 'Depot not set';
 
+  const renderOrder = (ord, canDispatch) => (
+    <div key={ord.id} className="p-5 bg-slate-50 border-2 border-slate-200 rounded-xl space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <span className="font-mono font-bold text-xs text-cas-amberDark">#{ord.id.slice(0, 8).toUpperCase()}</span>
+          <h4 className="font-extrabold text-base text-cas-slate">{ord.buyer?.companyName || 'Unknown Buyer'}</h4>
+          <span className="text-xs text-cas-muted">
+            Destination: {ord.targetLatitude != null ? `${ord.targetLatitude}, ${ord.targetLongitude}` : 'Not set'}
+          </span>
+        </div>
+        <div className="sm:text-right">
+          <span className="text-xs font-bold text-cas-muted block">Escrow Amount</span>
+          <span className="text-xl font-extrabold font-mono text-cas-green">
+            ₦{(ord.totalEscrowAmount || 0).toLocaleString()}
+          </span>
+          <span className="text-xs text-slate-500 block">({ord.volumeLiters.toLocaleString()} Litres)</span>
+        </div>
+      </div>
+
+      <div className="p-3 bg-white rounded-lg border border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div>
+          <span className="text-cas-muted block">Current Status:</span>
+          <span className="font-bold text-cas-slate flex items-center gap-1.5 mt-0.5">
+            <Lock className="w-3.5 h-3.5 text-cas-amberDark" aria-hidden="true" />
+            <span>{ord.status}</span>
+          </span>
+        </div>
+
+        {canDispatch && ord.status === 'FUNDED' && !ord.driver ? (
+          <div className="flex flex-wrap items-center gap-2 w-full">
+            <select
+              value={driverChoice[ord.id] || ''}
+              onChange={(e) => setDriverChoice((prev) => ({ ...prev, [ord.id]: e.target.value }))}
+              className="flex-1 min-w-0 h-9 px-2 bg-white border border-slate-300 rounded font-semibold text-xs text-cas-slate"
+              aria-label="Select verified driver"
+            >
+              <option value="">{drivers.length ? 'Select driver' : 'No verified drivers yet'}</option>
+              {drivers.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.firstName} {d.lastName} ({d.truckPlateNumber || 'no plate'}){d.truckCapacityLiters ? ` - ${d.truckCapacityLiters.toLocaleString()}L` : ''}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              onClick={() => handleDispatch(ord.id)}
+              disabled={dispatchingId === ord.id}
+              className="h-9 px-4 bg-cas-slate hover:bg-black text-white font-bold rounded text-xs transition-colors shrink-0 disabled:opacity-50"
+            >
+              {dispatchingId === ord.id ? 'Dispatching...' : 'Assign & Dispatch'}
+            </button>
+          </div>
+        ) : ord.driver ? (
+          <div className="text-left sm:text-right">
+            <span className="text-cas-muted block">Dispatched Tanker Driver:</span>
+            <span className="font-bold text-cas-slate">
+              {ord.driver.firstName} {ord.driver.lastName} ({ord.driver.truckPlateNumber || 'no plate'})
+            </span>
+            {ord.lastLocationAt && (
+              <span className="text-cas-muted block mt-0.5">
+                Last location: {new Date(ord.lastLocationAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </span>
+            )}
+          </div>
+        ) : (
+          <div className="text-cas-muted">{ord.status === 'DRAFT' ? 'Awaiting funding' : 'Awaiting driver assignment'}</div>
+        )}
+      </div>
+      <div className="flex justify-end border-t border-slate-200 pt-3">
+        <button onClick={() => viewOrder(ord.id)} className="text-xs font-bold text-cas-slate hover:text-cas-blue transition-colors">View Full Details &rarr;</button>
+      </div>
+    </div>
+  );
+
+  const liveQuoteRows = myQuotes.filter((q) => q.status !== 'DRAFT' && q.status !== 'WITHDRAWN');
+  const liveQuotes = liveQuoteRows.length;
+  const quotedTotal = liveQuoteRows
+    .reduce((sum, q) => sum + (Number(q.pricePerLitre) || 0) * (Number(q.rfq?.volumeLiters) || 0), 0);
+  const pendingRfqs = (openRfqs || []).filter((r) => !r.myQuote);
+
   return (
     <section id="supplier-desk" className="bg-cas-canvas py-12 md:py-20 border-b border-cas-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
@@ -114,7 +222,7 @@ export default function SupplierPortal() {
             {profile ? `${profile.companyName} Operations Desk` : 'Vendor Operations Desk'}
           </h1>
           <p className="text-base text-cas-muted mt-2">
-            Set your daily spot price per litre and review confirmed escrow allocations.
+            Quote open requests, dispatch funded orders and keep your spot price current.
           </p>
         </div>
 
@@ -138,6 +246,71 @@ export default function SupplierPortal() {
             <span>Market rates successfully broadcast to CAS Diesel Marketplace.</span>
           </div>
         )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
+          <Kpi label="Total Quoted (₦)" value={naira(quotedTotal)} hint={`${liveQuotes} live quote${liveQuotes === 1 ? '' : 's'}`} />
+          <Kpi label="Active Orders" value={activeOrders === null ? '...' : activeOrders.length} hint="Funded or in transit" tone="text-cas-green" />
+          <Kpi label="Pending RFQs" value={openRfqs === null ? '...' : pendingRfqs.length} hint="Open and not yet quoted by you" tone="text-cas-amberDark" />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-cas-border shadow-sm">
+            <div className="pb-4 border-b border-slate-200 mb-6">
+              <h2 className="font-extrabold text-lg text-cas-slate">Active Orders</h2>
+              <span className="text-xs text-cas-muted">Funded orders waiting for a driver, and loads in transit</span>
+            </div>
+            {activeOrders === null ? (
+              <div className="py-8 text-center text-cas-muted text-sm font-bold">Loading orders...</div>
+            ) : activeOrders.length === 0 ? (
+              <div className="py-8 text-center text-cas-muted text-sm">
+                <p className="font-bold">Nothing to dispatch.</p>
+                <p className="mt-1">Funded orders appear here the moment a buyer pays into escrow.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">{activeOrders.map((ord) => renderOrder(ord, true))}</div>
+            )}
+          </div>
+
+          <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-cas-border shadow-sm">
+            <div className="flex items-start justify-between gap-3 pb-4 border-b border-slate-200 mb-6">
+              <div>
+                <h2 className="font-extrabold text-lg text-cas-slate">Open RFQs</h2>
+                <span className="text-xs text-cas-muted">Buyers waiting for a price</span>
+              </div>
+              <Link to="/rfqs" className="inline-flex items-center gap-1 text-xs font-bold text-cas-amberDark hover:underline">
+                See all <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </Link>
+            </div>
+            {openRfqs === null ? (
+              <div className="py-8 text-center text-cas-muted text-sm font-bold">Loading requests...</div>
+            ) : openRfqs.length === 0 ? (
+              <div className="py-8 text-center text-cas-muted text-sm">
+                <p className="font-bold">No open requests right now.</p>
+                <p className="mt-1">{profile && !profile.isVerified ? 'You will see requests once CAS verifies your company.' : 'New requests show up here as buyers post them.'}</p>
+              </div>
+            ) : (
+              <ul className="space-y-3">
+                {openRfqs.slice(0, 5).map((r) => {
+                  const urgency = closesIn(r.expiresAt);
+                  return (
+                    <li key={r.id}>
+                      <Link to={`/rfqs/${r.id}`} className="flex items-center justify-between gap-3 p-4 bg-slate-50 border-2 border-slate-200 rounded-xl hover:border-cas-amber transition-colors">
+                        <div className="min-w-0">
+                          <p className="font-extrabold text-cas-slate">{Number(r.volumeLiters).toLocaleString()} L</p>
+                          <p className="text-xs text-cas-muted truncate">{r.buyerName} · {[r.city, r.state].filter(Boolean).join(', ') || 'Location not given'}</p>
+                        </div>
+                        <div className="flex flex-col items-end gap-1 shrink-0">
+                          <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${URGENCY_STYLE[urgency.tone]}`}>{urgency.label}</span>
+                          <span className="text-xs font-bold text-cas-slate">{r.myQuote ? `Quoted ${naira(r.myQuote.pricePerLitre)}` : 'Quote now'}</span>
+                        </div>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
@@ -223,7 +396,7 @@ export default function SupplierPortal() {
             <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-cas-border shadow-sm">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 mb-6 gap-4">
                 <div>
-                  <h3 className="font-extrabold text-lg text-cas-slate">Confirmed Inbound Escrow Orders</h3>
+                  <h3 className="font-extrabold text-lg text-cas-slate">Order History</h3>
                   <span className="text-xs text-cas-muted">Funds secured in CAS Escrow prior to dispatch</span>
                 </div>
                 <span className="text-xs font-bold px-3 py-1 bg-cas-amberLight text-cas-amberDark rounded-full border border-cas-amber/50">
@@ -253,79 +426,7 @@ export default function SupplierPortal() {
                 <div className="py-8 text-center text-cas-muted text-sm font-bold">No orders found.</div>
               ) : (
                 <div className="space-y-4">
-                  {orders.map((ord) => (
-                    <div key={ord.id} className="p-5 bg-slate-50 border-2 border-slate-200 rounded-xl space-y-4">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <div>
-                          <span className="font-mono font-bold text-xs text-cas-amberDark">#{ord.id.slice(0, 8).toUpperCase()}</span>
-                          <h4 className="font-extrabold text-base text-cas-slate">{ord.buyer?.companyName || 'Unknown Buyer'}</h4>
-                          <span className="text-xs text-cas-muted">
-                            Destination: {ord.targetLatitude != null ? `${ord.targetLatitude}, ${ord.targetLongitude}` : 'Not set'}
-                          </span>
-                        </div>
-                        <div className="sm:text-right">
-                          <span className="text-xs font-bold text-cas-muted block">Escrow Amount</span>
-                          <span className="text-xl font-extrabold font-mono text-cas-green">
-                            ₦{(ord.totalEscrowAmount || 0).toLocaleString()}
-                          </span>
-                          <span className="text-xs text-slate-500 block">({ord.volumeLiters.toLocaleString()} Litres)</span>
-                        </div>
-                      </div>
-
-                      <div className="p-3 bg-white rounded-lg border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-                        <div>
-                          <span className="text-cas-muted block">Current Status:</span>
-                          <span className="font-bold text-cas-slate flex items-center gap-1.5 mt-0.5">
-                            <Lock className="w-3.5 h-3.5 text-cas-amberDark" aria-hidden="true" />
-                            <span>{ord.status}</span>
-                          </span>
-                        </div>
-
-                        {ord.status === 'FUNDED' && !ord.driver ? (
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
-                            <select
-                              value={driverChoice[ord.id] || ''}
-                              onChange={(e) => setDriverChoice((prev) => ({ ...prev, [ord.id]: e.target.value }))}
-                              className="w-full sm:w-auto h-9 px-2 bg-white border border-slate-300 rounded font-semibold text-xs text-cas-slate"
-                              aria-label="Select verified driver"
-                            >
-                              <option value="">{drivers.length ? 'Select driver' : 'No verified drivers yet'}</option>
-                              {drivers.map((d) => (
-                                <option key={d.id} value={d.id}>
-                                  {d.firstName} {d.lastName} ({d.truckPlateNumber || 'no plate'}){d.truckCapacityLiters ? ` - ${d.truckCapacityLiters.toLocaleString()}L` : ''}
-                                </option>
-                              ))}
-                            </select>
-                            <button
-                              type="button"
-                              onClick={() => handleDispatch(ord.id)}
-                              disabled={dispatchingId === ord.id}
-                              className="h-9 px-4 bg-cas-slate hover:bg-black text-white font-bold rounded text-xs transition-colors shrink-0 disabled:opacity-50"
-                            >
-                              {dispatchingId === ord.id ? 'Dispatching...' : 'Assign & Dispatch'}
-                            </button>
-                          </div>
-                        ) : ord.driver ? (
-                          <div className="text-left sm:text-right">
-                            <span className="text-cas-muted block">Dispatched Tanker Driver:</span>
-                            <span className="font-bold text-cas-slate">
-                              {ord.driver.firstName} {ord.driver.lastName} ({ord.driver.truckPlateNumber || 'no plate'})
-                            </span>
-                            {ord.lastLocationAt && (
-                              <span className="text-cas-muted block mt-0.5">
-                                Last location: {new Date(ord.lastLocationAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                              </span>
-                            )}
-                          </div>
-                        ) : (
-                          <div className="text-cas-muted">Awaiting funding</div>
-                        )}
-                      </div>
-                      <div className="flex justify-end border-t border-slate-200 pt-3">
-                        <button onClick={() => viewOrder(ord.id)} className="text-xs font-bold text-cas-slate hover:text-cas-blue transition-colors">View Full Details &rarr;</button>
-                      </div>
-                    </div>
-                  ))}
+                  {orders.map((ord) => renderOrder(ord, false))}
                 </div>
               )}
             </div>

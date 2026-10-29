@@ -4,6 +4,7 @@ import { ArrowLeft, FileText, CheckCircle2, AlertTriangle, Clock, Plus, Info, Up
 import { api } from '../api';
 import { NIGERIAN_STATES } from '../lib/nigeria';
 import { DEPOTS, depotName } from '../data/depots';
+import { closesIn, URGENCY_STYLE } from '../lib/rfqUrgency';
 
 const naira = (n) => `₦${Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
 const when = (d) => new Date(d).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
@@ -646,6 +647,11 @@ function SupplierRfqs() {
   const [saving, setSaving] = useState(false);
   const [uploadingCert, setUploadingCert] = useState(false);
   const [showAutoInfo, setShowAutoInfo] = useState(false);
+  const [spotPrice, setSpotPrice] = useState(0);
+
+  useEffect(() => {
+    api.companies.getProfile().then((res) => setSpotPrice(Number((res?.company || res)?.pricePerLitre) || 0)).catch(() => {});
+  }, []);
 
   const load = useCallback(() => {
     api.rfqs.list().then((r) => setRfqs(r.rfqs)).catch((e) => setError(e.message));
@@ -707,20 +713,32 @@ function SupplierRfqs() {
           <p className="text-xs mt-1">If you have not been verified yet, upload your documents in the Vendor Desk first.</p>
         </div>
       ) : (
-        <ul className="space-y-3">
-          {rfqs.map((r) => (
-            <li key={r.id}>
-              <Link to={`/rfqs/${r.id}`} className="block bg-white border border-cas-border rounded-xl p-4 hover:border-slate-400 shadow-sm">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <p className="font-bold text-cas-slate">{Number(r.volumeLiters).toLocaleString()} L of AGO</p>
-                    <p className="text-xs text-cas-muted mt-0.5">{r.buyerName} · {[r.city, r.state].filter(Boolean).join(', ') || 'Location not given'} · closes {when(r.expiresAt)}</p>
+        <ul className="space-y-4">
+          {rfqs.map((r) => {
+            const urgency = closesIn(r.expiresAt);
+            const spotValue = spotPrice ? Number(r.volumeLiters) * spotPrice : 0;
+            return (
+              <li key={r.id}>
+                <Link to={`/rfqs/${r.id}`} className="block bg-white border-2 border-cas-border rounded-2xl p-5 sm:p-6 hover:border-cas-amber shadow-sm transition-colors">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <p className="text-2xl font-extrabold text-cas-slate">{Number(r.volumeLiters).toLocaleString()} <span className="text-base font-bold text-cas-muted">L of AGO</span></p>
+                      <p className="text-sm text-cas-muted mt-1">{r.buyerName} · {[r.city, r.state].filter(Boolean).join(', ') || 'Location not given'}</p>
+                    </div>
+                    <span className={`text-xs font-bold px-3 py-1.5 rounded-full border ${URGENCY_STYLE[urgency.tone]}`}>{urgency.label}</span>
                   </div>
-                  {r.myQuote ? <span className="text-sm font-semibold text-cas-green">Quoted {naira(r.myQuote.pricePerLitre)}</span> : <span className="text-sm font-semibold text-cas-amberDark">Quote now</span>}
-                </div>
-              </Link>
-            </li>
-          ))}
+                  <dl className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 pt-4 border-t border-slate-100 text-sm">
+                    <div><dt className="text-xs font-bold text-cas-muted">Loading depot</dt><dd className="font-semibold text-cas-slate mt-0.5">{r.depotId ? depotName(r.depotId) : 'Any depot'}</dd></div>
+                    <div><dt className="text-xs font-bold text-cas-muted">Value at your spot price</dt><dd className="font-semibold text-cas-slate mt-0.5">{spotValue ? naira(spotValue) : 'Set a spot price'}</dd></div>
+                    <div><dt className="text-xs font-bold text-cas-muted">Dispatch and delivery</dt><dd className="font-semibold text-cas-slate mt-0.5">{r.terms?.dispatchHours || 24}h and {r.terms?.deliveryWorkingDays || 3} working days</dd></div>
+                    <div className="flex items-center sm:justify-end">
+                      {r.myQuote ? <span className="text-sm font-bold text-cas-green">Quoted {naira(r.myQuote.pricePerLitre)}</span> : <span className="px-4 py-2 bg-cas-amber text-cas-slate text-sm font-bold rounded-lg">Quote now</span>}
+                    </div>
+                  </dl>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       )}
 
