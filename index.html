@@ -23,9 +23,19 @@
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="CAS Diesel | Bulk Diesel Marketplace & Escrow Logistics" />
     <meta name="twitter:description" content="Nigeria's bulk diesel marketplace: escrow-protected payments, accredited vendors, and gate delivery tracking." />
+      <style>
+      .cas-boot-spinner{width:32px;height:32px;border-radius:9999px;border:2px solid transparent;border-bottom-color:#D97706;animation:cas-boot-spin .8s linear infinite}
+      @keyframes cas-boot-spin{to{transform:rotate(360deg)}}
+      @media (prefers-reduced-motion:reduce){.cas-boot-spinner{animation-duration:2.4s}}
+    </style>
   </head>
   <body class="bg-slate-50 text-cas-slate antialiased selection:bg-cas-amberLight selection:text-cas-amberDark">
-    <div id="root"></div>
+    <div id="root">
+      <!-- Shown until React mounts, so a slow connection never sees a blank page -->
+      <div role="status" aria-label="Loading CAS Diesel" style="display:flex;height:100vh;align-items:center;justify-content:center;background:#F8FAFC">
+        <div class="cas-boot-spinner"></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
     <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "837c0e363a094d918a6e91a589b0a8df"}'></script>
   </body>

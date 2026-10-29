@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, FileText, CheckCircle2, AlertTriangle, Clock, Plus, Info, Upload, FileCheck2, ExternalLink } from 'lucide-react';
+import { Loader2, ArrowLeft, FileText, CheckCircle2, AlertTriangle, Clock, Plus, Info, Upload, FileCheck2, ExternalLink } from 'lucide-react';
 import { api } from '../api';
 import { NIGERIAN_STATES } from '../lib/nigeria';
 import { DEPOTS, depotName } from '../data/depots';
@@ -184,7 +184,8 @@ function BuyerRfqs() {
           <Plus className="w-4 h-4" aria-hidden="true" /> New request
         </button>
       ) : (
-        <form onSubmit={create} className="max-w-4xl bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 mb-8 shadow-sm space-y-5">
+        <form onSubmit={create} className="max-w-4xl bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 mb-8 shadow-sm">
+          <fieldset disabled={busy} className="space-y-5 min-w-0 border-0 p-0 m-0">
           <h2 className="text-xl font-bold text-cas-slate leading-tight">New request for quotes</h2>
           <div className="grid sm:grid-cols-3 gap-4">
             <Field label="Volume (litres)"><input required type="number" min="1" step="1" value={f.volumeLiters} onChange={set('volumeLiters')} className={inputCls} /></Field>
@@ -240,9 +241,10 @@ function BuyerRfqs() {
             </div>
           </details>
           <div className="flex gap-3">
-            <button disabled={busy} className="btn-primary">{busy ? 'Sending' : 'Send to vendors'}</button>
+            <button disabled={busy} className="btn-primary">{busy ? (<><Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /><span>Sending...</span></>) : 'Send to vendors'}</button>
             <button type="button" onClick={() => setOpen(false)} className="px-4 py-2.5 text-sm font-semibold text-cas-muted">Cancel</button>
           </div>
+        </fieldset>
         </form>
       )}
 
@@ -257,9 +259,9 @@ function BuyerRfqs() {
         <ul className="space-y-3">
           {rfqs.map((r) => (
             <li key={r.id}>
-              <Link to={`/rfqs/${r.id}`} className="block bg-white border border-cas-border rounded-xl p-4 hover:border-slate-400 transition-colors shadow-sm">
+              <Link to={`/rfqs/${r.id}`} className="block bg-white border border-slate-200 rounded-xl p-4 hover:border-slate-400 transition-colors shadow-sm break-words">
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div>
+                  <div className="min-w-0">
                     <p className="font-bold text-cas-slate leading-relaxed">{Number(r.volumeLiters).toLocaleString()} L of AGO</p>
                     <p className="text-xs text-cas-muted mt-0.5 leading-relaxed">{r.deliveryAddress || 'No address given'} · {r.status === 'OPEN' ? `closes ${when(r.expiresAt)}` : `raised ${when(r.createdAt)}`}</p>
                   </div>
@@ -602,7 +604,7 @@ function QuoteForm({ rfq, onDone }) {
           ))}
         </ul>
       )}
-      <button disabled={busy || uploadingCert} className="btn-primary">{uploadingCert ? 'Uploading certificate...' : busy ? 'Sending' : 'Submit quote'}</button>
+      <button disabled={busy || uploadingCert} className="btn-primary">{uploadingCert ? 'Uploading certificate...' : busy ? (<><Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /><span>Sending...</span></>) : 'Submit quote'}</button>
     </form>
   );
 }
@@ -730,9 +732,9 @@ function SupplierRfqs() {
             const spotValue = spotPrice ? Number(r.volumeLiters) * spotPrice : 0;
             return (
               <li key={r.id}>
-                <Link to={`/rfqs/${r.id}`} className="block bg-white border-2 border-cas-border rounded-2xl p-5 sm:p-6 hover:border-cas-amber shadow-sm transition-colors">
+                <Link to={`/rfqs/${r.id}`} className="block bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 hover:border-cas-amber shadow-sm transition-colors break-words">
                   <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-2xl font-extrabold text-cas-slate leading-relaxed">{Number(r.volumeLiters).toLocaleString()} <span className="text-base font-bold text-cas-muted">L of AGO</span></p>
                       <p className="text-sm text-cas-muted mt-1 leading-relaxed">{r.buyerName} · {[r.city, r.state].filter(Boolean).join(', ') || 'Location not given'}</p>
                     </div>

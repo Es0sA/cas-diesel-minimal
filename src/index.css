@@ -11,7 +11,7 @@
 
   /* One recipe for the single primary action on a screen */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl bg-cas-amber text-slate-900 text-sm font-bold shadow-sm hover:bg-amber-600 transition-colors disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl bg-cas-amber text-slate-900 text-sm font-bold shadow-sm hover:bg-cas-amberDark hover:text-white transition-colors disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed;
   }
 
   .btn-secondary {

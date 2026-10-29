@@ -341,6 +341,7 @@ export default function LoginPage({
                   type="text"
                   inputMode="numeric"
                   autoComplete="one-time-code"
+                  disabled={loading}
                   maxLength={6}
                   required
                   value={code}

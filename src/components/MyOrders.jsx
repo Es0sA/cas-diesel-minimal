@@ -83,7 +83,7 @@ export default function MyOrders({ onLoaded }) {
           </thead>
           <tbody className="divide-y divide-cas-border">
             {orders.map((o) => (
-              <tr key={o.id} className="hover:bg-slate-50">
+              <tr key={o.id} className="hover:bg-slate-100/50 transition-colors">
                 <td className="px-5 py-4"><StatusChip status={o.status} /></td>
                 <td className="px-5 py-4 font-semibold text-cas-slate">{o.supplier?.companyName || 'Vendor'}</td>
                 <td className="px-5 py-4 text-right font-medium text-slate-600 tabular-nums">{Number(o.volumeLiters).toLocaleString()} L</td>
