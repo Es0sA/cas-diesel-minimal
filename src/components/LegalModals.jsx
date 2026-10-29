@@ -51,7 +51,7 @@ export default function LegalModals({ activeModal, onClose }) {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
@@ -78,7 +78,7 @@ export default function LegalModals({ activeModal, onClose }) {
         </div>
 
         {/* Modal Scrollable Body */}
-        <div className="p-6 sm:p-8 overflow-y-auto space-y-6 text-sm text-cas-slate leading-relaxed">
+        <div className="p-6 sm:p-8 overflow-y-auto space-y-6 text-sm sm:text-base text-cas-slate leading-7">
           <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-cas-muted">
             <span className="font-bold text-cas-slate">Effective Date:</span> {LEGAL.lastUpdated}.
             {operator && <span> Operated by {operator}.</span>}
@@ -86,8 +86,8 @@ export default function LegalModals({ activeModal, onClose }) {
 
           {UNIFIED_TERMS.map(([title, text]) => (
             <div key={title} className="space-y-1.5">
-              <h4 className="font-bold text-sm sm:text-base text-cas-slate">{title}</h4>
-              <p className="text-xs sm:text-sm text-cas-muted leading-relaxed">{text}</p>
+              <h4 className="font-semibold text-base sm:text-lg text-cas-slate">{title}</h4>
+              <p className="text-sm sm:text-base text-slate-600 leading-7">{text}</p>
             </div>
           ))}
         </div>

@@ -279,20 +279,18 @@ export default function LoginPage({
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] flex-1 py-10 sm:py-16 px-4 sm:px-6 flex items-center justify-center overflow-hidden bg-slate-950">
+    <div className="relative min-h-[calc(100vh-4rem)] flex-1 py-10 sm:py-16 px-4 sm:px-6 flex items-center justify-center overflow-hidden bg-slate-50">
       {/* Background Image: Desaturated Coastal Terminal with Deep Slate Overlay */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat grayscale contrast-125 brightness-75 opacity-40 scale-105 pointer-events-none transition-all"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat grayscale opacity-[0.18] scale-105 pointer-events-none"
         style={{ backgroundImage: `url('/terminal-aerial.jpg')` }}
       />
       
       {/* Deep Vignette & Dark Tint Overlays */}
-      <div className="absolute inset-0 bg-slate-950/70 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/80 pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(2,6,23,0.8)_100%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-50/90 via-slate-50/40 to-slate-100/90 pointer-events-none" />
 
       {/* Floating Center Card */}
-      <div className="relative z-10 w-full max-w-md bg-white rounded-2xl border border-slate-200/90 shadow-2xl p-7 sm:p-9">
+      <div className="relative z-10 w-full max-w-md bg-white/90 backdrop-blur-xl rounded-3xl border border-white/70 shadow-xl shadow-slate-900/10 p-8 sm:p-10">
         
         {/* Brand Header */}
         <div className="text-center mb-6">
@@ -305,10 +303,10 @@ export default function LoginPage({
               CAS
             </div>
             <span className="font-extrabold text-2xl text-cas-slate tracking-tight">
-              CAS <span className="text-cas-amberDark">Diesel</span>
+              CAS Diesel
             </span>
           </button>
-          <h1 className="text-sm font-semibold text-slate-500 mt-2">
+          <h1 className="text-3xl font-bold tracking-tight text-cas-slate mt-5">
             {authMode === 'register' ? 'Create your account' : 'Sign in to your account'}
           </h1>
         </div>
@@ -348,19 +346,19 @@ export default function LoginPage({
                   value={code}
                   onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
                   placeholder="123456"
-                  className="w-full px-3 py-3 bg-white border border-slate-300 rounded-lg text-xl tracking-[0.4em] text-center font-mono text-slate-800 focus:outline-none focus:border-cas-amber"
+                  className="w-full px-3 py-3 bg-white border border-slate-300 rounded-lg text-xl tracking-[0.4em] text-center font-mono text-slate-800 focus:outline-none focus:border-slate-900"
                 />
               </div>
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-70 cursor-pointer"
+              className="w-full min-h-[48px] py-3 px-4 bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-70 cursor-pointer"
             >
-              {loading ? <Loader2 className="w-4 h-4 animate-spin text-cas-amber" aria-hidden="true" /> : <span>Verify and continue</span>}
+              {loading ? <Loader2 className="w-4 h-4 animate-spin text-slate-900" aria-hidden="true" /> : <span>Verify and continue</span>}
             </button>
             <div className="flex items-center justify-between text-xs pt-1">
-              <button type="button" onClick={handleResend} className="font-bold text-cas-amberDark underline underline-offset-2 hover:text-black">Send a new code</button>
+              <button type="button" onClick={handleResend} className="font-bold text-cas-slate underline underline-offset-2 hover:text-black">Send a new code</button>
               <button type="button" onClick={() => { setVerifyEmail(null); setCode(''); setErrorMessage(''); setSuccessNotice(''); }} className="text-slate-600 underline underline-offset-2 hover:text-black">Use a different email</button>
             </div>
           </form>
@@ -400,7 +398,7 @@ export default function LoginPage({
                   }`}
                   aria-pressed={selectedRole === 'supplier'}
                 >
-                  <UserCheck className={`w-3.5 h-3.5 ${selectedRole === 'supplier' ? 'text-amber-400' : 'text-slate-500'}`} aria-hidden="true" />
+                  <UserCheck className={`w-3.5 h-3.5 ${selectedRole === 'supplier' ? 'text-white' : 'text-slate-500'}`} aria-hidden="true" />
                   <span>Vendor</span>
                 </button>
 
@@ -435,7 +433,7 @@ export default function LoginPage({
                 autoCorrect="off"
                 spellCheck={false}
                 placeholder="you@company.com"
-                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-cas-amber focus:ring-1 focus:ring-cas-amber transition-all"
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-cas-amber transition-all"
               />
             </div>
 
@@ -448,7 +446,7 @@ export default function LoginPage({
                 <button
                   type="button"
                   onClick={openResetModal}
-                  className="text-xs text-slate-500 hover:text-cas-amberDark transition-colors font-medium"
+                  className="text-xs text-slate-500 hover:text-cas-slate transition-colors font-medium"
                 >
                   Forgot password?
                 </button>
@@ -461,7 +459,7 @@ export default function LoginPage({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-cas-amber focus:ring-1 focus:ring-cas-amber transition-all pr-10"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-cas-amber transition-all pr-10"
                 />
                 <button
                   type="button"
@@ -482,11 +480,11 @@ export default function LoginPage({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer pt-3"
+              className="w-full min-h-[48px] py-3 px-4 bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer pt-3"
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-cas-amber" aria-hidden="true" />
+                  <Loader2 className="w-4 h-4 animate-spin text-slate-900" aria-hidden="true" />
                   <span>Signing in...</span>
                 </>
               ) : (
@@ -500,7 +498,7 @@ export default function LoginPage({
               <button
                 type="button"
                 onClick={() => handleModeChange('register')}
-                className="font-bold text-cas-amberDark hover:text-black transition-colors underline underline-offset-2 cursor-pointer"
+                className="font-bold text-cas-slate hover:text-black transition-colors underline underline-offset-2 cursor-pointer"
               >
                 Sign up
               </button>
@@ -543,7 +541,7 @@ export default function LoginPage({
                   }`}
                   aria-pressed={selectedRole === 'supplier'}
                 >
-                  <UserCheck className={`w-3.5 h-3.5 ${selectedRole === 'supplier' ? 'text-amber-400' : 'text-slate-500'}`} aria-hidden="true" />
+                  <UserCheck className={`w-3.5 h-3.5 ${selectedRole === 'supplier' ? 'text-white' : 'text-slate-500'}`} aria-hidden="true" />
                   <span>Vendor</span>
                 </button>
 
@@ -578,7 +576,7 @@ export default function LoginPage({
                 autoCorrect="off"
                 spellCheck={false}
                 placeholder="you@company.com"
-                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-cas-amber focus:ring-1 focus:ring-cas-amber transition-all"
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-cas-amber transition-all"
               />
             </div>
 
@@ -595,7 +593,7 @@ export default function LoginPage({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-cas-amber focus:ring-1 focus:ring-cas-amber transition-all pr-10"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-cas-amber transition-all pr-10"
                 />
                 <button
                   type="button"
@@ -624,7 +622,7 @@ export default function LoginPage({
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-cas-amber focus:ring-1 focus:ring-cas-amber transition-all"
+                className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-cas-amber transition-all"
               />
             </div>
 
@@ -632,11 +630,11 @@ export default function LoginPage({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-cas-slate hover:bg-black text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer pt-3"
+              className="w-full min-h-[48px] py-3 px-4 bg-cas-amber hover:bg-cas-amberDark text-cas-slate hover:text-white text-sm font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer pt-3"
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-cas-amber" aria-hidden="true" />
+                  <Loader2 className="w-4 h-4 animate-spin text-slate-900" aria-hidden="true" />
                   <span>Creating your account...</span>
                 </>
               ) : (
@@ -650,7 +648,7 @@ export default function LoginPage({
               <button
                 type="button"
                 onClick={() => handleModeChange('signin')}
-                className="font-bold text-cas-amberDark hover:text-black transition-colors underline underline-offset-2 cursor-pointer"
+                className="font-bold text-cas-slate hover:text-black transition-colors underline underline-offset-2 cursor-pointer"
               >
                 Sign in
               </button>
@@ -674,7 +672,7 @@ export default function LoginPage({
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 animate-fadeIn">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <KeyRound className="w-5 h-5 text-cas-amberDark" aria-hidden="true" />
+                <KeyRound className="w-5 h-5 text-slate-700" aria-hidden="true" />
                 <h3 id="reset-title" className="font-bold text-base text-cas-slate">Reset Password</h3>
               </div>
               <button
@@ -715,7 +713,7 @@ export default function LoginPage({
                   value={resetEmail}
                   onChange={(e) => setResetEmail(e.target.value.toLowerCase())}
                   placeholder="you@company.com"
-                  className="w-full px-3 py-2.5 mb-5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-cas-amber"
+                  className="w-full px-3 py-2.5 mb-5 bg-white border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-slate-900"
                 />
                 <div className="flex items-center gap-3">
                   <button
@@ -740,7 +738,7 @@ export default function LoginPage({
       )}
 
       {/* Peripheral Terminal Metadata */}
-      <div className="absolute bottom-4 left-0 right-0 z-10 hidden sm:flex items-center justify-center gap-6 text-[10px] font-mono uppercase tracking-wider text-slate-400 pointer-events-none">
+      <div className="absolute bottom-4 left-0 right-0 z-10 hidden sm:flex items-center justify-center gap-6 text-[10px] font-mono uppercase tracking-wider text-slate-500 pointer-events-none">
         <span>Lagos Corridor (Apapa / Ijegun)</span>
         <span>•</span>
         <span>Niger Delta Corridor (Warri / Port Harcourt)</span>

@@ -242,7 +242,7 @@ export default function Waitlist({ onOpenLegalModal }) {
             <span className="text-slate-500 hidden sm:inline">|</span>
             <span className="text-slate-300 hidden sm:inline">Wholesale Automotive Gas Oil (AGO)</span>
           </div>
-          <div className="flex items-center gap-3 text-xs font-mono text-cas-amber">
+          <div className="flex items-center gap-3 text-xs font-mono text-slate-300">
             <span>casdiesel.com</span>
             <span className="text-slate-600 hidden sm:inline">|</span>
             <a href="mailto:info@casdiesel.com" className="hidden sm:inline hover:text-white transition-colors">
@@ -259,13 +259,13 @@ export default function Waitlist({ onOpenLegalModal }) {
             
             {/* Left Column: Direct value proposition */}
             <div className="lg:col-span-5 min-w-0 space-y-6 pt-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cas-amberLight border border-cas-amber/40 text-cas-amberDark text-xs font-bold uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5 text-cas-amberDark" />
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-600 text-xs font-semibold uppercase tracking-[0.14em]">
+                <Sparkles className="w-3.5 h-3.5 text-slate-500" />
                 <span>Priority Access Allocation</span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-cas-slate tracking-tight leading-tight">
-                Wholesale Diesel. Protected By Escrow.
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-cas-slate tracking-tighter leading-[1.05]">
+                Wholesale diesel. Protected by escrow.
               </h1>
 
               <p className="text-base sm:text-lg text-cas-muted leading-relaxed">
@@ -280,7 +280,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                   </div>
                   <div>
                     <h2 className="text-sm font-bold text-cas-slate">Direct Ex-Depot Pricing</h2>
-                    <p className="text-xs text-cas-muted mt-0.5">Live depot prices posted by CAS, with no broker markups.</p>
+                    <p className="text-sm leading-relaxed text-slate-600 mt-0.5">Live depot prices posted by CAS, with no broker markups.</p>
                   </div>
                 </div>
 
@@ -290,17 +290,17 @@ export default function Waitlist({ onOpenLegalModal }) {
                   </div>
                   <div>
                     <h2 className="text-sm font-bold text-cas-slate">Payment Released At Gate</h2>
-                    <p className="text-xs text-cas-muted mt-0.5">Funds stay safe in escrow until you verify quantity and quality upon delivery.</p>
+                    <p className="text-sm leading-relaxed text-slate-600 mt-0.5">Funds stay safe in escrow until you verify quantity and quality upon delivery.</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-cas-amberLight text-cas-amberDark flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 mt-0.5">
                     <FileCheck className="w-4 h-4" />
                   </div>
                   <div>
                     <h2 className="text-sm font-bold text-cas-slate">Verified Loading Documents</h2>
-                    <p className="text-xs text-cas-muted mt-0.5">NMDPRA licences, batch test certs, and loading tickets matched to every order.</p>
+                    <p className="text-sm leading-relaxed text-slate-600 mt-0.5">NMDPRA licences, batch test certs, and loading tickets matched to every order.</p>
                   </div>
                 </div>
               </div>
@@ -379,7 +379,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                   <div className="p-6 sm:p-8">
                     <div className="mb-6">
                       <h2 className="text-xl sm:text-2xl font-extrabold text-cas-slate">
-                        Join The Priority Waitlist
+                        Join the priority waitlist
                       </h2>
                       <p className="text-xs sm:text-sm text-cas-muted mt-1">
                         Select your role below to secure your allocation.
@@ -601,7 +601,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                           <span>Registering your priority spot...</span>
                         ) : (
                           <>
-                            <span>Join The Priority Waitlist</span>
+                            <span>Join the priority waitlist</span>
                             <ArrowRight className="w-4 h-4 text-cas-amber" />
                           </>
                         )}
@@ -626,7 +626,7 @@ export default function Waitlist({ onOpenLegalModal }) {
           <div className="text-center max-w-2xl mx-auto mb-10">
             <p className="text-xs font-bold uppercase tracking-wider text-cas-muted">Transaction Flow</p>
             <h3 className="text-2xl sm:text-3xl font-extrabold text-cas-slate mt-1.5">
-              Three Steps From Order To Gate Discharge
+              Three steps from order to gate discharge
             </h3>
           </div>
 
@@ -636,17 +636,17 @@ export default function Waitlist({ onOpenLegalModal }) {
                 1
               </div>
               <h4 className="font-bold text-cas-slate text-base">Compare & Fund Escrow</h4>
-              <p className="text-xs text-cas-muted mt-2 leading-relaxed">
+              <p className="text-sm text-slate-600 mt-2 leading-relaxed">
                 Review verified depot prices from vendors. Lock payment in secure escrow so vendors see funds are secured before trucks load.
               </p>
             </div>
 
             <div className="p-6 rounded-2xl bg-cas-canvas border border-cas-border">
-              <div className="w-9 h-9 rounded-lg bg-cas-amberLight text-cas-amberDark flex items-center justify-center mb-3.5 font-bold text-sm">
+              <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center mb-3.5 font-bold text-sm">
                 2
               </div>
               <h4 className="font-bold text-cas-slate text-base">Track Truck Dispatch</h4>
-              <p className="text-xs text-cas-muted mt-2 leading-relaxed">
+              <p className="text-sm text-slate-600 mt-2 leading-relaxed">
                 A verified driver is assigned. Track transit in real time with automated digital loading tickets and waybills attached directly to your order.
               </p>
             </div>
@@ -656,7 +656,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                 3
               </div>
               <h4 className="font-bold text-cas-slate text-base">Confirm & Release</h4>
-              <p className="text-xs text-cas-muted mt-2 leading-relaxed">
+              <p className="text-sm text-slate-600 mt-2 leading-relaxed">
                 Inspect quantity and test quality at your facility gate. Once you confirm receipt, escrow releases payout directly to the vendor.
               </p>
             </div>
@@ -674,7 +674,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                 <Building2 className="w-5 h-5 text-cas-blue" />
                 <span>For Corporate Buyers</span>
               </div>
-              <ul className="space-y-2.5 text-xs text-cas-muted">
+              <ul className="space-y-2.5 text-sm leading-relaxed text-slate-600">
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" />
                   <span>Real ex-depot prices without broker layer markups</span>
@@ -693,10 +693,10 @@ export default function Waitlist({ onOpenLegalModal }) {
             {/* Vendor Card */}
             <div className="p-6 sm:p-8 rounded-2xl bg-white border border-cas-border">
               <div className="flex items-center gap-2 text-cas-slate font-bold text-base mb-3">
-                <Truck className="w-5 h-5 text-cas-amberDark" />
+                <Truck className="w-5 h-5 text-slate-700" />
                 <span>For Vendors</span>
               </div>
-              <ul className="space-y-2.5 text-xs text-cas-muted">
+              <ul className="space-y-2.5 text-sm leading-relaxed text-slate-600">
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" />
                   <span>Payment secured in escrow before truck leaves the depot</span>

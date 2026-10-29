@@ -13,9 +13,9 @@ const ACTIVE_DELIVERY = ['FUNDED', 'IN_TRANSIT', 'ARRIVED', 'SETTLING'];
 
 function Metric({ icon: Icon, label, value, hint }) {
   return (
-    <div className="bg-white border border-cas-border rounded-2xl p-5 shadow-sm">
+    <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
       <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cas-muted">
-        <Icon className="w-4 h-4 text-cas-amberDark" aria-hidden="true" />
+        <Icon className="w-4 h-4 text-slate-500" aria-hidden="true" />
         <span>{label}</span>
       </div>
       <p className="mt-3 text-3xl font-extrabold text-cas-slate tabular-nums">{value}</p>
@@ -43,10 +43,10 @@ export default function BuyerDashboard() {
   const dash = '-';
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 sm:py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-cas-amberDark">Buyer dashboard</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Buyer dashboard</p>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-cas-slate tracking-tight mt-1">
             Welcome{company?.companyName ? `, ${company.companyName}` : ''}
           </h1>
@@ -65,7 +65,7 @@ export default function BuyerDashboard() {
 
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold text-cas-slate">My orders</h2>
-        <Link to="/rfqs" className="inline-flex items-center min-h-[44px] text-sm font-bold text-cas-amberDark hover:underline">View requests</Link>
+        <Link to="/rfqs" className="inline-flex items-center min-h-[44px] text-sm font-bold text-slate-900 hover:underline">View requests</Link>
       </div>
       <MyOrders onLoaded={onOrders} />
     </div>

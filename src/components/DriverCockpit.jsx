@@ -139,11 +139,11 @@ export default function DriverCockpit({ onNavigateToRegister }) {
   const driver = orders.find((o) => o.driver)?.driver;
 
   return (
-    <section id="driver-cockpit" className="bg-cas-canvas py-6 sm:py-12 md:py-20 border-b border-cas-border">
+    <section id="driver-cockpit" className="bg-cas-canvas py-6 sm:py-12 md:py-20 border-b border-slate-200">
       <div className="max-w-3xl mx-auto px-3 sm:px-8 flex flex-col">
         {/* The job comes first on a phone; the documents card stays above it on larger screens */}
         {!authError && !loading && <div className="order-2 sm:order-1 mt-6 sm:mt-0"><KycUpload types={['DRIVER_LICENCE', 'TRUCK_CALIBRATION']} /></div>}
-        <div className="order-1 sm:order-2 bg-white rounded-2xl border-2 border-cas-border shadow-md overflow-hidden">
+        <div className="order-1 sm:order-2 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
 
           <div className="bg-cas-slate text-white p-4 sm:p-6 border-b border-slate-700">
             <div className="flex items-center justify-between">
@@ -159,7 +159,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                 </div>
               </div>
               {driver?.truckPlateNumber && (
-                <span className="font-mono font-bold text-xs bg-slate-800 text-cas-amber px-2.5 py-1.5 rounded-lg border border-slate-700 shrink-0">
+                <span className="font-mono font-bold text-xs bg-slate-800 text-white px-2.5 py-1.5 rounded-lg border border-slate-700 shrink-0">
                   {driver.truckPlateNumber}
                 </span>
               )}
@@ -174,8 +174,8 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                   onClick={() => setFilterStatus(tab)}
                   className={`px-5 min-h-[44px] rounded-full text-xs font-bold transition-colors ${
                     filterStatus === tab
-                      ? 'bg-cas-amber text-slate-900 border-2 border-cas-amber'
-                      : 'bg-transparent text-cas-slate border-2 border-slate-300 hover:border-cas-amber'
+                      ? 'bg-cas-amber text-slate-900 border border-cas-amber'
+                      : 'bg-transparent text-cas-slate border border-slate-300 hover:border-cas-amber'
                   }`}
                 >
                   {tab}
@@ -207,7 +207,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
               return (
                 <div key={order.id} className="p-4 sm:p-8 space-y-5 border-b border-slate-200 last:border-b-0">
                   {order.status !== 'DELIVERED' && (
-                    <section aria-label="Delivery details" className="p-4 sm:p-5 bg-white border-2 border-cas-slate rounded-xl">
+                    <section aria-label="Delivery details" className="p-4 sm:p-5 bg-white border border-cas-slate rounded-xl">
                       <div className="text-xs font-bold uppercase tracking-wider text-cas-muted mb-3">Delivery Details</div>
                       <dl className="space-y-3 text-sm">
                         <div>
@@ -244,8 +244,8 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                     </section>
                   )}
 
-                  <div className="p-4 sm:p-5 bg-cas-amberLight border-2 border-cas-amber rounded-xl">
-                    <div className="text-xs sm:text-xs font-bold uppercase tracking-wider text-cas-amberDark mb-1">Dispatch Manifest</div>
+                  <div className="p-4 sm:p-5 bg-cas-amberLight border border-cas-amber rounded-xl">
+                    <div className="text-xs sm:text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Dispatch Manifest</div>
                     <div className="text-lg sm:text-xl font-extrabold text-cas-slate">
                       Order #{order.id.slice(0, 8).toUpperCase()} ({order.volumeLiters.toLocaleString()} Litres AGO)
                     </div>

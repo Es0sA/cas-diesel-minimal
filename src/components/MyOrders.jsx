@@ -64,7 +64,7 @@ export default function MyOrders({ onLoaded }) {
 
   return (
     <div>
-      <div className="hidden md:block bg-white border border-cas-border rounded-2xl shadow-sm overflow-hidden">
+      <div className="hidden md:block bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 text-left text-xs font-bold uppercase tracking-wider text-cas-muted">
             <tr>
@@ -83,7 +83,7 @@ export default function MyOrders({ onLoaded }) {
                 <td className="px-5 py-4 text-right tabular-nums">{Number(o.volumeLiters).toLocaleString()} L</td>
                 <td className="px-5 py-4 text-cas-muted">{day(o.createdAt)}</td>
                 <td className="px-5 py-4 text-right">
-                  <Link to={`/orders/${o.id}`} className="font-bold text-cas-amberDark hover:underline">View</Link>
+                  <Link to={`/orders/${o.id}`} className="font-bold text-slate-900 hover:underline">View</Link>
                 </td>
               </tr>
             ))}

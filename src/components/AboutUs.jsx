@@ -24,9 +24,9 @@ export default function AboutUs() {
     <section id="about-us" className="bg-white py-14 sm:py-20 border-b border-cas-border scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="max-w-3xl">
-          <div className="text-xs font-bold uppercase tracking-wider text-cas-amberDark mb-2">About CAS Diesel</div>
+          <div className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 mb-2">About CAS Diesel</div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-cas-slate tracking-tight">
-            Nigeria&apos;s Enterprise Diesel Marketplace.
+            Nigeria&apos;s enterprise diesel marketplace.
           </h2>
           <p className="text-base text-cas-muted mt-4 leading-relaxed">
             CAS Diesel is built to secure the downstream petroleum supply chain. We connect corporate bulk buyers with licensed, verified depot vendors and calibrated fleet drivers. By combining real-time spot pricing, geofenced delivery tracking, and a two-sided escrow system, we ensure that fuel is delivered exactly where it is needed, and funds are only released when the job is done right.
@@ -36,7 +36,7 @@ export default function AboutUs() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
           {PILLARS.map(({ icon: Icon, title, text }) => (
             <div key={title} className="rounded-2xl border border-cas-border bg-cas-canvas p-6">
-              <div className="w-11 h-11 rounded-xl bg-cas-amberLight text-cas-amberDark flex items-center justify-center mb-4">
+              <div className="w-11 h-11 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center mb-4">
                 <Icon className="w-5 h-5" aria-hidden="true" />
               </div>
               <h3 className="font-extrabold text-cas-slate text-lg">{title}</h3>

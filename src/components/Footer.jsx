@@ -21,7 +21,7 @@ export default function Footer({ onOpenLegalModal }) {
 
   return (
     <footer id="contact" className="bg-cas-slate text-slate-300 border-t border-slate-800 text-sm scroll-mt-10">
-      <div className="max-w-7xl mx-auto px-3 sm:px-8 py-8 sm:py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
@@ -30,7 +30,7 @@ export default function Footer({ onOpenLegalModal }) {
               </div>
               <span className="font-extrabold text-xl text-white tracking-tight">CAS Diesel</span>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed max-w-md">
+            <p className="text-sm text-slate-400 leading-relaxed max-w-md">
               A wholesale diesel marketplace. Payment is held in escrow and released when delivery is confirmed at your gate.
             </p>
           </div>

@@ -30,13 +30,13 @@ export default function Hero({ onOpenRegister }) {
           
           <div className="max-w-4xl space-y-6">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-cas-slate text-xs font-mono font-bold uppercase tracking-wider">
-              <ShieldCheck className="w-4 h-4 text-cas-amberDark shrink-0" aria-hidden="true" />
+              <ShieldCheck className="w-4 h-4 text-slate-500 shrink-0" aria-hidden="true" />
               <span>Institutional Downstream Sourcing & Escrow Settlement</span>
             </div>
 
             <h1 className="text-4xl sm:text-6xl font-black text-cas-slate tracking-tight leading-[1.08]">
               Buy diesel from official depot prices.<br />
-              <span className="text-cas-amberDark">Pay only when confirmed at your gate.</span>
+              <span className="text-slate-900">Pay only when confirmed at your gate.</span>
             </h1>
 
             <p className="text-base sm:text-lg text-cas-muted leading-relaxed max-w-2xl font-normal">
@@ -97,7 +97,7 @@ export default function Hero({ onOpenRegister }) {
       <section className="bg-slate-50/70 border-b border-cas-border py-12 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="mb-8">
-            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-cas-amberDark block">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500 block">
               Settlement Protocol
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-cas-slate tracking-tight mt-1">
@@ -108,7 +108,7 @@ export default function Hero({ onOpenRegister }) {
           <ol className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {STEPS.map((step, i) => (
               <li key={step.title} className="bg-white rounded-2xl border-2 border-cas-border p-6 shadow-sm space-y-3">
-                <div className="w-11 h-11 rounded-xl bg-cas-amberLight text-cas-amberDark flex items-center justify-center shrink-0">
+                <div className="w-11 h-11 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
                   <step.icon className="w-5 h-5" aria-hidden="true" />
                 </div>
                 <div>

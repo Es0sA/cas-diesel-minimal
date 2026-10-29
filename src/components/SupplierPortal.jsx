@@ -23,10 +23,10 @@ function destinationOf(ord) {
 
 function Kpi({ label, value, hint, tone = 'text-cas-slate' }) {
   return (
-    <div className="bg-white p-5 sm:p-6 rounded-2xl border-2 border-cas-border shadow-sm">
+    <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
       <p className="text-xs font-bold uppercase tracking-wider text-cas-muted">{label}</p>
       <p className={`mt-2 text-2xl sm:text-3xl font-extrabold font-mono ${tone}`}>{value}</p>
-      {hint && <p className="mt-1 text-xs text-cas-muted">{hint}</p>}
+      {hint && <p className="mt-1 text-xs text-slate-600">{hint}</p>}
     </div>
   );
 }
@@ -139,12 +139,12 @@ export default function SupplierPortal() {
   const depotName = DEPOTS.find((d) => d.id === profile?.depotId)?.name || (profile?.depotId === 'other' && profile?.businessAddress ? profile.businessAddress : profile?.depotId) || 'Depot not set';
 
   const renderOrder = (ord, canDispatch) => (
-    <div key={ord.id} className="p-5 bg-slate-50 border-2 border-slate-200 rounded-xl space-y-4">
+    <div key={ord.id} className="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <span className="font-mono font-bold text-xs text-cas-amberDark">#{ord.id.slice(0, 8).toUpperCase()}</span>
+          <span className="font-mono font-bold text-xs text-slate-500">#{ord.id.slice(0, 8).toUpperCase()}</span>
           <h4 className="font-extrabold text-base text-cas-slate">{ord.buyer?.companyName || 'Unknown Buyer'}</h4>
-          <span className="text-xs text-cas-muted">
+          <span className="text-xs text-slate-600">
             Destination: {destinationOf(ord)}
           </span>
         </div>
@@ -161,7 +161,7 @@ export default function SupplierPortal() {
         <div>
           <span className="text-cas-muted block">Current Status:</span>
           <span className="font-bold text-cas-slate flex items-center gap-1.5 mt-0.5">
-            <Lock className="w-3.5 h-3.5 text-cas-amberDark" aria-hidden="true" />
+            <Lock className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
             <span>{ord.status}</span>
           </span>
         </div>
@@ -228,8 +228,8 @@ export default function SupplierPortal() {
   const pendingRfqs = (openRfqs || []).filter((r) => !r.myQuote);
 
   return (
-    <section id="supplier-desk" className="bg-cas-canvas py-12 md:py-20 border-b border-cas-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8">
+    <section id="supplier-desk" className="bg-cas-canvas py-12 md:py-20 border-b border-slate-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="max-w-3xl mb-8">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-cas-greenLight text-cas-green text-xs font-bold uppercase tracking-wider mb-3">
@@ -245,7 +245,7 @@ export default function SupplierPortal() {
         </div>
 
         {profileMissing && (
-          <div className="p-4 mb-6 bg-amber-50 border-2 border-amber-300 rounded-xl text-amber-900 text-sm font-bold">
+          <div className="p-4 mb-6 bg-amber-50 border border-amber-300 rounded-xl text-amber-900 text-sm font-bold">
             No company profile found for this account. Complete your company profile before publishing rates.
           </div>
         )}
@@ -253,13 +253,13 @@ export default function SupplierPortal() {
         {profile && !profile.isVerified && <KycUpload types={['CAC_CERT', 'NMDPRA_LICENCE']} />}
 
         {profile && !profile.isVerified && (
-          <div className="p-4 mb-6 bg-amber-50 border-2 border-amber-300 rounded-xl text-amber-900 text-sm font-bold">
+          <div className="p-4 mb-6 bg-amber-50 border border-amber-300 rounded-xl text-amber-900 text-sm font-bold">
             Your company is awaiting verification by CAS. You will appear in the marketplace once approved.
           </div>
         )}
 
         {saveAlert && (
-          <div className="p-4 mb-6 bg-emerald-50 border-2 border-emerald-400 rounded-xl text-emerald-900 text-sm font-bold flex items-center gap-2">
+          <div className="p-4 mb-6 bg-emerald-50 border border-emerald-400 rounded-xl text-emerald-900 text-sm font-bold flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-cas-green shrink-0" aria-hidden="true" />
             <span>Market rates successfully broadcast to CAS Diesel Marketplace.</span>
           </div>
@@ -267,15 +267,15 @@ export default function SupplierPortal() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
           <Kpi label="Total Quoted (₦)" value={naira(quotedTotal)} hint={`${liveQuotes} live quote${liveQuotes === 1 ? '' : 's'}`} />
-          <Kpi label="Active Orders" value={activeOrders === null ? '...' : activeOrders.length} hint="Funded, in transit or at the gate" tone="text-cas-green" />
-          <Kpi label="Pending RFQs" value={openRfqs === null ? '...' : pendingRfqs.length} hint="Open and not yet quoted by you" tone="text-cas-amberDark" />
+          <Kpi label="Active Orders" value={activeOrders === null ? '...' : activeOrders.length} hint="Funded, in transit or at the gate" tone="text-slate-900" />
+          <Kpi label="Pending RFQs" value={openRfqs === null ? '...' : pendingRfqs.length} hint="Open and not yet quoted by you" tone="text-slate-900" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-cas-border shadow-sm">
+          <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
             <div className="pb-4 border-b border-slate-200 mb-6">
               <h2 className="font-extrabold text-lg text-cas-slate">Active Orders</h2>
-              <span className="text-xs text-cas-muted">Funded orders waiting for a driver, and loads on the road</span>
+              <span className="text-xs text-slate-600">Funded orders waiting for a driver, and loads on the road</span>
             </div>
             {activeOrders === null ? (
               <div className="py-8 text-center text-cas-muted text-sm font-bold">Loading orders...</div>
@@ -289,13 +289,13 @@ export default function SupplierPortal() {
             )}
           </div>
 
-          <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-cas-border shadow-sm">
+          <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
             <div className="flex items-start justify-between gap-3 pb-4 border-b border-slate-200 mb-6">
               <div>
                 <h2 className="font-extrabold text-lg text-cas-slate">Open RFQs</h2>
-                <span className="text-xs text-cas-muted">Buyers waiting for a price</span>
+                <span className="text-xs text-slate-600">Buyers waiting for a price</span>
               </div>
-              <Link to="/rfqs" className="inline-flex items-center gap-1 min-h-[44px] text-sm font-bold text-cas-amberDark hover:underline">
+              <Link to="/rfqs" className="inline-flex items-center gap-1 min-h-[44px] text-sm font-bold text-slate-900 hover:underline">
                 See all <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </Link>
             </div>
@@ -312,10 +312,10 @@ export default function SupplierPortal() {
                   const urgency = closesIn(r.expiresAt);
                   return (
                     <li key={r.id}>
-                      <Link to={`/rfqs/${r.id}`} className="flex items-center justify-between gap-3 p-4 bg-slate-50 border-2 border-slate-200 rounded-xl hover:border-cas-amber transition-colors">
+                      <Link to={`/rfqs/${r.id}`} className="flex items-center justify-between gap-3 p-4 bg-slate-50 border border-slate-200 rounded-xl hover:border-cas-amber transition-colors">
                         <div className="min-w-0">
                           <p className="font-extrabold text-cas-slate">{Number(r.volumeLiters).toLocaleString()} L</p>
-                          <p className="text-xs text-cas-muted truncate">{r.buyerName} · {[r.city, r.state].filter(Boolean).join(', ') || 'Location not given'}</p>
+                          <p className="text-xs text-slate-600 truncate">{r.buyerName} · {[r.city, r.state].filter(Boolean).join(', ') || 'Location not given'}</p>
                         </div>
                         <div className="flex flex-col items-end gap-1 shrink-0">
                           <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${URGENCY_STYLE[urgency.tone]}`}>{urgency.label}</span>
@@ -332,11 +332,11 @@ export default function SupplierPortal() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-          <div className="lg:col-span-4 bg-white p-6 sm:p-8 rounded-2xl border-2 border-cas-border shadow-sm">
+          <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
             <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-6">
               <div>
                 <h2 className="font-extrabold text-base text-cas-slate">Daily Spot Management</h2>
-                <span className="text-xs text-cas-muted">Depot: {depotName}</span>
+                <span className="text-xs text-slate-600">Depot: {depotName}</span>
               </div>
               <span className={`text-xs font-mono font-bold px-2 py-1 rounded border ${profile?.isVerified ? 'bg-emerald-50 text-cas-green border-emerald-200' : 'bg-slate-50 text-cas-muted border-slate-200'}`}>
                 {profile?.isVerified ? 'Verified' : 'Pending'}
@@ -356,7 +356,7 @@ export default function SupplierPortal() {
                     min="1"
                     value={dailySpotPrice}
                     onChange={(e) => setDailySpotPrice(Number(e.target.value))}
-                    className="w-full pl-8 pr-4 py-3 bg-white border-2 border-slate-300 rounded-lg text-lg font-bold font-mono text-cas-slate focus:border-cas-amber"
+                    className="w-full pl-8 pr-4 py-3 bg-white border border-slate-300 rounded-lg text-lg font-bold font-mono text-cas-slate focus:border-cas-amber"
                   />
                 </div>
               </div>
@@ -395,14 +395,14 @@ export default function SupplierPortal() {
                 <button
                   type="submit"
                   disabled={!profile}
-                  className="w-full py-3.5 px-4 bg-cas-slate hover:bg-black text-white font-extrabold text-sm rounded-lg transition-all shadow border-2 border-transparent hover:border-cas-amber disabled:opacity-50"
+                  className="w-full py-3.5 px-4 bg-cas-slate hover:bg-black text-white font-extrabold text-sm rounded-lg transition-all shadow border border-transparent hover:border-cas-amber disabled:opacity-50"
                 >
                   Publish Updated Rates to Marketplace
                 </button>
               </div>
             </form>
 
-            <div className="mt-6 pt-5 border-t border-slate-200 text-xs text-cas-muted space-y-2">
+            <div className="mt-6 pt-5 border-t border-slate-200 text-xs text-slate-600 space-y-2">
               <div className="flex justify-between">
                 <span>Total Escrow In Settlement:</span>
                 <strong className="font-mono text-cas-slate">₦{escrowInSettlement.toLocaleString()}</strong>
@@ -411,13 +411,13 @@ export default function SupplierPortal() {
           </div>
 
           <div className="lg:col-span-8 space-y-6">
-            <div className="bg-white p-6 sm:p-8 rounded-2xl border-2 border-cas-border shadow-sm">
+            <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-sm">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 mb-6 gap-4">
                 <div>
                   <h3 className="font-extrabold text-lg text-cas-slate">Order History</h3>
-                  <span className="text-xs text-cas-muted">Completed and cancelled orders</span>
+                  <span className="text-xs text-slate-600">Completed and cancelled orders</span>
                 </div>
-                <span className="text-xs font-bold px-3 py-1 bg-cas-amberLight text-cas-amberDark rounded-full border border-cas-amber/50">
+                <span className="text-xs font-bold px-3 py-1 bg-slate-100 text-slate-700 rounded-full border border-slate-200">
                   {orders.length} Orders
                 </span>
               </div>
@@ -429,8 +429,8 @@ export default function SupplierPortal() {
                     onClick={() => setFilterStatus(tab)}
                     className={`px-5 min-h-[44px] rounded-full text-xs font-bold transition-colors ${
                       filterStatus === tab
-                        ? 'bg-cas-amber text-slate-900 border-2 border-cas-amber'
-                        : 'bg-transparent text-cas-slate border-2 border-slate-300 hover:border-cas-amber'
+                        ? 'bg-cas-amber text-slate-900 border border-cas-amber'
+                        : 'bg-transparent text-cas-slate border border-slate-300 hover:border-cas-amber'
                     }`}
                   >
                     {tab}

@@ -265,7 +265,7 @@ const RequireAuth = ({ user, authLoading, roles, children }) => {
 function OrdersPage() {
   usePageTitle('My orders', 'Every order you have placed on CAS Diesel, with its escrow status.');
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 sm:py-12 min-h-[60vh]">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 min-h-[60vh]">
       <h1 className="text-2xl sm:text-3xl font-extrabold text-cas-slate tracking-tight mb-6">My orders</h1>
       <MyOrders />
     </div>
@@ -344,7 +344,6 @@ export default function App() {
     navigate('/');
   };
 
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
   return (
     <div className="min-h-screen flex flex-col bg-cas-canvas text-cas-slate">
@@ -356,7 +355,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={WAITLIST.enabled && !user ? <Waitlist onOpenLegalModal={(modal) => setActiveLegalModal(modal)} /> : <HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
           <Route path="/waitlist" element={<Waitlist onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />} />
-          <Route path="/portal" element={<GateWhileWaitlisted user={user} authLoading={authLoading}><HomePage user={user} handleOpenRegistration={handleOpenRegistration} /></GateWhileWaitlisted>} />
+          <Route path="/portal" element={<RequireAuth user={user} authLoading={authLoading}><HomePage user={user} handleOpenRegistration={handleOpenRegistration} /></RequireAuth>} />
           <Route path="/register" element={<LoginPage initialRole={registerInitialRole} initialMode="register" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/depots" element={<Depots user={user} />} />
@@ -387,8 +386,8 @@ export default function App() {
       {/* Cookie Banner */}
       <CookieBanner onOpenPolicy={(modal) => setActiveLegalModal(modal)} />
 
-      {/* Footer (hidden on register and sign-in pages) */}
-      {!isAuthPage && <Footer onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />}
+      {/* Footer */}
+      <Footer onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />
     </div>
   );
 }
