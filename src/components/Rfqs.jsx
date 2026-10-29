@@ -346,7 +346,7 @@ function BuyerRfqDetail({ id }) {
                         type="button"
                         onClick={async () => {
                           try {
-                            const certId = q.certificateUrl.match(/certificates\/([a-f0-9\-]+)/i)?.[1];
+                            const certId = q.certificateUrl.match(/certificates\/([a-f0-9-]+)/i)?.[1];
                             if (certId) {
                               await api.rfqs.downloadCertificate(rfq.id, certId, `certificate-${q.batchNumber || q.id.slice(0, 8)}.pdf`);
                             } else if (isSafeUrl(q.certificateUrl)) {
