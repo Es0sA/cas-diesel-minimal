@@ -28,6 +28,7 @@ export default function MyOrders({ onLoaded }) {
   const [orders, setOrders] = useState(null);
   const [total, setTotal] = useState(0);
   const [error, setError] = useState(null);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -40,10 +41,15 @@ export default function MyOrders({ onLoaded }) {
       })
       .catch((e) => { if (!cancelled) setError(e.message); });
     return () => { cancelled = true; };
-  }, [onLoaded]);
+  }, [onLoaded, attempt]);
 
   if (error) {
-    return <p role="alert" className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm leading-relaxed">{error}</p>;
+    return (
+      <div role="alert" className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm leading-relaxed">
+        <span>{error}</span>
+        <button type="button" onClick={() => { setError(null); setAttempt((n) => n + 1); }} className="btn-secondary h-9 px-4 text-xs">Try again</button>
+      </div>
+    );
   }
 
   if (orders === null) {

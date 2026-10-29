@@ -32,6 +32,17 @@ const STATUS_STYLE = {
 };
 const Pill = ({ status }) => <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${STATUS_STYLE[status] || 'bg-slate-100 text-cas-muted'}`}>{status}</span>;
 
+// Error banner; a connection failure also offers a retry that reloads the data behind it
+function ErrorNotice({ message, onRetry, className = 'mb-4' }) {
+  const canRetry = onRetry && /^Network error/.test(message || '');
+  return (
+    <div role="alert" className={`${className} flex flex-wrap items-center justify-between gap-3 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm leading-relaxed`}>
+      <span>{message}</span>
+      {canRetry && <button type="button" onClick={onRetry} className="btn-secondary h-9 px-4 text-xs">Try again</button>}
+    </div>
+  );
+}
+
 function Field({ label, hint, children }) {
   return (
     <label className="block">
@@ -166,7 +177,7 @@ function BuyerRfqs() {
 
   return (
     <Shell title="Requests for quotes" subtitle="Say what you need once. Verified vendors answer with a price and a batch certificate, and you pick the offer that fits.">
-      {error && <p role="alert" className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm leading-relaxed">{error}</p>}
+      {error && <ErrorNotice message={error} onRetry={() => { setError(null); load(); }} />}
 
       {!open ? (
         <button onClick={() => setOpen(true)} className="btn-primary mb-8">
@@ -298,7 +309,7 @@ function BuyerRfqDetail({ id }) {
     try { await api.rfqs.cancel(id); load(); } catch (err) { setError(err.message); }
   };
 
-  if (!data) return <Shell title="Request" back="/rfqs">{error ? <p role="alert" className="text-rose-700 leading-relaxed">{error}</p> : <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cas-blue" /></div>}</Shell>;
+  if (!data) return <Shell title="Request" back="/rfqs">{error ? <ErrorNotice message={error} onRetry={() => { setError(null); load(); }} className="" /> : <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cas-blue" /></div>}</Shell>;
   const { rfq, quotes } = data;
   const live = quotes.filter((q) => q.status === 'SUBMITTED');
   const cheapest = live.length ? Math.min(...live.map((q) => q.pricePerLitre)) : null;
@@ -310,7 +321,7 @@ function BuyerRfqDetail({ id }) {
         <span className="text-sm text-cas-muted flex items-center gap-1.5"><Clock className="w-4 h-4" aria-hidden="true" /> {rfq.status === 'OPEN' ? `Closes ${when(rfq.expiresAt)}` : `Closed`}</span>
         {rfq.status === 'OPEN' && <button onClick={cancel} className="ml-auto text-sm font-semibold text-rose-700 hover:underline">Cancel request</button>}
       </div>
-      {error && <p role="alert" className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm leading-relaxed">{error}</p>}
+      {error && <ErrorNotice message={error} onRetry={() => { setError(null); load(); }} />}
 
       <section className="bg-white border border-cas-border rounded-2xl p-6 mb-8 shadow-sm">
         <h2 className="text-xl font-bold text-cas-slate mb-3 leading-tight">Your specification</h2>
@@ -602,7 +613,7 @@ function SupplierRfqDetail({ id }) {
   const load = useCallback(() => api.rfqs.get(id).then(setData).catch((e) => setError(e.message)), [id]);
   useEffect(() => { load(); }, [load]);
 
-  if (!data) return <Shell title="Request" back="/rfqs">{error ? <p role="alert" className="text-rose-700 leading-relaxed">{error}</p> : <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cas-blue" /></div>}</Shell>;
+  if (!data) return <Shell title="Request" back="/rfqs">{error ? <ErrorNotice message={error} onRetry={() => { setError(null); load(); }} className="" /> : <div className="flex justify-center p-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cas-blue" /></div>}</Shell>;
   const { rfq, quotes } = data;
   const mine = quotes.find((q) => q.status === 'SUBMITTED' || q.status === 'DRAFT');
 
@@ -687,7 +698,7 @@ function SupplierRfqs() {
 
   return (
     <Shell title="Open requests" subtitle="Buyers post what they need. Quote with your price and a current batch certificate. Only verified vendors can quote.">
-      {error && <p role="alert" className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-sm leading-relaxed">{error}</p>}
+      {error && <ErrorNotice message={error} onRetry={() => { setError(null); load(); }} />}
 
       {drafts.length > 0 && (
         <section className="mb-8 bg-cas-amberLight/60 border border-amber-200 rounded-2xl p-5">

@@ -141,10 +141,11 @@ export default function OrderDetail() {
   if (error) {
     return (
       <div className="p-8 text-center text-red-500">
-        <p>Error: {error}</p>
-        <button onClick={() => navigate(-1)} className="mt-4 px-4 py-2 bg-cas-slate text-white rounded">
-          Go Back
-        </button>
+        <p role="alert">Error: {error}</p>
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+          <button type="button" onClick={() => fetchData()} className="btn-primary">Try again</button>
+          <button type="button" onClick={() => navigate(-1)} className="btn-secondary">Go Back</button>
+        </div>
       </div>
     );
   }
