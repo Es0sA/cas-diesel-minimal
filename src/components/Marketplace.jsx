@@ -44,6 +44,9 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
     return 0;
   });
 
+  // A vendor only counts as an offer once it has published a price
+  const hasPublishedOffers = suppliers.some((v) => Number(v.pricePerLitre) > 0);
+
   if (!loading && suppliers.length === 0) {
     return (
       <section id="marketplace" className="bg-white py-14 md:py-20 border-b border-cas-border">
@@ -59,8 +62,8 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl bg-cas-amberLight text-cas-amberDark flex items-center justify-center shrink-0"><ShieldCheck className="w-6 h-6" aria-hidden="true" /></div>
               <div>
-                <h3 className="font-extrabold text-cas-slate text-xl leading-tight">Vendors appear here once CAS verifies them</h3>
-                <p className="text-sm text-cas-muted mt-1 max-w-xl leading-relaxed">Every vendor is checked for a CAC certificate and an NMDPRA licence before they can quote. Meanwhile, compare what depots charge today.</p>
+                <h3 className="font-extrabold text-cas-slate text-xl leading-tight">No Vendors Currently Online</h3>
+                <p className="text-sm text-cas-muted mt-1 max-w-xl leading-relaxed">Vendor availability is temporarily limited. Please check back shortly for new supply listings and updated depot prices.</p>
               </div>
             </div>
             <Link to="/depots" className="shrink-0 px-6 py-3 rounded-xl bg-cas-slate text-white text-sm font-bold text-center hover:bg-black">See depot prices</Link>
@@ -158,10 +161,15 @@ export default function Marketplace({ onSelectSupplierForEscrow }) {
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredSuppliers.length === 0 && (
+            {!hasPublishedOffers ? (
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-8 text-center">
+                <h3 className="font-extrabold text-cas-slate text-xl leading-tight">Supply Availability Update</h3>
+                <p className="text-sm text-cas-muted mt-2 max-w-xl mx-auto leading-relaxed">No depots currently have published AGO offers available on the marketplace. Check back shortly as vendor availability and pricing are updated.</p>
+              </div>
+            ) : filteredSuppliers.length === 0 && (
               <p className="py-10 text-center text-sm text-cas-muted leading-relaxed">No registered vendors match your search yet.</p>
             )}
-            {filteredSuppliers.map((supplier) => (
+            {hasPublishedOffers && filteredSuppliers.map((supplier) => (
               <div
               key={supplier.id}
               className="p-5 sm:p-6 bg-white border-2 border-slate-200 rounded-xl hover:border-cas-amber transition-all shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6"

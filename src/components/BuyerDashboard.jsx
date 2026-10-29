@@ -50,7 +50,7 @@ export default function BuyerDashboard() {
           <h1 className="text-2xl sm:text-3xl font-extrabold text-cas-slate tracking-tight mt-1 leading-tight break-words line-clamp-2">
             Welcome{company?.companyName ? `, ${company.companyName}` : ''}
           </h1>
-          <p className="text-sm text-cas-muted mt-1 leading-relaxed">Your escrow, deliveries and requests in one place.</p>
+          <p className="text-sm text-cas-muted mt-1 leading-relaxed">Monitor your diesel procurement, track active orders and manage escrow-backed transactions from one dashboard.</p>
         </div>
         <Link to="/rfqs" className="btn-primary">
           <Plus className="w-4 h-4" aria-hidden="true" /> New request

@@ -22,6 +22,8 @@ const ROLE_CONFIGS = {
     apiRole: 'BUYER',
     title: 'Corporate Buyer',
     shortLabel: 'Buyer',
+    registerLabel: 'Corporate Buyer',
+    description: 'For manufacturers, fleet operators and businesses procuring wholesale AGO.',
     emailLabel: 'Email',
     emailPlaceholder: 'you@company.com'
   },
@@ -30,6 +32,8 @@ const ROLE_CONFIGS = {
     apiRole: 'VENDOR',
     title: 'Vendor',
     shortLabel: 'Vendor',
+    registerLabel: 'Depot Vendor',
+    description: 'For licensed depot vendors listing diesel supply and fulfilling orders.',
     emailLabel: 'Email',
     emailPlaceholder: 'you@company.com'
   },
@@ -38,6 +42,8 @@ const ROLE_CONFIGS = {
     apiRole: 'DRIVER',
     title: 'Fleet Driver',
     shortLabel: 'Driver',
+    registerLabel: 'Logistics Operator',
+    description: 'For authorised transport personnel handling assigned diesel deliveries.',
     emailLabel: 'Email or Phone ID',
     emailPlaceholder: 'you@company.com'
   }
@@ -306,9 +312,14 @@ export default function LoginPage({
               CAS Diesel
             </span>
           </button>
-          <h1 className="text-3xl font-bold tracking-tight text-cas-slate mt-5 leading-tight">
-            {authMode === 'register' ? 'Create your account' : 'Sign in to your account'}
+          <h1 className="text-3xl font-bold tracking-tight text-cas-slate mt-5 leading-tight text-balance">
+            {authMode === 'register' ? 'Join the CAS Diesel Network' : 'Access Your Trading Desk'}
           </h1>
+          <p className="text-sm text-slate-600 leading-relaxed mt-2 max-w-sm mx-auto">
+            {authMode === 'register'
+              ? 'Create your account to access a verified trading network for wholesale diesel procurement, depot supply and delivery operations.'
+              : 'Sign in to manage diesel procurement, monitor active orders and oversee your escrow-protected transactions.'}
+          </p>
         </div>
 
         {/* Error Alert */}
@@ -525,7 +536,7 @@ export default function LoginPage({
                 <button
                   type="button"
                   onClick={() => setSelectedRole('buyer')}
-                  className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-xs font-bold transition-all ${
+                  className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2 px-2 min-h-[44px] rounded-lg text-xs font-bold transition-all ${
                     selectedRole === 'buyer'
                       ? 'bg-cas-slate text-white shadow-xs'
                       : 'text-slate-600 hover:text-cas-slate hover:bg-slate-200/60'
@@ -533,13 +544,13 @@ export default function LoginPage({
                   aria-pressed={selectedRole === 'buyer'}
                 >
                   <Building2 className={`w-3.5 h-3.5 ${selectedRole === 'buyer' ? 'text-sky-400' : 'text-slate-500'}`} aria-hidden="true" />
-                  <span>Buyer</span>
+                  <span className="text-center leading-tight">{ROLE_CONFIGS.buyer.registerLabel}</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setSelectedRole('supplier')}
-                  className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-xs font-bold transition-all ${
+                  className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2 px-2 min-h-[44px] rounded-lg text-xs font-bold transition-all ${
                     selectedRole === 'supplier'
                       ? 'bg-cas-slate text-white shadow-xs'
                       : 'text-slate-600 hover:text-cas-slate hover:bg-slate-200/60'
@@ -547,13 +558,13 @@ export default function LoginPage({
                   aria-pressed={selectedRole === 'supplier'}
                 >
                   <UserCheck className={`w-3.5 h-3.5 ${selectedRole === 'supplier' ? 'text-white' : 'text-slate-500'}`} aria-hidden="true" />
-                  <span>Vendor</span>
+                  <span className="text-center leading-tight">{ROLE_CONFIGS.supplier.registerLabel}</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setSelectedRole('driver')}
-                  className={`flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-xs font-bold transition-all ${
+                  className={`flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2 px-2 min-h-[44px] rounded-lg text-xs font-bold transition-all ${
                     selectedRole === 'driver'
                       ? 'bg-cas-slate text-white shadow-xs'
                       : 'text-slate-600 hover:text-cas-slate hover:bg-slate-200/60'
@@ -561,9 +572,10 @@ export default function LoginPage({
                   aria-pressed={selectedRole === 'driver'}
                 >
                   <Truck className={`w-3.5 h-3.5 ${selectedRole === 'driver' ? 'text-emerald-400' : 'text-slate-500'}`} aria-hidden="true" />
-                  <span>Driver</span>
+                  <span className="text-center leading-tight">{ROLE_CONFIGS.driver.registerLabel}</span>
                 </button>
               </div>
+              <p className="mt-2 text-xs text-slate-600 leading-relaxed" aria-live="polite">{ROLE_CONFIGS[selectedRole]?.description}</p>
             </div>
 
             {/* Email */}

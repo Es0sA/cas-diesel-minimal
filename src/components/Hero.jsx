@@ -35,12 +35,11 @@ export default function Hero({ onOpenRegister }) {
             </div>
 
             <h1 className="text-4xl sm:text-6xl font-black text-cas-slate tracking-tight leading-[1.08]">
-              Buy diesel from official depot prices.<br />
-              <span className="text-slate-900">Pay only when confirmed at your gate.</span>
+              Procure Diesel. On Your Terms.
             </h1>
 
             <p className="text-base sm:text-lg text-cas-muted leading-relaxed max-w-2xl font-normal">
-              Accredited downstream vendors and calibrated fleet drivers load directly from certified terminals across Nigeria. Pick your depot, review official benchmark prices, and fund escrow with zero cash transit risk.
+              Source AGO directly from licensed depot vendors and compare available volumes and pricing in one place. Fund orders through escrow and keep your payment protected until delivery is verified at your designated location and quality requirements are met.
             </p>
 
             {/* Action Buttons */}
@@ -49,7 +48,7 @@ export default function Hero({ onOpenRegister }) {
                 to="/depots"
                 className="px-8 py-4 bg-cas-amber hover:bg-amber-500 text-cas-slate font-extrabold text-sm sm:text-base rounded-xl shadow-sm transition-all flex items-center justify-center gap-2.5"
               >
-                <span>Browse Depot Prices</span>
+                <span>Browse Available Supply</span>
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
 
@@ -71,18 +70,21 @@ export default function Hero({ onOpenRegister }) {
             </div>
 
             {/* Trust Assurance Signals */}
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-bold text-slate-600 pt-3">
+            <ul className="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4 pt-3 max-w-4xl">
               {[
-                'Bank Escrow Payment Protection',
-                '100-Meter Gate Perimeter Confirmation',
-                'Accredited Terminal Marketers & Calibrated Fleet'
-              ].map((t) => (
-                <span key={t} className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0" aria-hidden="true" />
-                  <span>{t}</span>
-                </span>
+                { title: 'Escrow-Secured Payments', text: 'Funds released against verified delivery conditions.' },
+                { title: 'KYC-Verified Vendors', text: 'Vendor identities and credentials checked.' },
+                { title: 'Geofenced Delivery', text: 'Delivery verified at the designated destination.' }
+              ].map((b) => (
+                <li key={b.title} className="flex items-start gap-2.5">
+                  <CheckCircle2 className="w-4 h-4 text-cas-green shrink-0 mt-0.5" aria-hidden="true" />
+                  <span>
+                    <span className="block text-sm font-bold text-cas-slate leading-tight">{b.title}</span>
+                    <span className="block text-xs text-slate-600 leading-relaxed mt-0.5">{b.text}</span>
+                  </span>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
           {/* 2. Featured Depots Carousel Row */}
