@@ -7,11 +7,22 @@ export const request = async (endpoint, options = {}) => {
   };
 
   // P1: Send cookies automatically (HttpOnly JWT cookie) instead of reading from localStorage
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    ...options,
-    headers,
-    credentials: 'include',
-  });
+  let response;
+  try {
+    response = await fetch(`${API_URL}${endpoint}`, {
+      ...options,
+      headers,
+      credentials: 'include',
+    });
+  } catch (cause) {
+    // fetch only rejects when the request never got an answer (offline, DNS, CORS, server down)
+    if (cause instanceof TypeError) {
+      const err = new Error('Network error: Please check your internet connection or try again later.');
+      err.isNetworkError = true;
+      throw err;
+    }
+    throw cause;
+  }
 
   let data;
   const contentType = response.headers.get('content-type');

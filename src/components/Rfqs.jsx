@@ -50,8 +50,8 @@ function Shell({ title, subtitle, back, children }) {
           <ArrowLeft className="w-4 h-4" aria-hidden="true" /> Back
         </Link>
       )}
-      <h1 className="text-2xl font-extrabold text-cas-slate leading-tight">{title}</h1>
-      {subtitle && <p className="text-cas-muted mt-1 mb-6 max-w-2xl leading-relaxed">{subtitle}</p>}
+      <h1 className="text-2xl font-extrabold text-cas-slate leading-tight break-words">{title}</h1>
+      {subtitle && <p className="text-cas-muted mt-1 mb-6 max-w-2xl leading-relaxed break-words">{subtitle}</p>}
       {children}
     </div>
   );
@@ -195,7 +195,7 @@ function BuyerRfqs() {
             </label>
             {sameContact ? (
               <dl className="grid sm:grid-cols-3 gap-4 text-sm">
-                <div><dt className="text-xs font-bold text-cas-muted">Name</dt><dd className="mt-0.5 text-cas-slate">{profile?.companyName || 'Not on file'}</dd></div>
+                <div><dt className="text-xs font-bold text-cas-muted">Name</dt><dd className="mt-0.5 text-cas-slate break-words">{profile?.companyName || 'Not on file'}</dd></div>
                 <div><dt className="text-xs font-bold text-cas-muted">Phone</dt><dd className="mt-0.5 text-cas-slate">{profile?.contactPhone || 'Not on file'}</dd></div>
                 <div><dt className="text-xs font-bold text-cas-muted">Registered street address</dt><dd className="mt-0.5 text-cas-slate break-words">{profile?.streetAddress || 'Not on file. Untick the box to enter one.'}</dd></div>
               </dl>

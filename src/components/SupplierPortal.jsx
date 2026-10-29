@@ -236,7 +236,7 @@ export default function SupplierPortal() {
             <UserCheck className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Downstream Vendor Operations Desk</span>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight leading-tight">
+          <h1 className="text-2xl sm:text-4xl font-extrabold text-cas-slate tracking-tight leading-tight break-words line-clamp-2">
             {profile ? `${profile.companyName} Operations Desk` : 'Vendor Operations Desk'}
           </h1>
           <p className="text-base text-cas-muted mt-2 leading-relaxed">

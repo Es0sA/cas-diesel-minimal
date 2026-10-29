@@ -247,16 +247,27 @@ const SessionSpinner = () => (
   </div>
 );
 
+// Shown instead of a redirect when the session check could not reach the server (an outage is not a sign-out)
+const SessionNetworkError = () => (
+  <div role="alert" className="max-w-md mx-auto text-center p-10">
+    <h1 className="text-xl font-bold text-cas-slate leading-tight">We could not reach CAS Diesel</h1>
+    <p className="mt-2 text-sm text-slate-600 leading-relaxed">Network error: Please check your internet connection or try again later. You have not been signed out.</p>
+    <button type="button" onClick={() => window.location.reload()} className="btn-primary mt-6">Try again</button>
+  </div>
+);
+
 // While the pre-launch waitlist is on, signed-out visitors only see the waitlist and the auth screens.
-const GateWhileWaitlisted = ({ user, authLoading, children }) => {
+const GateWhileWaitlisted = ({ user, authLoading, networkError, children }) => {
   if (authLoading) return <SessionSpinner />;
+  if (!user && networkError) return <SessionNetworkError />;
   if (!user && WAITLIST.enabled) return <Navigate to="/" replace />;
   return children;
 };
 
 // Pages that always need a signed-in account (optionally limited to some roles).
-const RequireAuth = ({ user, authLoading, roles, children }) => {
+const RequireAuth = ({ user, authLoading, networkError, roles, children }) => {
   if (authLoading) return <SessionSpinner />;
+  if (!user && networkError) return <SessionNetworkError />;
   if (!user) return <Navigate to="/" replace />;
   if (roles && !roles.includes((user.role || '').toUpperCase())) return <Navigate to="/" replace />;
   return children;
@@ -275,6 +286,7 @@ function OrdersPage() {
 export default function App() {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const [authNetworkError, setAuthNetworkError] = useState(false);
   const [activeLegalModal, setActiveLegalModal] = useState(null);
   const [registerInitialRole, setRegisterInitialRole] = useState('buyer');
   const loginInitialRole = 'buyer';
@@ -284,8 +296,8 @@ export default function App() {
   // Restore the logged-in state after a refresh (the session lives in an HttpOnly cookie)
   useEffect(() => {
     api.auth.me()
-      .then((session) => { if (session.role) setUser({ role: session.role }); })
-      .catch(() => {})
+      .then((session) => { setAuthNetworkError(false); if (session.role) setUser({ role: session.role }); })
+      .catch((err) => { if (err.isNetworkError) setAuthNetworkError(true); })
       .finally(() => setAuthLoading(false));
   }, []);
 
@@ -355,7 +367,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={WAITLIST.enabled && !user ? <Waitlist onOpenLegalModal={(modal) => setActiveLegalModal(modal)} /> : <HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
           <Route path="/waitlist" element={<Waitlist onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />} />
-          <Route path="/portal" element={<RequireAuth user={user} authLoading={authLoading}><HomePage user={user} handleOpenRegistration={handleOpenRegistration} /></RequireAuth>} />
+          <Route path="/portal" element={<RequireAuth user={user} authLoading={authLoading} networkError={authNetworkError}><HomePage user={user} handleOpenRegistration={handleOpenRegistration} /></RequireAuth>} />
           <Route path="/register" element={<LoginPage initialRole={registerInitialRole} initialMode="register" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/depots" element={<Depots user={user} />} />
@@ -363,10 +375,10 @@ export default function App() {
           <Route path="/vendor" element={<NotForAdmin user={user}><SupplierPortal /></NotForAdmin>} />
           <Route path="/driver" element={<NotForAdmin user={user}><DriverCockpit onNavigateToRegister={() => handleOpenRegistration('driver')} /></NotForAdmin>} />
           <Route path="/onboarding" element={<Onboarding user={user} />} />
-          <Route path="/dashboard" element={<RequireAuth user={user} authLoading={authLoading} roles={['BUYER']}><BuyerDashboard /></RequireAuth>} />
-          <Route path="/orders" element={<RequireAuth user={user} authLoading={authLoading} roles={['BUYER']}><OrdersPage /></RequireAuth>} />
-          <Route path="/rfqs" element={<RequireAuth user={user} authLoading={authLoading}><Rfqs user={user} /></RequireAuth>} />
-          <Route path="/rfqs/:id" element={<RequireAuth user={user} authLoading={authLoading}><Rfqs user={user} /></RequireAuth>} />
+          <Route path="/dashboard" element={<RequireAuth user={user} authLoading={authLoading} networkError={authNetworkError} roles={['BUYER']}><BuyerDashboard /></RequireAuth>} />
+          <Route path="/orders" element={<RequireAuth user={user} authLoading={authLoading} networkError={authNetworkError} roles={['BUYER']}><OrdersPage /></RequireAuth>} />
+          <Route path="/rfqs" element={<RequireAuth user={user} authLoading={authLoading} networkError={authNetworkError}><Rfqs user={user} /></RequireAuth>} />
+          <Route path="/rfqs/:id" element={<RequireAuth user={user} authLoading={authLoading} networkError={authNetworkError}><Rfqs user={user} /></RequireAuth>} />
           <Route path="/orders/:id" element={<OrderDetail user={user} />} />
           <Route path="/profile" element={<ProfileSettings user={user} onDeleted={() => { setUser(null); navigate('/account-deleted'); }} />} />
           <Route path="/reset-password" element={<ResetPassword />} />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { X, ShieldCheck, Scale } from 'lucide-react';
 import { CONTACT, LEGAL } from '../config';
 import { PRIVACY_SECTIONS } from '../lib/legalText';
@@ -46,11 +46,53 @@ const UNIFIED_TERMS = [
   ]
 ];
 
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 export default function LegalModals({ activeModal, onClose }) {
+  const dialogRef = useRef(null);
+  // The parent passes a new onClose every render; keep the latest one without re-running the focus effect
+  const onCloseRef = useRef(onClose);
+  useEffect(() => { onCloseRef.current = onClose; });
+
+  useEffect(() => {
+    if (!activeModal) return undefined;
+    const opener = document.activeElement;
+    const root = dialogRef.current;
+    const focusables = () => (root ? [...root.querySelectorAll(FOCUSABLE)] : []);
+    focusables()[0]?.focus();
+
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onCloseRef.current();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const inside = root.contains(document.activeElement);
+      if (!inside || (e.shiftKey && document.activeElement === first)) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      if (opener && typeof opener.focus === 'function') opener.focus();
+    };
+  }, [activeModal]);
+
   if (!activeModal) return null;
 
   return (
     <div 
+      ref={dialogRef}
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"

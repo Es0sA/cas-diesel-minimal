@@ -433,6 +433,8 @@ export default function LoginPage({
                 autoCorrect="off"
                 spellCheck={false}
                 placeholder="you@company.com"
+                autoComplete="email"
+                disabled={loading}
                 className="input"
               />
             </div>
@@ -459,6 +461,8 @@ export default function LoginPage({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
+                  autoComplete="current-password"
+                  disabled={loading}
                   className="input pr-10"
                 />
                 <button
@@ -576,6 +580,7 @@ export default function LoginPage({
                 autoCorrect="off"
                 spellCheck={false}
                 placeholder="you@company.com"
+                disabled={loading}
                 className="input"
               />
             </div>
@@ -593,6 +598,7 @@ export default function LoginPage({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
+                  disabled={loading}
                   className="input pr-10"
                 />
                 <button
@@ -622,6 +628,7 @@ export default function LoginPage({
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••••••"
+                disabled={loading}
                 className="input"
               />
             </div>
