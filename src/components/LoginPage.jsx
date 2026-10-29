@@ -53,6 +53,7 @@ export default function LoginPage({
   onBackToHome, 
   onLoginSuccess, 
   onRegistrationSuccess,
+  onOpenLegalModal,
   initialRole = 'buyer',
   initialMode = 'signin' // 'signin' or 'register'
 }) {
@@ -64,6 +65,7 @@ export default function LoginPage({
     : (ROLE_CONFIGS[initialRole] ? initialRole : 'buyer');
 
   const [authMode, setAuthMode] = useState(initialMode); // 'signin' or 'register'
+  const [consentGiven, setConsentGiven] = useState(false);
   const [selectedRole, setSelectedRole] = useState(initialRoleChoice);
 
   usePageTitle(
@@ -215,13 +217,19 @@ export default function LoginPage({
       return;
     }
 
+    if (!consentGiven) {
+      setErrorMessage('You must agree to the Terms of Service and Privacy Policy to register.');
+      return;
+    }
+
     setLoading(true);
 
     try {
       const result = await api.auth.register({
         email: email.trim(),
         password: password,
-        role: activeConfig.apiRole
+        role: activeConfig.apiRole,
+        consentGiven
       });
 
       if (result.needsVerification) {
@@ -646,10 +654,43 @@ export default function LoginPage({
               />
             </div>
 
+            {/* Legal consent: required before the account can be created */}
+            <div className="flex items-start gap-3">
+              <input
+                id="register-consent"
+                type="checkbox"
+                required
+                checked={consentGiven}
+                onChange={(e) => setConsentGiven(e.target.checked)}
+                disabled={loading}
+                className="mt-0.5 h-5 w-5 shrink-0 rounded border-slate-300 accent-cas-amber cursor-pointer"
+              />
+              <label htmlFor="register-consent" className="text-sm text-slate-700 leading-relaxed">
+                I have read and agree to the{' '}
+                <button
+                  type="button"
+                  onClick={() => onOpenLegalModal && onOpenLegalModal('terms')}
+                  className="inline-link font-semibold text-cas-slate underline underline-offset-4 decoration-slate-300 hover:decoration-slate-900"
+                >
+                  Terms of Service
+                </button>
+                {' '}and{' '}
+                <a
+                  href="/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-link font-semibold text-cas-slate underline underline-offset-4 decoration-slate-300 hover:decoration-slate-900"
+                >
+                  Privacy Policy
+                </a>
+                .
+              </label>
+            </div>
+
             {/* Submit Register Button */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !consentGiven}
               className="btn-primary w-full"
             >
               {loading ? (

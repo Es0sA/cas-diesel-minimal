@@ -265,11 +265,11 @@ export default function Waitlist({ onOpenLegalModal }) {
               </div>
 
               <h1 className="text-4xl sm:text-5xl font-bold text-cas-slate tracking-tighter leading-[1.05]">
-                Wholesale diesel. Protected by escrow.
+                Diesel Trading. Built on Proof.
               </h1>
 
               <p className="text-base text-cas-muted leading-relaxed">
-                Connect directly with licensed depot vendors across Lagos, Warri, Port Harcourt, and Calabar. Your payment stays securely locked in escrow until the truck arrives and diesel is confirmed at your gate.
+                CAS Diesel connects corporate buyers directly to licensed depot vendors, replacing blind advance payments with escrow-backed transactions. Funds are released only when delivery is verified at the designated geofenced location and the diesel meets the agreed quality criteria.
               </p>
 
               {/* Three Core Guarantees (Desktop column highlights) */}
@@ -601,7 +601,7 @@ export default function Waitlist({ onOpenLegalModal }) {
                           <span>Registering your priority spot...</span>
                         ) : (
                           <>
-                            <span>Join the priority waitlist</span>
+                            <span>Join the Founding Buyers</span>
                             <ArrowRight className="w-4 h-4" />
                           </>
                         )}
