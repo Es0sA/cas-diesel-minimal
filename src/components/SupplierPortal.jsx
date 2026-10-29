@@ -207,9 +207,9 @@ export default function SupplierPortal() {
               </span>
             )}
           </div>
-        ) : (
+        ) : ord.status === 'DRAFT' || ord.status === 'FUNDED' ? (
           <div className="text-cas-muted">{ord.status === 'DRAFT' ? 'Awaiting funding' : 'Awaiting driver assignment'}</div>
-        )}
+        ) : null}
       </div>
       {dispatchMsg[ord.id] && (
         <p role={dispatchMsg[ord.id].tone === 'error' ? 'alert' : 'status'} className={`p-3 rounded-lg border text-xs font-semibold ${dispatchMsg[ord.id].tone === 'error' ? 'bg-rose-50 border-rose-200 text-rose-800' : 'bg-amber-50 border-amber-200 text-amber-900'}`}>

@@ -79,7 +79,7 @@ function LocationSharing({ order, onStatusChange }) {
         <button
           type="button"
           onClick={() => { setError(''); setMessage(''); setSharing((s) => !s); }}
-          className={`px-4 py-2 rounded-lg text-xs font-bold shrink-0 flex items-center gap-2 ${sharing ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-cas-slate text-white'}`}
+          className={`px-5 min-h-[48px] rounded-lg text-sm font-bold shrink-0 flex items-center justify-center gap-2 ${sharing ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-cas-slate text-white'}`}
         >
           <Radio className="w-4 h-4" aria-hidden="true" />
           {sharing ? 'Stop sharing' : 'Start sharing'}
@@ -140,9 +140,10 @@ export default function DriverCockpit({ onNavigateToRegister }) {
 
   return (
     <section id="driver-cockpit" className="bg-cas-canvas py-6 sm:py-12 md:py-20 border-b border-cas-border">
-      <div className="max-w-3xl mx-auto px-3 sm:px-8">
-        {!authError && !loading && <KycUpload types={['DRIVER_LICENCE', 'TRUCK_CALIBRATION']} />}
-        <div className="bg-white rounded-2xl border-2 border-cas-border shadow-md overflow-hidden">
+      <div className="max-w-3xl mx-auto px-3 sm:px-8 flex flex-col">
+        {/* The job comes first on a phone; the documents card stays above it on larger screens */}
+        {!authError && !loading && <div className="order-2 sm:order-1 mt-6 sm:mt-0"><KycUpload types={['DRIVER_LICENCE', 'TRUCK_CALIBRATION']} /></div>}
+        <div className="order-1 sm:order-2 bg-white rounded-2xl border-2 border-cas-border shadow-md overflow-hidden">
 
           <div className="bg-cas-slate text-white p-4 sm:p-6 border-b border-slate-700">
             <div className="flex items-center justify-between">
@@ -171,7 +172,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                 <button
                   key={tab}
                   onClick={() => setFilterStatus(tab)}
-                  className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
+                  className={`px-5 min-h-[44px] rounded-full text-xs font-bold transition-colors ${
                     filterStatus === tab
                       ? 'bg-cas-amber text-slate-900 border-2 border-cas-amber'
                       : 'bg-transparent text-cas-slate border-2 border-slate-300 hover:border-cas-amber'
@@ -210,8 +211,8 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                       <div className="text-xs font-bold uppercase tracking-wider text-cas-muted mb-3">Delivery Details</div>
                       <dl className="space-y-3 text-sm">
                         <div>
-                          <dt className="text-xs font-bold text-cas-muted">Destination address</dt>
-                          <dd className="font-extrabold text-base text-cas-slate break-words">{order.delivery?.deliveryAddress || 'No street address given. Use the GPS route below.'}</dd>
+                          <dt className="text-xs font-bold text-cas-muted">Destination</dt>
+                          <dd className="font-extrabold text-base text-cas-slate break-words">{[order.delivery?.deliveryAddress, [order.delivery?.city, order.delivery?.state].filter(Boolean).join(', ')].filter(Boolean).join(', ') || 'No address given. Use the GPS route below.'}</dd>
                         </div>
                         <div>
                           <dt className="text-xs font-bold text-cas-muted">Receiver</dt>
@@ -233,12 +234,12 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                             )}
                           </dd>
                         </div>
-                        <div>
-                          <dt className="text-xs font-bold text-cas-muted">Gate coordinates</dt>
-                          <dd className="font-mono font-bold text-cas-blue">
-                            {hasGate ? `${order.targetLatitude}, ${order.targetLongitude}` : 'Not set'}
-                          </dd>
-                        </div>
+                        {hasGate && (
+                          <div>
+                            <dt className="text-xs font-bold text-cas-muted">Gate coordinates</dt>
+                            <dd className="font-mono font-bold text-cas-blue">{order.targetLatitude}, {order.targetLongitude}</dd>
+                          </div>
+                        )}
                       </dl>
                     </section>
                   )}
@@ -251,8 +252,8 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                     <div className="text-xs text-slate-700 mt-1">
                       {order.supplier?.companyName} to {order.buyer?.companyName}
                     </div>
-                    <div className="mt-3">
-                      <button onClick={() => viewOrder(order.id)} className="text-xs font-bold text-cas-blue hover:underline">View Full Details &rarr;</button>
+                    <div className="mt-1">
+                      <button onClick={() => viewOrder(order.id)} className="inline-flex items-center min-h-[44px] text-sm font-bold text-cas-blue hover:underline">View Full Details &rarr;</button>
                     </div>
                   </div>
 
@@ -260,7 +261,7 @@ export default function DriverCockpit({ onNavigateToRegister }) {
                     {STEPS.map((step, i) => (
                       <div
                         key={step.status}
-                        className={`p-2.5 rounded-lg border flex items-center justify-center gap-1.5 ${
+                        className={`p-2.5 min-h-[44px] rounded-lg border flex items-center justify-center gap-1.5 ${
                           i <= stepIndex ? 'bg-cas-green text-white border-cas-green' : 'bg-white text-cas-muted border-slate-300'
                         }`}
                       >
