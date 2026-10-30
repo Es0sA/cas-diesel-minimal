@@ -4,11 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { scrollBehavior } from '../lib/motion';
 import { CONTACT, LEGAL, hasContact } from '../config';
 
-const LEGAL_LINKS = [
-  { key: 'terms', label: 'Terms & Conditions' }
-];
-
-export default function Footer({ onOpenLegalModal }) {
+export default function Footer() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -72,17 +68,9 @@ export default function Footer({ onOpenLegalModal }) {
                 <li>
                   <Link to="/privacy" className="inline-flex items-center min-h-[44px] text-slate-400 hover:text-white underline underline-offset-4 decoration-slate-600 hover:decoration-white transition-colors">Privacy</Link>
                 </li>
-                {LEGAL_LINKS.map((l) => (
-                  <li key={l.key}>
-                    <button
-                      type="button"
-                      onClick={() => onOpenLegalModal(l.key)}
-                      className="inline-flex items-center min-h-[44px] text-slate-400 hover:text-white underline underline-offset-4 decoration-slate-600 hover:decoration-white transition-colors"
-                    >
-                      {l.label}
-                    </button>
-                  </li>
-                ))}
+                <li>
+                  <Link to="/terms" className="inline-flex items-center min-h-[44px] text-slate-400 hover:text-white underline underline-offset-4 decoration-slate-600 hover:decoration-white transition-colors">Terms &amp; Conditions</Link>
+                </li>
               </ul>
             </div>
           </div>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { ShieldCheck, X } from 'lucide-react';
 
-export default function CookieBanner({ onOpenPolicy }) {
+export default function CookieBanner() {
   const [dismissed, setDismissed] = useState(true);
   const [visible, setVisible] = useState(false);
 
@@ -52,13 +53,12 @@ export default function CookieBanner({ onOpenPolicy }) {
             >
               Accept Cookies
             </button>
-            <button
-              type="button"
-              onClick={() => onOpenPolicy('terms')}
+            <Link
+              to="/terms"
               className="text-xs sm:text-xs font-semibold text-cas-muted hover:text-cas-slate underline underline-offset-2"
             >
-              Terms & Conditions
-            </button>
+              Terms &amp; Conditions
+            </Link>
           </div>
         </div>
 

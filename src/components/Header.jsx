@@ -35,7 +35,7 @@ const PUBLIC_LINKS = [
   { label: 'Depots', to: '/depots' },
 ];
 
-export default function Header({ user, onLogout, onOpenLegalModal }) {
+export default function Header({ user, onLogout }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -246,21 +246,16 @@ export default function Header({ user, onLogout, onOpenLegalModal }) {
               </>
             )}
           </div>
-          {onOpenLegalModal && (
-            <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileOpen(false);
-                  onOpenLegalModal('terms');
-                }}
-                className="underline underline-offset-2 hover:text-black font-semibold"
-              >
-                Terms & Conditions
-              </button>
-              <span>&copy; {new Date().getFullYear()} CAS Diesel</span>
-            </div>
-          )}
+          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <Link
+              to="/terms"
+              onClick={() => setMobileOpen(false)}
+              className="underline underline-offset-2 hover:text-black font-semibold"
+            >
+              Terms &amp; Conditions
+            </Link>
+            <span>&copy; {new Date().getFullYear()} CAS Diesel</span>
+          </div>
         </div>
       )}
     </header>

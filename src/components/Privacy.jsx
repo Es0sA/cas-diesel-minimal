@@ -7,7 +7,7 @@ import { usePageTitle } from '../lib/usePageTitle';
 
 const operator = [LEGAL.entityName, LEGAL.rcNumber && `RC ${LEGAL.rcNumber}`, LEGAL.registeredAddress].filter(Boolean).join(', ');
 
-export default function Privacy({ onOpenTerms }) {
+export default function Privacy() {
   usePageTitle('Privacy Policy', 'How CAS Diesel collects, uses, shares and retains personal data under the Nigeria Data Protection Act 2023, and the rights you hold.');
 
   return (
@@ -33,7 +33,7 @@ export default function Privacy({ onOpenTerms }) {
 
       <p className="mt-10 pt-6 border-t border-cas-border text-sm text-cas-muted leading-relaxed">
         These sections are part of our{' '}
-        <button type="button" onClick={() => onOpenTerms && onOpenTerms('terms')} className="underline underline-offset-2 hover:text-cas-slate font-semibold">Terms &amp; Conditions</button>.
+        <Link to="/terms" className="underline underline-offset-2 hover:text-cas-slate font-semibold">Terms &amp; Conditions</Link>.
         {CONTACT.email && <> Questions can go to {LEGAL.privacyEmail || CONTACT.email}.</>}{' '}
         <Link to="/" className="underline underline-offset-2 hover:text-cas-slate font-semibold">Back to home</Link>
       </p>

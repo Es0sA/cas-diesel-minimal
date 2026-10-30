@@ -15,7 +15,6 @@ import OrderDetail from './components/OrderDetail';
 import ProfileSettings from './components/ProfileSettings';
 import AccountDeleted from './components/AccountDeleted';
 import OrderCheckoutModal from './components/OrderCheckoutModal';
-import LegalModals from './components/LegalModals';
 import CookieBanner from './components/CookieBanner';
 import Footer from './components/Footer';
 import Onboarding from './components/Onboarding';
@@ -23,7 +22,7 @@ import BuyerDashboard from './components/BuyerDashboard';
 import MyOrders from './components/MyOrders';
 import AboutUs from './components/AboutUs';
 import Privacy from './components/Privacy';
-import Terms from './components/Terms';
+import TermsPage from './pages/TermsPage';
 import About from './components/About';
 import ResetPassword from './components/ResetPassword';
 import NotFound from './components/NotFound';
@@ -291,7 +290,6 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [authNetworkError, setAuthNetworkError] = useState(false);
-  const [activeLegalModal, setActiveLegalModal] = useState(null);
   const [registerInitialRole, setRegisterInitialRole] = useState('buyer');
   const loginInitialRole = 'buyer';
   const navigate = useNavigate();
@@ -364,17 +362,17 @@ export default function App() {
   return (
     <div className="min-h-dvh flex flex-col bg-slate-50 text-cas-slate">
       {/* Top Header */}
-      <Header user={user} onLogout={handleLogout} onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />
+      <Header user={user} onLogout={handleLogout} />
 
       {/* Main Body */}
       <main className="flex-grow">
         <Suspense fallback={<div role="status" aria-label="Loading" className="flex min-h-[50vh] items-center justify-center"><div className="cas-boot-spinner" /></div>}>
         <Routes>
-          <Route path="/" element={WAITLIST.enabled && !user ? <Waitlist onOpenLegalModal={(modal) => setActiveLegalModal(modal)} /> : <HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
-          <Route path="/waitlist" element={<Waitlist onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />} />
+          <Route path="/" element={WAITLIST.enabled && !user ? <Waitlist /> : <HomePage user={user} handleOpenRegistration={handleOpenRegistration} />} />
+          <Route path="/waitlist" element={<Waitlist />} />
           <Route path="/portal" element={<RequireAuth user={user} authLoading={authLoading} networkError={authNetworkError}><HomePage user={user} handleOpenRegistration={handleOpenRegistration} /></RequireAuth>} />
-          <Route path="/register" element={<LoginPage onOpenLegalModal={(modal) => setActiveLegalModal(modal)} initialRole={registerInitialRole} initialMode="register" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
-          <Route path="/login" element={<LoginPage onOpenLegalModal={(modal) => setActiveLegalModal(modal)} initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
+          <Route path="/register" element={<LoginPage initialRole={registerInitialRole} initialMode="register" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
+          <Route path="/login" element={<LoginPage initialRole={loginInitialRole} initialMode="signin" onBackToHome={() => navigate('/')} onLoginSuccess={handleLoginSuccess} onRegistrationSuccess={handleRegistrationSuccess} />} />
           <Route path="/depots" element={<Depots user={user} />} />
           <Route path="/depots/:id" element={<DepotDetail user={user} />} />
           <Route path="/vendor" element={<NotForAdmin user={user}><SupplierPortal /></NotForAdmin>} />
@@ -387,8 +385,8 @@ export default function App() {
           <Route path="/orders/:id" element={<OrderDetail user={user} />} />
           <Route path="/profile" element={<ProfileSettings user={user} onDeleted={() => { setUser(null); navigate('/account-deleted'); }} />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/privacy" element={<Privacy onOpenTerms={(modal) => setActiveLegalModal(modal)} />} />
-          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<TermsPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/account-deleted" element={<AccountDeleted />} />
           <Route path="/admin" element={<AdminDashboard user={user} />} />
@@ -397,17 +395,11 @@ export default function App() {
         </Suspense>
       </main>
 
-      {/* Compliance Modals */}
-      <LegalModals 
-        activeModal={activeLegalModal}
-        onClose={() => setActiveLegalModal(null)}
-      />
-
       {/* Cookie Banner */}
-      <CookieBanner onOpenPolicy={(modal) => setActiveLegalModal(modal)} />
+      <CookieBanner />
 
       {/* Footer */}
-      <Footer onOpenLegalModal={(modal) => setActiveLegalModal(modal)} />
+      <Footer />
     </div>
   );
 }

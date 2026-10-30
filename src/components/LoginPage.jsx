@@ -53,7 +53,6 @@ export default function LoginPage({
   onBackToHome, 
   onLoginSuccess, 
   onRegistrationSuccess,
-  onOpenLegalModal,
   initialRole = 'buyer',
   initialMode = 'signin' // 'signin' or 'register'
 }) {
@@ -671,13 +670,14 @@ export default function LoginPage({
               />
               <label htmlFor="register-consent" className="text-sm text-slate-700 leading-relaxed">
                 I have read and agree to the{' '}
-                <button
-                  type="button"
-                  onClick={() => onOpenLegalModal && onOpenLegalModal('terms')}
+                <a
+                  href="/terms"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-link font-semibold text-cas-slate underline underline-offset-4 decoration-slate-300 hover:decoration-slate-900"
                 >
                   Terms of Service
-                </button>
+                </a>
                 {' '}and{' '}
                 <a
                   href="/privacy"
