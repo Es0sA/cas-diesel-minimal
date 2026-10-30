@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { ShieldCheck } from 'lucide-react';
 import { CONTACT, LEGAL } from '../config';
 import { PRIVACY_SECTIONS } from '../lib/legalText';
@@ -33,9 +32,9 @@ export default function Privacy() {
 
       <p className="mt-10 pt-6 border-t border-cas-border text-sm text-cas-muted leading-relaxed">
         These sections are part of our{' '}
-        <Link to="/terms" className="underline underline-offset-2 hover:text-cas-slate font-semibold">Terms &amp; Conditions</Link>.
+        <a href="/terms" className="underline underline-offset-2 hover:text-cas-slate font-semibold">Terms &amp; Conditions</a>.
         {CONTACT.email && <> Questions can go to {LEGAL.privacyEmail || CONTACT.email}.</>}{' '}
-        <Link to="/" className="underline underline-offset-2 hover:text-cas-slate font-semibold">Back to home</Link>
+        <a href="/" className="underline underline-offset-2 hover:text-cas-slate font-semibold">Back to home</a>
       </p>
     </div>
   );

@@ -32,7 +32,7 @@ export default function About() {
         <p className="mt-10 text-sm text-cas-muted leading-relaxed">
           <Link to="/depots" className="underline underline-offset-2 hover:text-cas-slate font-semibold">Browse loading terminals</Link>
           {' '}or read our{' '}
-          <Link to="/terms" className="underline underline-offset-2 hover:text-cas-slate font-semibold">Terms &amp; Conditions</Link>.
+          <a href="/terms" className="underline underline-offset-2 hover:text-cas-slate font-semibold">Terms &amp; Conditions</a>.
         </p>
       </div>
     </section>

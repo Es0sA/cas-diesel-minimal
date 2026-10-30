@@ -99,3 +99,17 @@
 body.cookie-banner-open {
   padding-bottom: 6rem;
 }
+
+/* Page-load fade-in animation for smooth MPA transition */
+@keyframes fadeInPage {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#root {
+  animation: fadeInPage 0.3s ease-in-out;
+}

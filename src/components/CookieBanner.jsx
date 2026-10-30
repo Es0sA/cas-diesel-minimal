@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { ShieldCheck, X } from 'lucide-react';
 
 export default function CookieBanner() {
@@ -53,12 +52,12 @@ export default function CookieBanner() {
             >
               Accept Cookies
             </button>
-            <Link
-              to="/terms"
+            <a
+              href="/terms"
               className="text-xs sm:text-xs font-semibold text-cas-muted hover:text-cas-slate underline underline-offset-2"
             >
               Terms &amp; Conditions
-            </Link>
+            </a>
           </div>
         </div>
 

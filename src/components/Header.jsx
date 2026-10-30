@@ -28,6 +28,8 @@ const ROLE_LINKS = {
   ],
 };
 
+const PUBLIC_ROUTES = new Set(['/', '/about', '/terms', '/privacy', '/waitlist']);
+
 const PUBLIC_LINKS = [
   { label: 'Home', to: '/' },
   { label: 'About Us', hash: 'about-us' },
@@ -94,23 +96,40 @@ export default function Header({ user, onLogout }) {
         : 'text-slate-600 hover:text-black hover:bg-slate-50'
     }`;
 
-  const NavLink = ({ link, className }) => (
-    <Link to={link.to || '/'} onClick={go(link)} className={className}>
-      {link.label}
-    </Link>
-  );
+  const NavLink = ({ link, className }) => {
+    if (link.hash) {
+      return (
+        <a href={`/#${link.hash}`} onClick={go(link)} className={className}>
+          {link.label}
+        </a>
+      );
+    }
+    const isPublic = !link.to || PUBLIC_ROUTES.has(link.to);
+    if (isPublic) {
+      return (
+        <a href={link.to || '/'} onClick={() => setMobileOpen(false)} className={className}>
+          {link.label}
+        </a>
+      );
+    }
+    return (
+      <Link to={link.to || '/'} onClick={() => setMobileOpen(false)} className={className}>
+        {link.label}
+      </Link>
+    );
+  };
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-6">
-        <Link to="/" className="flex items-center gap-2.5 group shrink-0">
+        <a href="/" className="flex items-center gap-2.5 group shrink-0">
           <span className="w-9 h-9 bg-cas-slate rounded-lg flex items-center justify-center">
             <span className="font-extrabold text-sm tracking-wider text-cas-amber">CAS</span>
           </span>
           <span className="font-extrabold text-xl tracking-tight text-cas-slate group-hover:text-cas-amberDark transition-colors">
             CAS Diesel
           </span>
-        </Link>
+        </a>
 
         <nav className="hidden md:flex items-center gap-1 flex-1" aria-label="Primary">
           {links.map((l) => (
@@ -247,13 +266,13 @@ export default function Header({ user, onLogout }) {
             )}
           </div>
           <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <Link
-              to="/terms"
+            <a
+              href="/terms"
               onClick={() => setMobileOpen(false)}
               className="underline underline-offset-2 hover:text-black font-semibold"
             >
               Terms &amp; Conditions
-            </Link>
+            </a>
             <span>&copy; {new Date().getFullYear()} CAS Diesel</span>
           </div>
         </div>

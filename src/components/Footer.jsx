@@ -1,19 +1,8 @@
 import React from 'react';
 import { Phone, Mail, MapPin } from 'lucide-react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { scrollBehavior } from '../lib/motion';
 import { CONTACT, LEGAL, hasContact } from '../config';
 
 export default function Footer() {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  // About Us lives on the home page; jump there from anywhere
-  const goToAbout = () => {
-    const scroll = () => document.getElementById('about-us')?.scrollIntoView({ behavior: scrollBehavior() });
-    if (location.pathname === '/') scroll();
-    else { navigate('/'); setTimeout(scroll, 350); }
-  };
 
   return (
     <footer id="contact" className="bg-cas-slate text-slate-300 border-t border-slate-800 text-sm scroll-mt-10">
@@ -63,13 +52,13 @@ export default function Footer() {
               <h2 className="text-xs font-bold uppercase tracking-wider text-white leading-tight">Company</h2>
               <ul className="space-y-1 text-xs">
                 <li>
-                  <button type="button" onClick={goToAbout} className="inline-flex items-center min-h-[44px] text-slate-400 hover:text-white underline underline-offset-4 decoration-slate-600 hover:decoration-white transition-colors">About Us</button>
+                  <a href="/about" className="inline-flex items-center min-h-[44px] text-slate-400 hover:text-white underline underline-offset-4 decoration-slate-600 hover:decoration-white transition-colors">About Us</a>
                 </li>
                 <li>
-                  <Link to="/privacy" className="inline-flex items-center min-h-[44px] text-slate-400 hover:text-white underline underline-offset-4 decoration-slate-600 hover:decoration-white transition-colors">Privacy</Link>
+                  <a href="/privacy" className="inline-flex items-center min-h-[44px] text-slate-400 hover:text-white underline underline-offset-4 decoration-slate-600 hover:decoration-white transition-colors">Privacy</a>
                 </li>
                 <li>
-                  <Link to="/terms" className="inline-flex items-center min-h-[44px] text-slate-400 hover:text-white underline underline-offset-4 decoration-slate-600 hover:decoration-white transition-colors">Terms &amp; Conditions</Link>
+                  <a href="/terms" className="inline-flex items-center min-h-[44px] text-slate-400 hover:text-white underline underline-offset-4 decoration-slate-600 hover:decoration-white transition-colors">Terms &amp; Conditions</a>
                 </li>
               </ul>
             </div>

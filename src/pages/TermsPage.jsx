@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import { 
   Scale, 
   FileText, 
@@ -150,13 +149,13 @@ export default function TermsPage() {
                 <Printer className="w-4 h-4 text-cas-amber" aria-hidden="true" />
                 <span>Print Document</span>
               </button>
-              <Link
-                to="/privacy"
+              <a
+                href="/privacy"
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 transition-colors"
               >
                 <ExternalLink className="w-4 h-4 text-cas-amber" aria-hidden="true" />
                 <span>Privacy Policy</span>
-              </Link>
+              </a>
             </div>
           </div>
 
@@ -336,9 +335,9 @@ export default function TermsPage() {
                 </h3>
                 <p className="leading-relaxed text-gray-800">
                   Data processing safeguards, cookies, and regulatory rights under the Nigeria Data Protection Act 2023 are detailed in our{' '}
-                  <Link to="/privacy" className="text-cas-amberDark font-bold hover:underline">
+                  <a href="/privacy" className="text-cas-amberDark font-bold hover:underline">
                     Privacy Policy
-                  </Link>.
+                  </a>.
                 </p>
                 {CONTACT.email && (
                   <p className="text-xs text-slate-600">
@@ -349,9 +348,9 @@ export default function TermsPage() {
                   </p>
                 )}
                 <div className="pt-4 border-t border-slate-200 flex items-center justify-between text-xs">
-                  <Link to="/" className="text-cas-slate font-bold hover:underline">
+                  <a href="/" className="text-cas-slate font-bold hover:underline">
                     &larr; Return to Home
-                  </Link>
+                  </a>
                   <button
                     type="button"
                     onClick={scrollToTop}
